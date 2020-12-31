@@ -49,7 +49,7 @@ def memorytabinit(self):
     p=os.popen('cat /proc/meminfo | grep -E -i "corrupted"')
     tempcourrupted=p.read().split(':')[1]
     p.close()
-    self.memCourruptedLabelValue.set_text(tempcourrupted)
+    self.memCourruptedLabelValue.set_text(re.sub('\s','',tempcourrupted))
     
 
 
@@ -58,6 +58,7 @@ def memoryTabUpdate(self):
     self.usedd=round((memory[0]-memory[1])/math.pow(2,30),1)
     self.memAvailable=round(memory[1]/math.pow(2,30),1)
     self.memFree=round(memory[4]/math.pow(2,30),1)
+    self.memPercent=memory[2]
 
     self.memInUseLabelValue.set_text(str(self.usedd)+' GiB')
     self.memAvailableLabelValue.set_text(str(self.memAvailable)+' GiB')

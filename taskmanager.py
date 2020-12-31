@@ -14,6 +14,7 @@ class myclass:
         myclass.memoryTab=memoryTabUpdate
         #myclass.memDrawFunc1=on_memDrawArea1_draw
         myclass.sidepaneinitialisation=sidepaneinit
+        myclass.sidepaneUpdate=sidePaneUpdate
 
         self.gladefile="taskManager.glade"
         self.builder=g.Builder()
@@ -156,6 +157,7 @@ class myclass:
         self.cpuSidePaneLabelValue.set_text(cpuUtilString+' '+cpuSpeedstring)
 
         self.memoryTab()
+        self.sidepaneUpdate()
 
         ## cpu utilisation graph
         self.cpuUtilArray.pop()
@@ -164,6 +166,7 @@ class myclass:
         g.Widget.queue_draw(self.memDrawArea1)
         g.Widget.queue_draw(self.memDrawArea2)
         g.Widget.queue_draw(self.cpuSidePaneDrawArea)
+        g.Widget.queue_draw(self.memSidePaneDrawArea)
 
         return True
 
@@ -349,7 +352,41 @@ class myclass:
 
         return False
 
+    def on_memSidePaneDrawArea_draw(self,dr,cr):
+        #print("memdraw1")
+        cr.set_line_width(2)
 
+        w=self.cpuSidePaneDrawArea.get_allocated_width()
+        h=self.cpuSidePaneDrawArea.get_allocated_height()
+        scalingfactor=h/self.memTotal
+        #creating outer rectangle
+        cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
+        cr.set_line_width(3)
+        cr.rectangle(0,0,w,h)
+        cr.stroke()
+        
+        stepsize=w/99.0
+        #print("in draw stepsize",stepsize)
+        for i in range(0,99):
+            # not effcient way to fill the bars (drawing)
+            cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+            cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
+            cr.line_to((i+1)*stepsize,h)
+            cr.line_to(i*stepsize,h)
+            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+
+            cr.fill()
+            cr.stroke()
+            # for outer line
+            cr.set_line_width(1.5)
+            cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
+            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+            cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
+            cr.stroke()
+
+
+        return False
 
 
 if __name__=="__main__":

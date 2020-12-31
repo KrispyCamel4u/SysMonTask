@@ -316,7 +316,7 @@
                                         <property name="label" translatable="yes">CPU</property>
                                         <attributes>
                                           <attribute name="weight" value="medium"/>
-                                          <attribute name="scale" value="1.8"/>
+                                          <attribute name="scale" value="1.6000000000000001"/>
                                         </attributes>
                                       </object>
                                       <packing>
@@ -352,7 +352,79 @@
                               </packing>
                             </child>
                             <child>
-                              <placeholder/>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkDrawingArea" id="memsidepanedrawarea">
+                                    <property name="width_request">110</property>
+                                    <property name="height_request">64</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="valign">start</property>
+                                    <property name="margin_left">8</property>
+                                    <property name="margin_start">8</property>
+                                    <property name="margin_top">8</property>
+                                    <property name="margin_bottom">6</property>
+                                    <signal name="draw" handler="on_memSidePaneDrawArea_draw" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkGrid">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="margin_left">10</property>
+                                    <property name="margin_start">10</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="valign">start</property>
+                                        <property name="margin_top">5</property>
+                                        <property name="label" translatable="yes">Memory</property>
+                                        <attributes>
+                                          <attribute name="weight" value="medium"/>
+                                          <attribute name="scale" value="1.3999999999999999"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="memsidepanelabelvalue">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="valign">start</property>
+                                        <property name="label" translatable="yes">label</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
                             </child>
                             <child>
                               <placeholder/>
