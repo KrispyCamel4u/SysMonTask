@@ -265,6 +265,7 @@
                 <property name="margin_right">2</property>
                 <child>
                   <object class="GtkScrolledWindow">
+                    <property name="width_request">226</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="shadow_type">in</property>
@@ -278,14 +279,71 @@
                             <property name="can_focus">False</property>
                             <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkButton">
-                                <property name="label" translatable="yes">button</property>
-                                <property name="width_request">85</property>
-                                <property name="height_request">35</property>
+                              <object class="GtkBox">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="receives_default">True</property>
-                                <property name="margin_bottom">1</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkDrawingArea" id="cpusidepanedrawarea">
+                                    <property name="width_request">110</property>
+                                    <property name="height_request">64</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="halign">start</property>
+                                    <property name="valign">start</property>
+                                    <property name="margin_start">8</property>
+                                    <property name="margin_top">8</property>
+                                    <property name="margin_bottom">6</property>
+                                    <signal name="draw" handler="on_cpuSidePaneDrawArea_draw" swapped="no"/>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkGrid">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="margin_start">10</property>
+                                    <child>
+                                      <object class="GtkLabel">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="valign">start</property>
+                                        <property name="margin_top">4</property>
+                                        <property name="label" translatable="yes">CPU</property>
+                                        <attributes>
+                                          <attribute name="weight" value="medium"/>
+                                          <attribute name="scale" value="1.8"/>
+                                        </attributes>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkLabel" id="cpusidepanelabelvalue">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="halign">start</property>
+                                        <property name="valign">start</property>
+                                        <property name="label" translatable="yes">label</property>
+                                      </object>
+                                      <packing>
+                                        <property name="left_attach">0</property>
+                                        <property name="top_attach">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -294,16 +352,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkFixed" id="expgrid">
-                                <property name="height_request">82</property>
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
+                              <placeholder/>
                             </child>
                             <child>
                               <placeholder/>
@@ -1369,6 +1418,7 @@ sdfbsdf</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
+                                            <property name="valign">start</property>
                                             <property name="margin_start">10</property>
                                             <property name="hexpand">True</property>
                                             <property name="label" translatable="yes">Coruppted:</property>
@@ -1425,7 +1475,7 @@ sdfbsdf</property>
                       </object>
                       <packing>
                         <property name="name">page1</property>
-                        <property name="title" translatable="yes">page1</property>
+                        <property name="title" translatable="yes">Memory</property>
                         <property name="position">1</property>
                       </packing>
                     </child>
@@ -1454,6 +1504,7 @@ sdfbsdf</property>
                                     <property name="can_focus">False</property>
                                     <property name="halign">center</property>
                                     <property name="valign">start</property>
+                                    <property name="vexpand">False</property>
                                     <property name="stack">performancestack</property>
                                   </object>
                                   <packing>
@@ -1469,7 +1520,7 @@ sdfbsdf</property>
                                     <property name="margin_top">2</property>
                                     <property name="hexpand">True</property>
                                     <child>
-                                      <object class="GtkLabel" id="cputextlabel2">
+                                      <object class="GtkLabel" id="memtextlabel2">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="halign">start</property>
@@ -1477,7 +1528,7 @@ sdfbsdf</property>
                                         <property name="margin_left">15</property>
                                         <property name="margin_start">15</property>
                                         <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">CPU   </property>
+                                        <property name="label" translatable="yes">Memory  </property>
                                         <property name="width_chars">9</property>
                                         <property name="max_width_chars">9</property>
                                         <attributes>
@@ -1499,7 +1550,7 @@ sdfbsdf</property>
                                         <property name="margin_left">15</property>
                                         <property name="margin_start">15</property>
                                         <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">% Utilisation</property>
+                                        <property name="label" translatable="yes">Active Time</property>
                                       </object>
                                       <packing>
                                         <property name="left_attach">0</property>
@@ -1507,7 +1558,7 @@ sdfbsdf</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkLabel" id="cpuinfolabel2">
+                                      <object class="GtkLabel" id="meminfolabel1">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="halign">end</property>
@@ -1515,8 +1566,7 @@ sdfbsdf</property>
                                         <property name="margin_right">15</property>
                                         <property name="margin_end">15</property>
                                         <property name="hexpand">True</property>
-                                        <property name="label" translatable="yes">
-sdfbsdf</property>
+                                        <property name="label" translatable="yes">sdfbsdf</property>
                                         <property name="justify">center</property>
                                       </object>
                                       <packing>
@@ -1547,9 +1597,9 @@ sdfbsdf</property>
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkDrawingArea" id="cpudrawarea2">
+                                  <object class="GtkDrawingArea" id="memdrawarea3">
                                     <property name="width_request">600</property>
-                                    <property name="height_request">200</property>
+                                    <property name="height_request">150</property>
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
                                     <property name="margin_left">15</property>
@@ -1564,6 +1614,40 @@ sdfbsdf</property>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
                                     <property name="position">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="halign">start</property>
+                                    <property name="margin_left">15</property>
+                                    <property name="margin_start">15</property>
+                                    <property name="margin_top">15</property>
+                                    <property name="hexpand">False</property>
+                                    <property name="label" translatable="yes">Disk Transfer Rate</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">3</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkDrawingArea" id="memdrawarea4">
+                                    <property name="height_request">80</property>
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="margin_left">15</property>
+                                    <property name="margin_right">15</property>
+                                    <property name="margin_start">15</property>
+                                    <property name="margin_end">15</property>
+                                    <property name="hexpand">False</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">4</property>
                                   </packing>
                                 </child>
                                 <child>
@@ -1588,7 +1672,7 @@ sdfbsdf</property>
                                             <property name="margin_start">15</property>
                                             <property name="margin_top">10</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Utilisastion</property>
+                                            <property name="label" translatable="yes">Active Time</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">0</property>
@@ -1602,7 +1686,7 @@ sdfbsdf</property>
                                             <property name="halign">start</property>
                                             <property name="margin_top">10</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Speed</property>
+                                            <property name="label" translatable="yes">Average Response Time </property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -1610,14 +1694,14 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpuutilisation2">
+                                          <object class="GtkLabel" id="meminuselabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
                                             <property name="margin_left">15</property>
                                             <property name="margin_start">15</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">value</property>
+                                            <property name="label" translatable="yes">NA</property>
                                             <attributes>
                                               <attribute name="weight" value="normal"/>
                                               <attribute name="scale" value="1.8"/>
@@ -1636,7 +1720,7 @@ sdfbsdf</property>
                                             <property name="margin_left">15</property>
                                             <property name="margin_start">15</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Processes</property>
+                                            <property name="label" translatable="yes">Read Speed</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">0</property>
@@ -1644,12 +1728,12 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpuspeed2">
+                                          <object class="GtkLabel" id="memavailablelabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">value</property>
+                                            <property name="label" translatable="yes">NA</property>
                                             <attributes>
                                               <attribute name="weight" value="normal"/>
                                               <attribute name="scale" value="1.8"/>
@@ -1666,7 +1750,7 @@ sdfbsdf</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Threads</property>
+                                            <property name="label" translatable="yes">Write Speed</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -1674,7 +1758,7 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpuprocesses2">
+                                          <object class="GtkLabel" id="membufferslabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
@@ -1683,7 +1767,7 @@ sdfbsdf</property>
                                             <property name="margin_start">15</property>
                                             <property name="hexpand">True</property>
                                             <property name="vexpand">False</property>
-                                            <property name="label" translatable="yes">label</property>
+                                            <property name="label" translatable="yes">NA</property>
                                             <attributes>
                                               <attribute name="weight" value="normal"/>
                                               <attribute name="scale" value="1.8"/>
@@ -1695,14 +1779,14 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cputhreads2">
+                                          <object class="GtkLabel" id="memcachedlabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
                                             <property name="valign">start</property>
                                             <property name="hexpand">True</property>
                                             <property name="vexpand">False</property>
-                                            <property name="label" translatable="yes">label</property>
+                                            <property name="label" translatable="yes">NA</property>
                                             <attributes>
                                               <attribute name="weight" value="normal"/>
                                               <attribute name="scale" value="1.8"/>
@@ -1722,7 +1806,6 @@ sdfbsdf</property>
                                             <property name="margin_start">15</property>
                                             <property name="margin_top">10</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Temperature</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">0</property>
@@ -1730,7 +1813,7 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cputemplabelvalue2">
+                                          <object class="GtkLabel" id="memswaplabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
@@ -1739,7 +1822,6 @@ sdfbsdf</property>
                                             <property name="margin_start">15</property>
                                             <property name="hexpand">True</property>
                                             <property name="vexpand">False</property>
-                                            <property name="label" translatable="yes">label</property>
                                             <attributes>
                                               <attribute name="weight" value="normal"/>
                                               <attribute name="scale" value="1.8"/>
@@ -1764,7 +1846,7 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpuuptimelabelvalue2">
+                                          <object class="GtkLabel" id="memcommittedlabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
@@ -1792,8 +1874,8 @@ sdfbsdf</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="halign">start</property>
-                                        <property name="margin_left">48</property>
-                                        <property name="margin_start">48</property>
+                                        <property name="margin_left">44</property>
+                                        <property name="margin_start">44</property>
                                         <property name="hexpand">True</property>
                                         <property name="vexpand">True</property>
                                         <child>
@@ -1805,7 +1887,7 @@ sdfbsdf</property>
                                             <property name="margin_start">10</property>
                                             <property name="margin_top">10</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Cores:</property>
+                                            <property name="label" translatable="yes">Speed:</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">0</property>
@@ -1813,7 +1895,7 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpucoreslablevalue2">
+                                          <object class="GtkLabel" id="memspeedlabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
@@ -1821,7 +1903,7 @@ sdfbsdf</property>
                                             <property name="margin_start">25</property>
                                             <property name="margin_top">10</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Speed</property>
+                                            <property name="label" translatable="yes">NA</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -1836,7 +1918,7 @@ sdfbsdf</property>
                                             <property name="margin_left">10</property>
                                             <property name="margin_start">10</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Logical Processor:</property>
+                                            <property name="label" translatable="yes">Slot Used:</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">0</property>
@@ -1844,14 +1926,14 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpulogicallabelvalue2">
+                                          <object class="GtkLabel" id="memslotlabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
                                             <property name="margin_left">25</property>
                                             <property name="margin_start">25</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Speed</property>
+                                            <property name="label" translatable="yes">NA</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -1866,7 +1948,7 @@ sdfbsdf</property>
                                             <property name="margin_left">10</property>
                                             <property name="margin_start">10</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Virtualisation:</property>
+                                            <property name="label" translatable="yes">Form Factor:</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">0</property>
@@ -1874,14 +1956,14 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpuvirtualisationlabelvalue2">
+                                          <object class="GtkLabel" id="memformlabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
                                             <property name="margin_left">25</property>
                                             <property name="margin_start">25</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Speed</property>
+                                            <property name="label" translatable="yes">NA</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -1893,10 +1975,11 @@ sdfbsdf</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
+                                            <property name="valign">start</property>
                                             <property name="margin_left">10</property>
                                             <property name="margin_start">10</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">L1 cache:</property>
+                                            <property name="label" translatable="yes">Coruppted:</property>
                                             <property name="justify">center</property>
                                           </object>
                                           <packing>
@@ -1905,14 +1988,14 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpul1labelvalue2">
+                                          <object class="GtkLabel" id="memreservedlabelvalue1">
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
                                             <property name="margin_left">25</property>
                                             <property name="margin_start">25</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Speed</property>
+                                            <property name="label" translatable="yes">NA</property>
                                           </object>
                                           <packing>
                                             <property name="left_attach">1</property>
@@ -1920,66 +2003,16 @@ sdfbsdf</property>
                                           </packing>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="halign">start</property>
-                                            <property name="margin_left">10</property>
-                                            <property name="margin_start">10</property>
-                                            <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">L2 Cache:</property>
-                                          </object>
-                                          <packing>
-                                            <property name="left_attach">0</property>
-                                            <property name="top_attach">4</property>
-                                          </packing>
+                                          <placeholder/>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpul2labelvalue2">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="halign">start</property>
-                                            <property name="margin_left">25</property>
-                                            <property name="margin_start">25</property>
-                                            <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Speed</property>
-                                          </object>
-                                          <packing>
-                                            <property name="left_attach">1</property>
-                                            <property name="top_attach">4</property>
-                                          </packing>
+                                          <placeholder/>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="halign">start</property>
-                                            <property name="margin_left">10</property>
-                                            <property name="margin_start">10</property>
-                                            <property name="margin_bottom">15</property>
-                                            <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">L3 Cache:</property>
-                                          </object>
-                                          <packing>
-                                            <property name="left_attach">0</property>
-                                            <property name="top_attach">5</property>
-                                          </packing>
+                                          <placeholder/>
                                         </child>
                                         <child>
-                                          <object class="GtkLabel" id="cpul3labelvalue2">
-                                            <property name="visible">True</property>
-                                            <property name="can_focus">False</property>
-                                            <property name="halign">start</property>
-                                            <property name="margin_left">25</property>
-                                            <property name="margin_start">25</property>
-                                            <property name="margin_bottom">15</property>
-                                            <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">Speed</property>
-                                          </object>
-                                          <packing>
-                                            <property name="left_attach">1</property>
-                                            <property name="top_attach">5</property>
-                                          </packing>
+                                          <placeholder/>
                                         </child>
                                       </object>
                                       <packing>
@@ -1991,7 +2024,7 @@ sdfbsdf</property>
                                   <packing>
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
-                                    <property name="position">3</property>
+                                    <property name="position">5</property>
                                   </packing>
                                 </child>
                               </object>
@@ -2001,7 +2034,7 @@ sdfbsdf</property>
                       </object>
                       <packing>
                         <property name="name">page2</property>
-                        <property name="title" translatable="yes">page2</property>
+                        <property name="title" translatable="yes">Disk</property>
                         <property name="position">2</property>
                       </packing>
                     </child>

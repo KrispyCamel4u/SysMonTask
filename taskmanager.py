@@ -3,6 +3,7 @@ from gi.repository import Gtk as g , GObject as go, Gdk
 import os,cairo,re,psutil as ps
 
 from mem import *
+from sidepane import *
 
 class myclass:
     flag=0      #flag for the updator 
@@ -12,6 +13,7 @@ class myclass:
         myclass.memoryinitalisation=memorytabinit
         myclass.memoryTab=memoryTabUpdate
         #myclass.memDrawFunc1=on_memDrawArea1_draw
+        myclass.sidepaneinitialisation=sidepaneinit
 
         self.gladefile="taskManager.glade"
         self.builder=g.Builder()
@@ -58,6 +60,7 @@ class myclass:
         self.cpuFanSpeedLabelValue=self.builder.get_object('cpufanspeedlabelvalue')
 
         self.memoryinitalisation()
+        self.sidepaneinitialisation()
         
         self.Window.show()
 
@@ -127,15 +130,17 @@ class myclass:
 
         #print("setting speed")
         self.speed=ps.cpu_freq()
-        self.cpuSpeedLabelValue.set_text("{:.2f}".format(self.speed[0]/1000)+' Ghz')
+        cpuSpeedstring="{:.2f}".format(self.speed[0]/1000)+' Ghz'
+        self.cpuSpeedLabelValue.set_text(cpuSpeedstring)
         #print("speed setting done")
 
         self.cpuUtil=ps.cpu_percent() ## % of the time is is working
         #print(self.cpuUtil)
         
         #print("setting utilisation")
-        self.cpuUtilLabelValue.set_text(str(int(self.cpuUtil))+' %')
-        print('setting utilisation done')
+        cpuUtilString=str(int(self.cpuUtil))+'%'
+        self.cpuUtilLabelValue.set_text(cpuUtilString)
+        #print('setting utilisation done')
 
         #print("setting number of processes and threads")
         self.cpuProcessesLabelValue.set_text(str(len(ps.pids())))
@@ -148,6 +153,8 @@ class myclass:
         self.cpuTempLabelValue.set_text(str(int(ps.sensors_temperatures()['coretemp'][0][1])))
         # cpu fan speed
 
+        self.cpuSidePaneLabelValue.set_text(cpuUtilString+' '+cpuSpeedstring)
+
         self.memoryTab()
 
         ## cpu utilisation graph
@@ -156,11 +163,12 @@ class myclass:
         g.Widget.queue_draw(self.cpuDrawArea)
         g.Widget.queue_draw(self.memDrawArea1)
         g.Widget.queue_draw(self.memDrawArea2)
+        g.Widget.queue_draw(self.cpuSidePaneDrawArea)
 
         return True
 
     def on_memDrawArea1_draw(self,dr,cr):
-        print("memdraw1")
+        #print("memdraw1")
         cr.set_line_width(2)
 
         w=self.memDrawArea1.get_allocated_width()
@@ -208,7 +216,7 @@ class myclass:
         return False
 
     def on_memDrawArea2_draw(self,dr,cr):
-        print("memdraw2")
+        #print("memdraw2")
         cr.set_line_width(2)
 
         w=self.memDrawArea2.get_allocated_width()
@@ -254,14 +262,14 @@ class myclass:
     
     ## method for drawing
     def on_cpuDrawArea_draw(self,dr,cr):
-        print("idsaf")
+        #print("idsaf")
         cr.set_line_width(2)
 
         w=self.cpuDrawArea.get_allocated_width()
         h=self.cpuDrawArea.get_allocated_height()
         scalingfactor=h/100.0
         #creating outer rectangle
-        cr.set_source_rgba(0,.607,1.0,1)
+        cr.set_source_rgba(0,.454,.878,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -302,6 +310,44 @@ class myclass:
 
         return False
         
+        #side pane cpu draw
+    
+    def on_cpuSidePaneDrawArea_draw(self,dr,cr):
+        #print("cpu sidepane draw")
+        cr.set_line_width(2)
+
+        w=self.cpuSidePaneDrawArea.get_allocated_width()
+        h=self.cpuSidePaneDrawArea.get_allocated_height()
+        scalingfactor=h/100.0
+        #creating outer rectangle
+        cr.set_source_rgba(0,.454,.878,1)
+        cr.set_line_width(3)
+        cr.rectangle(0,0,w,h)
+        cr.stroke()
+        
+        
+        stepsize=w/99.0
+        #print("in draw stepsize",stepsize)
+        for i in range(0,99):
+            # not effcient way to fill the bars (drawing)
+            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+            cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
+            cr.line_to((i+1)*stepsize,h)
+            cr.line_to(i*stepsize,h)
+            cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+
+            cr.fill()
+            cr.stroke()
+            # for outer line
+            cr.set_line_width(1.5)
+            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
+            cr.stroke()
+
+
+        return False
 
 
 
