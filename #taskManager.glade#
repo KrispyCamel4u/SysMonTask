@@ -1369,6 +1369,7 @@ sdfbsdf</property>
                                             <property name="visible">True</property>
                                             <property name="can_focus">False</property>
                                             <property name="halign">start</property>
+                                            <property name="valign">start</property>
                                             <property name="margin_start">10</property>
                                             <property name="hexpand">True</property>
                                             <property name="label" translatable="yes">Coruppted:</property>
@@ -1425,7 +1426,7 @@ sdfbsdf</property>
                       </object>
                       <packing>
                         <property name="name">page1</property>
-                        <property name="title" translatable="yes">page1</property>
+                        <property name="title" translatable="yes">Memory</property>
                         <property name="position">1</property>
                       </packing>
                     </child>

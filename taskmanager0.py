@@ -2,17 +2,11 @@
 from gi.repository import Gtk as g , GObject as go, Gdk
 import os,cairo,re,psutil as ps
 
-from mem import *
 
 class myclass:
     flag=0      #flag for the updator 
 
     def __init__(self):
-
-        myclass.memoryinitalisation=memorytabinit
-        myclass.memoryTab=memoryTabUpdate
-        #myclass.memDrawFunc1=on_memDrawArea1_draw
-
         self.gladefile="taskManager.glade"
         self.builder=g.Builder()
         self.builder.add_from_file(self.gladefile)
@@ -56,10 +50,30 @@ class myclass:
         self.cpuL3LabelValue=self.builder.get_object('cpul3labelvalue')
         self.cpuTempLabelValue=self.builder.get_object('cputemplabelvalue')
         self.cpuFanSpeedLabelValue=self.builder.get_object('cpufanspeedlabelvalue')
-
-        self.memoryinitalisation()
         
+        self.expdraw=self.builder.get_object('expdraw')
+        self.expdraw.connect("button-press-event",self.do_button_press_event)
+        self.expdraw.set_events(self.expdraw.get_events() | Gdk.EventMask.BUTTON_PRESS_MASK)
+
         self.Window.show()
+
+    def do_button_press_event(self,widget,event):
+        print("hi its working")
+        #g.Widget.queue_draw(self.expdraw)
+
+    def on_expdraw_draw(self,dr,cr):
+        w=self.cpuDrawArea.get_allocated_width()
+        h=self.cpuDrawArea.get_allocated_height()
+        #creating outer rectangle
+        print('hel')
+        cr.set_source_rgba(1,.607,1.0,1)
+        cr.set_line_width(3)
+        cr.rectangle(0,0,w,h)
+        cr.fill()
+        cr.stroke()
+
+
+        return False
 
     def on_main_window_destroy(self,object,data=None):
         print("print with cancel")
@@ -135,7 +149,7 @@ class myclass:
         
         #print("setting utilisation")
         self.cpuUtilLabelValue.set_text(str(int(self.cpuUtil))+' %')
-        print('setting utilisation done')
+        #print('setting utilisation done')
 
         #print("setting number of processes and threads")
         self.cpuProcessesLabelValue.set_text(str(len(ps.pids())))
@@ -148,113 +162,14 @@ class myclass:
         self.cpuTempLabelValue.set_text(str(int(ps.sensors_temperatures()['coretemp'][0][1])))
         # cpu fan speed
 
-        self.memoryTab()
-
         ## cpu utilisation graph
         self.cpuUtilArray.pop()
         self.cpuUtilArray.insert(0,self.cpuUtil)
         g.Widget.queue_draw(self.cpuDrawArea)
-        g.Widget.queue_draw(self.memDrawArea1)
-        g.Widget.queue_draw(self.memDrawArea2)
-
         return True
 
-    def on_memDrawArea1_draw(self,dr,cr):
-        print("memdraw1")
-        cr.set_line_width(2)
-
-        w=self.memDrawArea1.get_allocated_width()
-        h=self.memDrawArea1.get_allocated_height()
-        scalingfactor=h/self.memTotal
-        #creating outer rectangle
-        cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
-        cr.set_line_width(3)
-        cr.rectangle(0,0,w,h)
-        cr.stroke()
-        # creating grid lines
-        verticalGap=int(h/10)
-        horzontalGap=int(w/10)
-        for i in range(1,10):
-            cr.set_source_rgba(.815,.419,1.0,1) #for changing the outer line color
-            cr.set_line_width(0.5)
-            cr.move_to(0,i*verticalGap)
-            cr.line_to(w,i*verticalGap)
-
-            cr.move_to(i*horzontalGap,0)
-            cr.line_to(i*horzontalGap,h)
-        cr.stroke()
-        
-        stepsize=w/99.0
-        #print("in draw stepsize",stepsize)
-        for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
-
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-            cr.stroke()
-
-
-        return False
-
-    def on_memDrawArea2_draw(self,dr,cr):
-        print("memdraw2")
-        cr.set_line_width(2)
-
-        w=self.memDrawArea2.get_allocated_width()
-        h=self.memDrawArea2.get_allocated_height()
-        scalingfactor=int(w/self.memTotal)
-
-        #print("in draw stepsize",stepsize)
-        cr.set_source_rgba(.815,.419,1.0,0.25)   #for changing the fill color
-        cr.set_line_width(2)
-        cr.rectangle(0,0,scalingfactor*self.usedd,h)
-        cr.fill()
-        cr.stroke()
-        cr.set_source_rgba(.815,.419,1.0,1)
-        cr.set_line_width(2)
-        cr.move_to(scalingfactor*self.usedd,0)
-        cr.line_to(scalingfactor*self.usedd,h)
-        cr.stroke()
-
-        cr.set_source_rgba(.815,.419,1.0,0.1)   #for changing the fill color
-        cr.set_line_width(2)
-        cr.rectangle(scalingfactor*(self.usedd),0,scalingfactor*(self.memAvailable-self.memFree),h)
-        cr.fill()
-        cr.stroke()
-        cr.set_source_rgba(.815,.419,1.0,.7)   #for changing the fill color
-        cr.set_line_width(2)
-        cr.move_to(scalingfactor*(self.usedd+self.memAvailable-self.memFree),0)
-        cr.line_to(scalingfactor*(self.usedd+self.memAvailable-self.memFree),h)
-        cr.stroke()
-
-        cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
-        cr.set_line_width(2)
-        cr.rectangle(scalingfactor*(self.usedd+self.memAvailable-self.memFree),0,scalingfactor*self.memFree,h)
-        cr.stroke()
-
-        #creating outer rectangle
-        cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
-        cr.set_line_width(3)
-        cr.rectangle(0,0,w,h)
-        cr.stroke()
-        
-
-        return False
-    
     ## method for drawing
     def on_cpuDrawArea_draw(self,dr,cr):
-        print("idsaf")
         cr.set_line_width(2)
 
         w=self.cpuDrawArea.get_allocated_width()
@@ -302,8 +217,6 @@ class myclass:
 
         return False
         
-
-
 
 
 if __name__=="__main__":
