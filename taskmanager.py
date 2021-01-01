@@ -4,6 +4,7 @@ import os,cairo,re,psutil as ps
 
 from mem import *
 from sidepane import *
+from disk import *
 
 class myclass:
     flag=0      #flag for the updator 
@@ -15,6 +16,8 @@ class myclass:
         #myclass.memDrawFunc1=on_memDrawArea1_draw
         myclass.sidepaneinitialisation=sidepaneinit
         myclass.sidepaneUpdate=sidePaneUpdate
+        myclass.diskinitialisation=diskinit
+        myclass.disktabUpdate=diskTabUpdate
 
         self.gladefile="taskManager.glade"
         self.builder=g.Builder()
@@ -24,6 +27,8 @@ class myclass:
         self.quit=self.builder.get_object("quit")
         self.quit.connect('activate',self.on_quit_activate)
         
+        self.performanceStack=self.builder.get_object('performancestack')
+
         # for about dialog 
         self.aboutdialog=self.builder.get_object("aboutdialog")
         # for notebook
@@ -62,7 +67,8 @@ class myclass:
 
         self.memoryinitalisation()
         self.sidepaneinitialisation()
-        
+        self.diskinitialisation()
+
         self.Window.show()
 
     def on_main_window_destroy(self,object,data=None):
@@ -158,6 +164,7 @@ class myclass:
 
         self.memoryTab()
         self.sidepaneUpdate()
+        self.disktabUpdate()
 
         ## cpu utilisation graph
         self.cpuUtilArray.pop()
@@ -165,6 +172,8 @@ class myclass:
         g.Widget.queue_draw(self.cpuDrawArea)
         g.Widget.queue_draw(self.memDrawArea1)
         g.Widget.queue_draw(self.memDrawArea2)
+        for i in range(0,self.numOfDisks):
+            g.Widget.queue_draw(self.diskWidgetList[i].diskdrawarea1)
         g.Widget.queue_draw(self.cpuSidePaneDrawArea)
         g.Widget.queue_draw(self.memSidePaneDrawArea)
 
@@ -353,7 +362,7 @@ class myclass:
         return False
 
     def on_memSidePaneDrawArea_draw(self,dr,cr):
-        #print("memdraw1")
+        #print("tyoe",g.Buildable.get_name(dr))
         cr.set_line_width(2)
 
         w=self.cpuSidePaneDrawArea.get_allocated_width()
@@ -387,6 +396,8 @@ class myclass:
 
 
         return False
+
+
 
 
 if __name__=="__main__":
