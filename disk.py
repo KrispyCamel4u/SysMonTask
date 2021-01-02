@@ -37,12 +37,63 @@ class diskTabWidget(g.ScrolledWindow):
         
 
     @GtkTemplate.Callback
+    def on_diskDrawArea2_draw(self,dr,cr):
+
+        cr.set_line_width(2)
+
+        w=self.diskdrawarea2.get_allocated_width()
+        h=self.diskdrawarea2.get_allocated_height()
+        scalingfactor=h/1000.0
+        #creating outer rectangle
+        cr.set_source_rgba(.109,.670,.0588,1)
+        cr.set_line_width(3)
+        cr.rectangle(0,0,w,h)
+        cr.stroke()
+        # creating grid lines
+        verticalGap=int(h/10)
+        horzontalGap=int(w/10)
+        for i in range(1,10):
+            cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+            cr.set_line_width(0.5)
+            cr.move_to(0,i*verticalGap)
+            cr.line_to(w,i*verticalGap)
+
+            cr.move_to(i*horzontalGap,0)
+            cr.line_to(i*horzontalGap,h)
+            cr.stroke()
+        cr.stroke()
+        
+        stepsize=w/99.0
+        #print("in draw stepsize",stepsize)
+        for i in range(0,99):
+            # not effcient way to fill the bars (drawing)
+            cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+            cr.move_to(i*stepsize,scalingfactor*(1000-self.diskreadArray[i])+2)
+            cr.line_to((i+1)*stepsize,scalingfactor*(1000-self.diskreadArray[i+1])+2)
+            cr.line_to((i+1)*stepsize,h)
+            cr.line_to(i*stepsize,h)
+            cr.move_to(i*stepsize,scalingfactor*(1000-self.diskreadArray[i])+2)
+
+            cr.fill()
+            cr.stroke()
+            # for outer line
+            cr.set_line_width(1.5)
+            cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+            cr.move_to(i*stepsize,scalingfactor*(1000-self.diskreadArray[i])+2)
+            cr.line_to((i+1)*stepsize,scalingfactor*(1000-self.diskreadArray[i+1])+2)
+            cr.stroke()
+
+
+        return False
+
+    @GtkTemplate.Callback
     def on_diskDrawArea1_draw(self,dr,cr):
 
         cr.set_line_width(2)
 
         w=self.diskdrawarea1.get_allocated_width()
         h=self.diskdrawarea1.get_allocated_height()
+
         scalingfactor=h/100.0
         #creating outer rectangle
         cr.set_source_rgba(.109,.670,.0588,1)
@@ -84,7 +135,7 @@ class diskTabWidget(g.ScrolledWindow):
             cr.stroke()
 
 
-        return False
+        return False        
 
 def diskinit(self):
 
@@ -109,10 +160,10 @@ def diskinit(self):
     for i in range(0,self.numOfDisks):
         self.diskWidgetList[i]=diskTabWidget()
         self.performanceStack.add_titled(self.diskWidgetList[i],'diskStack'+str(i),'Disk'+str(i))
-        self.diskWidgetList[i].disktextlabel.set_text(self.disklist[i].upper())
-        self.diskWidgetList[i].diskinfolabel.set_text(self.disksize[i].upper())
+        self.diskWidgetList[i].disktextlabel.set_text(self.disklist[i])
+        self.diskWidgetList[i].diskinfolabel.set_text(self.disksize[i])
         disktemp=ps.disk_io_counters(perdisk=True)
-        self.diskt1=time.time()##
+
         for drives in disktemp:
             if drives==self.disklist[i]:
                self.diskstate1.append(disktemp[drives])
@@ -129,7 +180,6 @@ def diskinit(self):
     
 def diskTabUpdate(self):
     disktemp=ps.disk_io_counters(perdisk=True)
-    self.diskt2=time.time()##
 
     self.diskstate2=[]
     for i in range(0,self.numOfDisks):
@@ -137,17 +187,18 @@ def diskTabUpdate(self):
             if drives==self.disklist[i]:
                self.diskstate2.append(disktemp[drives])
     self.diff=[]
+    self.diskActiveString=[]
     for i in range(0,self.numOfDisks):
         self.diff.append([x2-x1 for x1,x2 in zip(self.diskstate1[i],self.diskstate2[i])])
         
-        self.diskActiveString=str(int(self.diff[i][8]/10))+'%'
-        self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString)
+        self.diskActiveString.append(str(int(self.diff[i][8]/10))+'%')
+        self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString[i])
         self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diff[i][2]/1000000)+'MB')
         self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diff[i][3]/1000000)+'MB')
         self.diskWidgetList[i].diskresponselabelvalue.set_text(str(self.diff[i][4])+'/'+str(self.diff[i][4])+' ms')
 
         self.diskActiveArray[i].pop()
-        self.diskActiveArray[i].insert(0,(100*self.diff[i][8])/(self.diskt2-self.diskt1))##
+        self.diskActiveArray[i].insert(0,(self.diff[i][8])/12)##
 
         self.diskReadArray[i].pop()
         self.diskReadArray[i].insert(0,self.diff[i][2]/1000000)
@@ -159,8 +210,6 @@ def diskTabUpdate(self):
 
 
     self.diskstate1=self.diskstate2
-    self.diskt1=self.diskt1##
-
 
 
 

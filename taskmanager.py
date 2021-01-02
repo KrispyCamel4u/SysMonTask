@@ -28,6 +28,12 @@ class myclass:
         self.quit.connect('activate',self.on_quit_activate)
         
         self.performanceStack=self.builder.get_object('performancestack')
+        
+
+        self.sidepaneBox=self.builder.get_object('sidepanebox')
+        self.memoryinitalisation()
+        self.diskinitialisation()
+
 
         # for about dialog 
         self.aboutdialog=self.builder.get_object("aboutdialog")
@@ -65,10 +71,11 @@ class myclass:
         self.cpuTempLabelValue=self.builder.get_object('cputemplabelvalue')
         self.cpuFanSpeedLabelValue=self.builder.get_object('cpufanspeedlabelvalue')
 
-        self.memoryinitalisation()
-        self.sidepaneinitialisation()
-        self.diskinitialisation()
 
+
+        self.sidepaneinitialisation()
+
+        #time.sleep(2)
         self.Window.show()
 
     def on_main_window_destroy(self,object,data=None):
@@ -163,8 +170,9 @@ class myclass:
         self.cpuSidePaneLabelValue.set_text(cpuUtilString+' '+cpuSpeedstring)
 
         self.memoryTab()
-        self.sidepaneUpdate()
         self.disktabUpdate()
+
+        self.sidepaneUpdate()
 
         ## cpu utilisation graph
         self.cpuUtilArray.pop()
@@ -174,8 +182,14 @@ class myclass:
         g.Widget.queue_draw(self.memDrawArea2)
         for i in range(0,self.numOfDisks):
             g.Widget.queue_draw(self.diskWidgetList[i].diskdrawarea1)
+            g.Widget.queue_draw(self.diskWidgetList[i].diskdrawarea2)
+
+        ##  sidepane  
         g.Widget.queue_draw(self.cpuSidePaneDrawArea)
         g.Widget.queue_draw(self.memSidePaneDrawArea)
+        for i in range(0,self.numOfDisks):
+            g.Widget.queue_draw(self.diskSidepaneWidgetList[i].disksidepanedrawarea)
+
 
         return True
 

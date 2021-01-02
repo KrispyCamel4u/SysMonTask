@@ -23,7 +23,7 @@ def memorytabinit(self):
     self.memDrawArea2=self.builder.get_object('memdrawarea2')
 
     self.memTotal=round(ps.virtual_memory()[0]/math.pow(2,30),1)
-    self.memInfoLabel.set_text(str(self.memTotal))
+    self.memInfoLabel.set_text(str(self.memTotal)+'GiB')
 
     p=os.popen('sudo dmidecode -t memory|grep -E -i "memory speed"')
     memspeed=100000000

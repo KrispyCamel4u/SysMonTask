@@ -146,7 +146,7 @@
             </child>
             <child>
               <object class="GtkDrawingArea" id="diskdrawarea2">
-                <property name="height_request">80</property>
+                <property name="height_request">100</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_left">15</property>
@@ -154,6 +154,7 @@
                 <property name="margin_start">15</property>
                 <property name="margin_end">15</property>
                 <property name="hexpand">False</property>
+                <signal name="draw" handler="on_diskDrawArea2_draw" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
