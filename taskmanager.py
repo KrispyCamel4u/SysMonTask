@@ -28,7 +28,7 @@ class myclass:
         self.quit.connect('activate',self.on_quit_activate)
         
         self.performanceStack=self.builder.get_object('performancestack')
-        
+
 
         self.sidepaneBox=self.builder.get_object('sidepanebox')
         self.memoryinitalisation()
@@ -46,7 +46,7 @@ class myclass:
         self.cpuUtilArray=[0]*100   #cpu util array
 
         
-        self.timeinterval=1000     #time interval in mili
+        self.timeinterval=850     #time interval in mili
 
         # timer binding 
         go.timeout_add(self.timeinterval,self.updater)
