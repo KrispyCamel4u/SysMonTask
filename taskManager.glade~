@@ -239,12 +239,28 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <child>
-              <object class="GtkButton" id="button1">
-                <property name="label" translatable="yes">button1</property>
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <signal name="clicked" handler="on_button_clicked" swapped="no"/>
+                <property name="can_focus">False</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">label</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
             </child>
             <child type="tab">
@@ -551,7 +567,7 @@
                                             <property name="margin_end">15</property>
                                             <property name="hexpand">True</property>
                                             <property name="label" translatable="yes">
-sdfbsdf</property>
+NA</property>
                                             <property name="justify">center</property>
                                             <attributes>
                                               <attribute name="scale" value="1.2"/>
@@ -652,7 +668,7 @@ sdfbsdf</property>
                                                 <property name="halign">start</property>
                                                 <property name="margin_start">15</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">value</property>
+                                                <property name="label" translatable="yes">NA</property>
                                                 <attributes>
                                                   <attribute name="weight" value="normal"/>
                                                   <attribute name="scale" value="1.8"/>
@@ -683,7 +699,7 @@ sdfbsdf</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="halign">start</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">value</property>
+                                                <property name="label" translatable="yes">NA</property>
                                                 <attributes>
                                                   <attribute name="weight" value="normal"/>
                                                   <attribute name="scale" value="1.8"/>
@@ -716,7 +732,7 @@ sdfbsdf</property>
                                                 <property name="margin_start">15</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="vexpand">False</property>
-                                                <property name="label" translatable="yes">label</property>
+                                                <property name="label" translatable="yes">NA</property>
                                                 <attributes>
                                                   <attribute name="weight" value="normal"/>
                                                   <attribute name="scale" value="1.8"/>
@@ -735,7 +751,7 @@ sdfbsdf</property>
                                                 <property name="valign">start</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="vexpand">False</property>
-                                                <property name="label" translatable="yes">label</property>
+                                                <property name="label" translatable="yes">NA</property>
                                                 <attributes>
                                                   <attribute name="weight" value="normal"/>
                                                   <attribute name="scale" value="1.8"/>
@@ -772,7 +788,7 @@ sdfbsdf</property>
                                                 <property name="margin_start">15</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="vexpand">False</property>
-                                                <property name="label" translatable="yes">label</property>
+                                                <property name="label" translatable="yes">NA</property>
                                                 <attributes>
                                                   <attribute name="weight" value="normal"/>
                                                   <attribute name="scale" value="1.8"/>
@@ -851,7 +867,7 @@ sdfbsdf</property>
                                                 <property name="margin_start">25</property>
                                                 <property name="margin_top">10</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Speed</property>
+                                                <property name="label" translatable="yes">NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
@@ -879,7 +895,7 @@ sdfbsdf</property>
                                                 <property name="halign">start</property>
                                                 <property name="margin_start">25</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Speed</property>
+                                                <property name="label" translatable="yes">NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
@@ -907,7 +923,7 @@ sdfbsdf</property>
                                                 <property name="halign">start</property>
                                                 <property name="margin_start">25</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Speed</property>
+                                                <property name="label" translatable="yes">NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
@@ -936,7 +952,7 @@ sdfbsdf</property>
                                                 <property name="halign">start</property>
                                                 <property name="margin_start">25</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Speed</property>
+                                                <property name="label" translatable="yes">NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
@@ -964,7 +980,7 @@ sdfbsdf</property>
                                                 <property name="halign">start</property>
                                                 <property name="margin_start">25</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Speed</property>
+                                                <property name="label" translatable="yes">NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
@@ -994,7 +1010,7 @@ sdfbsdf</property>
                                                 <property name="margin_start">25</property>
                                                 <property name="margin_bottom">15</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Speed</property>
+                                                <property name="label" translatable="yes">NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>

@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-from gi.repository import Gtk as g , GObject as go, Gdk
-import os,cairo,re,psutil as ps
+#import gi
+#gi.require_version("Gtk", "3.24")
+
+from gi.repository import Gtk as g , GObject as go
+import os,re,psutil as ps,cairo
 
 from mem import *
 from sidepane import *
@@ -70,6 +73,7 @@ class myclass:
         self.cpuL3LabelValue=self.builder.get_object('cpul3labelvalue')
         self.cpuTempLabelValue=self.builder.get_object('cputemplabelvalue')
         self.cpuFanSpeedLabelValue=self.builder.get_object('cpufanspeedlabelvalue')
+        self.cpuMxSpeedLabelValue=self.builder.get_object('cpumxspeedlabelvalue')
 
 
 
@@ -103,47 +107,57 @@ class myclass:
     ## repeatedily called out fucntion
     def updater(self):
         
+        self.speed=ps.cpu_freq()
+
         if(not myclass.flag):
             myclass.flag=1
             #print("in if")
-
-            ## for the first time only to get the name of the cpu
-            p=os.popen('cat /proc/cpuinfo |grep -m1 "model name"')
-            self.cpuname=p.read().split(':')[1].split('\n')[0]
-            #print(self.cpuname)                                          # cpu name
-            self.cpuInfoLabel.set_text(self.cpuname)
-            self.cpuInfoLabel.set_valign(g.Align.CENTER)
-            p.close()
+            try:
+                ## for the first time only to get the name of the cpu
+                p=os.popen('cat /proc/cpuinfo |grep -m1 "model name"')
+                self.cpuname=p.read().split(':')[1].split('\n')[0]
+                #print(self.cpuname)                                          # cpu name
+                self.cpuInfoLabel.set_text(self.cpuname)
+                self.cpuInfoLabel.set_valign(g.Align.CENTER)
+                p.close()
+            except:
+                print("Failed to get model information")
 
             self.cpuCoreLabelValue.set_text(str(ps.cpu_count(logical=False)))
 
             self.cpuLogicalLabelValue.set_text(str(ps.cpu_count()))
+            try:
+                p=os.popen('lscpu|grep -i -E "(vt-x)|(amd-v)"')
+                temp=p.read()
+                if temp:
+                    temptext="Enabled"
+                else:
+                    temptext="Disabled"
+                self.cpuVirtualisationLabelValue.set_text(temptext)
+                p.close()
+            except:
+                print("Failed to get Virtualisation information")
 
-            p=os.popen('lscpu|grep -i -E "(vt-x)|(amd-v)"')
-            temp=p.read()
-            if temp:
-                temptext="Enabled"
-            else:
-                temptext="Disabled"
-            self.cpuVirtualisationLabelValue.set_text(temptext)
-            p.close()
-            
-            p=os.popen('lscpu|grep -i -m1 "L1d cache"')
-            self.cpuL1LabelValue.set_text(re.sub("[\s]","",p.read().split(':')[1]))
-            p.close()
-            
-            p=os.popen('lscpu|grep -i -m1 "L2 cache"')
-            self.cpuL2LabelValue.set_text(re.sub('[\s]','',p.read().split(':')[1]))
-            p.close()
+            try:
+                p=os.popen('lscpu|grep -i -m1 "L1d cache"')
+                self.cpuL1LabelValue.set_text(re.sub("[\s]","",p.read().split(':')[1]))
+                p.close()
+                
+                p=os.popen('lscpu|grep -i -m1 "L2 cache"')
+                self.cpuL2LabelValue.set_text(re.sub('[\s]','',p.read().split(':')[1]))
+                p.close()
 
-            p=os.popen('lscpu|grep -i "L3 cache"')
-            self.cpuL3LabelValue.set_text(re.sub('[\s]','',p.read().split(':')[1]))
-            p.close()
+                p=os.popen('lscpu|grep -i "L3 cache"')
+                self.cpuL3LabelValue.set_text(re.sub('[\s]','',p.read().split(':')[1]))
+                p.close()
+            except:
+                print("Failed to get Cache information")
+
+            self.cpuMxSpeedLabelValue.set_text('{:.2f}'.format(self.speed[2]/1000)+' GHz')
 
             return True
 
         #print("setting speed")
-        self.speed=ps.cpu_freq()
         cpuSpeedstring="{:.2f}".format(self.speed[0]/1000)+' Ghz'
         self.cpuSpeedLabelValue.set_text(cpuSpeedstring)
         #print("speed setting done")
@@ -158,10 +172,13 @@ class myclass:
 
         #print("setting number of processes and threads")
         self.cpuProcessesLabelValue.set_text(str(len(ps.pids())))
-
-        p=os.popen("ps axms|wc -l")
-        self.cpuThreadsLabelValue.set_text(re.sub('[\s]','',p.read()))
-        p.close()
+        try:
+            p=os.popen("ps axms|wc -l")
+            self.cpuThreadsLabelValue.set_text(re.sub('[\s]','',p.read()))
+            p.close()
+        except:
+            print("Failed to get Threads")
+            pass
 
         #cpu package temp
         self.cpuTempLabelValue.set_text(str(int(ps.sensors_temperatures()['coretemp'][0][1])))

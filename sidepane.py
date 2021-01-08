@@ -1,5 +1,7 @@
-from gi.repository import Gtk as g , GObject as go, Gdk
-import os,cairo,re,psutil as ps
+# import gi
+# gi.require_version("Gtk", "3.24")
+
+from gi.repository import Gtk as g,cairo
 from gi_composites import GtkTemplate
 
 

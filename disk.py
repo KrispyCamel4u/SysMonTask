@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-from gi.repository import Gtk as g, GObject as go, Gdk
-import os,cairo,re,psutil as ps,math,time
+# import gi
+# gi.require_version("Gtk", "3.24")
+
+from gi.repository import Gtk as g
+import os,re,psutil as ps,math,time,cairo
 from gi_composites import GtkTemplate
 
 
@@ -46,7 +49,7 @@ class diskTabWidget(g.ScrolledWindow):
         w=self.diskdrawarea2.get_allocated_width()
         h=self.diskdrawarea2.get_allocated_height()
 
-        speedstep=200
+        speedstep=100
         maximumcurrentspeed=max(max(self.diskreadArray),max(self.diskwriteArray))
         currentscalespeed=self.diskmxfactor*speedstep
         while(currentscalespeed<maximumcurrentspeed):
@@ -172,15 +175,19 @@ def diskinit(self):
 
     self.disklist=[]
     self.disksize=[]
-    p=os.popen('lsblk -d -o NAME,SIZE')
-    partitions=p.readlines()
-    p.close()
-    for parts in partitions:
-        tempparts=parts.split()
-        if 'loop' not in tempparts[0] and 'NAME' not in  tempparts[0]:
-            self.disklist.append(tempparts[0])
-            self.disksize.append(tempparts[1])
-            print(tempparts[0])
+    try:
+        p=os.popen('lsblk -d -o NAME,SIZE')
+        partitions=p.readlines()
+        p.close()
+        for parts in partitions:
+            tempparts=parts.split()
+            if 'loop' not in tempparts[0] and 'NAME' not in  tempparts[0]:
+                self.disklist.append(tempparts[0])
+                self.disksize.append(tempparts[1])
+                print(tempparts[0])
+    except:
+        print("Failed to get Disks")
+        pass
 
     self.diskWidgetList={}
     self.diskstate1=[]
