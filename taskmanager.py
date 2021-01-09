@@ -8,6 +8,7 @@ import os,re,psutil as ps,cairo
 from mem import *
 from sidepane import *
 from disk import *
+from net import *
 
 class myclass:
     flag=0      #flag for the updator 
@@ -19,8 +20,12 @@ class myclass:
         #myclass.memDrawFunc1=on_memDrawArea1_draw
         myclass.sidepaneinitialisation=sidepaneinit
         myclass.sidepaneUpdate=sidePaneUpdate
+
         myclass.diskinitialisation=diskinit
         myclass.disktabUpdate=diskTabUpdate
+
+        myclass.netinitialisation=netinit
+        myclass.netTabUpdate=netUpdate
 
         self.gladefile="taskManager.glade"
         self.builder=g.Builder()
@@ -36,6 +41,7 @@ class myclass:
         self.sidepaneBox=self.builder.get_object('sidepanebox')
         self.memoryinitalisation()
         self.diskinitialisation()
+        self.netinitialisation()
 
 
         # for about dialog 
@@ -188,6 +194,11 @@ class myclass:
 
         self.memoryTab()
         self.disktabUpdate()
+        if len(self.netNameList)!=0:
+            # print('dismis')
+            self.netTabUpdate() 
+            for i in range(0,self.numOfNets):
+                g.Widget.queue_draw(self.netWidgetList[i].netdrawarea)
 
         self.sidepaneUpdate()
 
@@ -204,6 +215,7 @@ class myclass:
         ##  sidepane  
         g.Widget.queue_draw(self.cpuSidePaneDrawArea)
         g.Widget.queue_draw(self.memSidePaneDrawArea)
+        
         for i in range(0,self.numOfDisks):
             g.Widget.queue_draw(self.diskSidepaneWidgetList[i].disksidepanedrawarea)
 

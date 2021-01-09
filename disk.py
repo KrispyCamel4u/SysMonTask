@@ -33,7 +33,7 @@ class diskTabWidget(g.ScrolledWindow):
         
         # This must occur *after* you initialize your base
         self.init_template()
-        self.diskmxfactor=1
+        self.diskmxfactor=1             #for the scaling of maximum value on the graph
 
     def givedata(self,secondself,index):
         self.diskactiveArray=secondself.diskActiveArray[index]
@@ -219,31 +219,30 @@ def diskinit(self):
 def diskTabUpdate(self):
     disktemp=ps.disk_io_counters(perdisk=True)
     self.diskt2=time.time()##
-    timediff=self.diskt2-self.diskt1
+    timediskDiff=self.diskt2-self.diskt1
     self.diskstate2=[]
     for i in range(0,self.numOfDisks):
-        for drives in disktemp:
-            if drives==self.disklist[i]:
-               self.diskstate2.append(disktemp[drives])
-    self.diff=[]
+        self.diskstate2.append(disktemp[self.disklist[i]])
+        
+    self.diskDiff=[]    
     self.diskActiveString=[]
     for i in range(0,self.numOfDisks):
-        self.diff.append([x2-x1 for x1,x2 in zip(self.diskstate1[i],self.diskstate2[i])])
+        self.diskDiff.append([x2-x1 for x1,x2 in zip(self.diskstate1[i],self.diskstate2[i])])
         
-        self.diskActiveString.append(str(int(self.diff[i][8]/10))+'%')
+        self.diskActiveString.append(str(int(self.diskDiff[i][8]/10))+'%')
         self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString[i])
-        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diff[i][2]/1000000)+'MB')
-        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diff[i][3]/1000000)+'MB')
-        self.diskWidgetList[i].diskresponselabelvalue.set_text(str(self.diff[i][4])+'/'+str(self.diff[i][4])+' ms')
+        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diskDiff[i][2]/1000000)+'MB')
+        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diskDiff[i][3]/1000000)+'MB')
+        self.diskWidgetList[i].diskresponselabelvalue.set_text(str(self.diskDiff[i][4])+'/'+str(self.diskDiff[i][4])+' ms')
 
         self.diskActiveArray[i].pop()
-        self.diskActiveArray[i].insert(0,(self.diff[i][8])/(10*timediff))##
+        self.diskActiveArray[i].insert(0,(self.diskDiff[i][8])/(10*timediskDiff))##
 
         self.diskReadArray[i].pop()
-        self.diskReadArray[i].insert(0,self.diff[i][2]/((timediff)*1000000))
+        self.diskReadArray[i].insert(0,self.diskDiff[i][2]/((timediskDiff)*1000000))
 
         self.diskWriteArray[i].pop()
-        self.diskWriteArray[i].insert(0,self.diff[i][3]/((timediff)*1000000))
+        self.diskWriteArray[i].insert(0,self.diskDiff[i][3]/((timediskDiff)*1000000))
 
         self.diskWidgetList[i].givedata(self,i)
 

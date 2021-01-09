@@ -913,7 +913,7 @@ NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">0</property>
-                                                <property name="top_attach">2</property>
+                                                <property name="top_attach">3</property>
                                               </packing>
                                             </child>
                                             <child>
@@ -927,7 +927,7 @@ NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
-                                                <property name="top_attach">2</property>
+                                                <property name="top_attach">3</property>
                                               </packing>
                                             </child>
                                             <child>
@@ -942,7 +942,7 @@ NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">0</property>
-                                                <property name="top_attach">3</property>
+                                                <property name="top_attach">4</property>
                                               </packing>
                                             </child>
                                             <child>
@@ -956,7 +956,7 @@ NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
-                                                <property name="top_attach">3</property>
+                                                <property name="top_attach">4</property>
                                               </packing>
                                             </child>
                                             <child>
@@ -970,7 +970,7 @@ NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">0</property>
-                                                <property name="top_attach">4</property>
+                                                <property name="top_attach">5</property>
                                               </packing>
                                             </child>
                                             <child>
@@ -984,7 +984,7 @@ NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
-                                                <property name="top_attach">4</property>
+                                                <property name="top_attach">5</property>
                                               </packing>
                                             </child>
                                             <child>
@@ -999,7 +999,7 @@ NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">0</property>
-                                                <property name="top_attach">5</property>
+                                                <property name="top_attach">6</property>
                                               </packing>
                                             </child>
                                             <child>
@@ -1014,7 +1014,35 @@ NA</property>
                                               </object>
                                               <packing>
                                                 <property name="left_attach">1</property>
-                                                <property name="top_attach">5</property>
+                                                <property name="top_attach">6</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="halign">start</property>
+                                                <property name="margin_start">10</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="label" translatable="yes">Maximum Speed:</property>
+                                              </object>
+                                              <packing>
+                                                <property name="left_attach">0</property>
+                                                <property name="top_attach">2</property>
+                                              </packing>
+                                            </child>
+                                            <child>
+                                              <object class="GtkLabel" id="cpumxspeedlabelvalue">
+                                                <property name="visible">True</property>
+                                                <property name="can_focus">False</property>
+                                                <property name="halign">start</property>
+                                                <property name="margin_start">25</property>
+                                                <property name="hexpand">True</property>
+                                                <property name="label" translatable="yes">NA</property>
+                                              </object>
+                                              <packing>
+                                                <property name="left_attach">1</property>
+                                                <property name="top_attach">2</property>
                                               </packing>
                                             </child>
                                           </object>
