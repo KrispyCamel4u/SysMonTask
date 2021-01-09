@@ -320,7 +320,7 @@ NA</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="margin_start">30</property>
+                    <property name="margin_start">15</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <child>
