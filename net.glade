@@ -309,15 +309,6 @@ NA</property>
                     <child>
                       <placeholder/>
                     </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
-                    <child>
-                      <placeholder/>
-                    </child>
                   </object>
                   <packing>
                     <property name="resize">False</property>
@@ -329,8 +320,7 @@ NA</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="margin_left">48</property>
-                    <property name="margin_start">48</property>
+                    <property name="margin_start">30</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <child>
@@ -403,7 +393,6 @@ NA</property>
                         <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Virtualisation:</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -418,7 +407,6 @@ NA</property>
                         <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">NA</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -433,7 +421,6 @@ NA</property>
                         <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">L1 cache:</property>
                         <property name="justify">center</property>
                       </object>
                       <packing>
@@ -449,7 +436,6 @@ NA</property>
                         <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">NA</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -464,7 +450,6 @@ NA</property>
                         <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Maximum Speed:</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -479,7 +464,6 @@ NA</property>
                         <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">NA</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>

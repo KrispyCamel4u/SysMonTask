@@ -9,6 +9,5 @@ for i in range(1,100):
     time.sleep(1) 
     d1=d2  
 """
-d=ps.net_if_stats()
-if d['wlo1'][0]==True:
-    print("het")
+d=ps.net_if_addrs()
+print(d)

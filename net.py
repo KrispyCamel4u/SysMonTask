@@ -164,72 +164,86 @@ def netinit(self):
 
 def netUpdate(self):
     nettemp=ps.net_io_counters(pernic=True)
+    nettempaddr=ps.net_if_addrs()
     self.nett2=time.time()##
     timenetDiff=self.nett2-self.nett1
     self.netstate2=[]
+    self.byterecpersecString=[]
+    self.bytesendpersecString=[]
     for i in range(0,self.numOfNets):
-        self.netstate2.append(nettemp[self.netNameList[i]])
+        try:
+            self.netstate2.append(nettemp[self.netNameList[i]])
+        except:
+            pass
 
     self.netDiff=[]
     for i in range(0,self.numOfNets):
-        self.netDiff.append([x2-x1 for x1,x2 in zip(self.netstate1[i],self.netstate2[i])])
-        bytesendpersec=(self.netDiff[i][0]/timenetDiff)/1000           ##default in KB
-        byterecpersec=(self.netDiff[i][1]/timenetDiff)/1000  
-        totalbyterec=nettemp[self.netNameList[i]][1]/1000            ##default in KB
-        totalbytesent=nettemp[self.netNameList[i]][0]/1000
+        try:
+            self.netDiff.append([x2-x1 for x1,x2 in zip(self.netstate1[i],self.netstate2[i])])
+            bytesendpersec=(self.netDiff[i][0]/timenetDiff)/1000           ##default in KB
+            byterecpersec=(self.netDiff[i][1]/timenetDiff)/1000  
+            totalbyterec=nettemp[self.netNameList[i]][1]/1000            ##default in KB
+            totalbytesent=nettemp[self.netNameList[i]][0]/1000
 
-        ## total received
-        if totalbyterec > 1000:   ###MB
-            if totalbyterec > 1000000:    ##GB
-                netscalefactor=1000000
-                suffix='GB'
+            ## total received
+            if totalbyterec > 1000:   ###MB
+                if totalbyterec > 1000000:    ##GB
+                    netscalefactor=1000000
+                    suffix='GB'
+                else:
+                    netscalefactor=1000
+                    suffix='MB'
             else:
-                netscalefactor=1000
-                suffix='MB'
-        else:
-            netscalefactor=1
-            suffix='KB'
-     
-        self.netWidgetList[i].nettotalreclabelvalue.set_text("{:.1f}".format(totalbyterec/netscalefactor)+suffix)
+                netscalefactor=1
+                suffix='KB'
+        
+            self.netWidgetList[i].nettotalreclabelvalue.set_text("{:.1f}".format(totalbyterec/netscalefactor)+suffix)
 
-        ## total bytes sent
-        if totalbytesent > 1000:   ###MB
-            if totalbyterec > 1000000:    ##GB
-                netscalefactor=1000000
-                suffix='GB'
+            ## total bytes sent
+            if totalbytesent > 1000:   ###MB
+                if totalbyterec > 1000000:    ##GB
+                    netscalefactor=1000000
+                    suffix='GB'
+                else:
+                    netscalefactor=1000
+                    suffix='MB'
             else:
+                netscalefactor=1
+                suffix='KB'
+            self.netWidgetList[i].nettotalsentlabelvalue.set_text("{:.1f}".format(totalbytesent/netscalefactor)+suffix)
+
+            ## send per sec (uploading speed)
+            if bytesendpersec > 1000:   ###MB
                 netscalefactor=1000
-                suffix='MB'
-        else:
-            netscalefactor=1
-            suffix='KB'
-        self.netWidgetList[i].nettotalsentlabelvalue.set_text("{:.1f}".format(totalbytesent/netscalefactor)+suffix)
+                suffix='MB/s'
+            else:
+                netscalefactor=1
+                suffix='KB/s'
+            self.bytesendpersecString.append("{:.1f}".format(bytesendpersec/netscalefactor)+suffix)
+            self.netWidgetList[i].netsendlabelvalue.set_text(self.bytesendpersecString[i])
 
-        ## send per sec (uploading speed)
-        if bytesendpersec > 1000:   ###MB
-            netscalefactor=1000
-            suffix='MB/s'
-        else:
-            netscalefactor=1
-            suffix='KB/s'
-        self.netWidgetList[i].netsendlabelvalue.set_text("{:.1f}".format(bytesendpersec/netscalefactor)+suffix)
+            ## received per sec (downloading speed)
+            if byterecpersec > 1000:   ###MB
+                netscalefactor=1000
+                suffix='MB/s'
+            else:
+                netscalefactor=1
+                suffix='KB/s'
+            self.byterecpersecString.append("{:.1f}".format(byterecpersec/netscalefactor)+suffix)
+            self.netWidgetList[i].netreclabelvalue.set_text(self.byterecpersecString[i])
 
-        ## received per sec (downloading speed)
-        if byterecpersec > 1000:   ###MB
-            netscalefactor=1000
-            suffix='MB/s'
-        else:
-            netscalefactor=1
-            suffix='KB/s'
-        self.netWidgetList[i].netreclabelvalue.set_text("{:.1f}".format(byterecpersec/netscalefactor)+suffix)
+            self.netReceiveArray[i].pop()
+            self.netReceiveArray[i].insert(0,byterecpersec)         ## in KBs
 
-        self.netReceiveArray[i].pop()
-        self.netReceiveArray[i].insert(0,byterecpersec)         ## in KBs
+            self.netSendArray[i].pop()
+            self.netSendArray[i].insert(0,bytesendpersec)
 
-        self.netSendArray[i].pop()
-        self.netSendArray[i].insert(0,bytesendpersec)
+            self.netWidgetList[i].givedata(self,i)
 
-        self.netWidgetList[i].givedata(self,i)
+            self.netWidgetList[i].net4addrlablevalue.set_text(nettempaddr[self.netNameList[i]][0][1])
+            self.netWidgetList[i].net6addrlabelvalue.set_text(nettempaddr[self.netNameList[i]][1][1])
+        except:
+            pass
 
 
     self.netstate1=self.netstate2
