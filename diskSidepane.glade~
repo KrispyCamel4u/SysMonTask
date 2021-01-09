@@ -45,7 +45,7 @@
             <property name="label" translatable="yes">Disk</property>
             <attributes>
               <attribute name="weight" value="medium"/>
-              <attribute name="scale" value="1.6000000000000001"/>
+              <attribute name="scale" value="1.5"/>
             </attributes>
           </object>
           <packing>
