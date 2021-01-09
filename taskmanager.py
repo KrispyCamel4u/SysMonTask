@@ -185,11 +185,13 @@ class myclass:
         except:
             print("Failed to get Threads")
             pass
-
-        #cpu package temp
-        self.cpuTempLabelValue.set_text(str(int(ps.sensors_temperatures()['coretemp'][0][1])))
-        # cpu fan speed
-
+        
+        try:
+            #cpu package temp
+            self.cpuTempLabelValue.set_text(str(int(ps.sensors_temperatures()['coretemp'][0][1])))
+            # cpu fan speed
+        except:
+            pass
         self.cpuSidePaneLabelValue.set_text(cpuUtilString+' '+cpuSpeedstring)
 
         self.memoryTab()
