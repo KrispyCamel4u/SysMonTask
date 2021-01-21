@@ -3,6 +3,8 @@
 <interface>
   <requires lib="gtk+" version="3.16"/>
   <template class="diskTabWidget" parent="GtkScrolledWindow">
+    <property name="width_request">400</property>
+    <property name="height_request">490</property>
     <property name="visible">True</property>
     <property name="can_focus">True</property>
     <property name="hexpand">True</property>
@@ -197,34 +199,17 @@
                     <property name="width_request">280</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="column_homogeneous">True</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">15</property>
-                        <property name="margin_start">15</property>
                         <property name="margin_top">10</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">Active Time</property>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="margin_top">10</property>
-                        <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Read/Write Time </property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
+                        <property name="left_attach">2</property>
                         <property name="top_attach">0</property>
                       </packing>
                     </child>
@@ -233,8 +218,6 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">15</property>
-                        <property name="margin_start">15</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">NA</property>
                         <attributes>
@@ -243,7 +226,7 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
+                        <property name="left_attach">2</property>
                         <property name="top_attach">1</property>
                       </packing>
                     </child>
@@ -252,31 +235,13 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">15</property>
-                        <property name="margin_start">15</property>
+                        <property name="margin_top">10</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">Read Speed</property>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">2</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="diskresponselabelvalue">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">NA</property>
-                        <attributes>
-                          <attribute name="weight" value="normal"/>
-                          <attribute name="scale" value="1.8"/>
-                        </attributes>
-                      </object>
-                      <packing>
                         <property name="left_attach">1</property>
-                        <property name="top_attach">1</property>
+                        <property name="top_attach">0</property>
                       </packing>
                     </child>
                     <child>
@@ -298,8 +263,6 @@
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
                         <property name="valign">start</property>
-                        <property name="margin_left">15</property>
-                        <property name="margin_start">15</property>
                         <property name="hexpand">True</property>
                         <property name="vexpand">False</property>
                         <property name="label" translatable="yes">NA</property>
@@ -309,8 +272,8 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">3</property>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">1</property>
                       </packing>
                     </child>
                     <child>
@@ -333,32 +296,46 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="1">
+                        <property name="width_request">0</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="margin_left">15</property>
-                        <property name="margin_start">15</property>
-                        <property name="margin_top">10</property>
-                        <property name="hexpand">True</property>
+                        <property name="halign">end</property>
+                        <property name="label" translatable="yes">|</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="scale" value="1.8"/>
+                          <attribute name="foreground" value="#3534f0f0afae"/>
+                        </attributes>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
-                        <property name="top_attach">4</property>
+                        <property name="top_attach">3</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="2">
+                        <property name="width_request">0</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="margin_top">10</property>
-                        <property name="hexpand">True</property>
+                        <property name="halign">end</property>
+                        <property name="label" translatable="yes">|</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="scale" value="1.8"/>
+                          <attribute name="foreground" value="#6d6cffff0b0a"/>
+                        </attributes>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">4</property>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">1</property>
                       </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
                     </child>
                     <child>
                       <placeholder/>

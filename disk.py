@@ -20,7 +20,6 @@ class diskTabWidget(g.ScrolledWindow):
     diskdrawarea2=GtkTemplate.Child()
     disktextlabel=GtkTemplate.Child()
     diskactivelabelvalue=GtkTemplate.Child()
-    diskresponselabelvalue=GtkTemplate.Child()
     diskreadlabelvalue=GtkTemplate.Child()
     diskwritelabelvalue=GtkTemplate.Child()
     diskcurrenspeedlabelvalue=GtkTemplate.Child()
@@ -235,7 +234,6 @@ def diskTabUpdate(self):
         self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString[i])
         self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diskDiff[i][2]/1000000)+'MB')
         self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diskDiff[i][3]/1000000)+'MB')
-        self.diskWidgetList[i].diskresponselabelvalue.set_text(str(self.diskDiff[i][4])+'/'+str(self.diskDiff[i][4])+' ms')
 
         self.diskActiveArray[i].pop()
         self.diskActiveArray[i].insert(0,(self.diskDiff[i][8])/(10*timediskDiff))##
