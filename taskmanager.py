@@ -64,7 +64,7 @@ class myclass:
         self.timeinterval=850     #time interval in mili
 
         # timer binding 
-        go.timeout_add(self.timeinterval,self.updater)
+        self.timehandler=go.timeout_add(self.timeinterval,self.updater)
 
         ## cpu draw tab labels
         self.cpuInfoLabel=self.builder.get_object('cpuinfolabel')
@@ -104,10 +104,10 @@ class myclass:
 
     def on_refresh_activate(self,menuitem,data=None):
         print("refreshing")
-        self.memoryinitalisation()
-        self.diskinitialisation()
-        self.netinitialisation()
-        self.sidepaneinitialisation()
+        # self.memoryinitalisation()
+        # self.diskinitialisation()
+        # self.netinitialisation()
+        # self.sidepaneinitialisation()
     
     # method to show the about dialog
     def on_about_activate(self,menuitem,data=None):
@@ -116,6 +116,23 @@ class myclass:
         self.aboutdialog.hide()
         print("aboutdialog closed")
     
+
+    def updatespeed_on_activate(self,menuitem,data=None):
+        print("update speed")
+        update_speed=g.Buildable.get_name(menuitem)
+        if(update_speed=='low'):
+            go.source_remove(self.timehandler)
+            self.timehandler=go.timeout_add(1400,self.updater)
+        elif(update_speed=='normal'):
+            go.source_remove(self.timehandler)
+            self.timehandler=go.timeout_add(850,self.updater)
+        elif(update_speed=='high'):
+            go.source_remove(self.timehandler)
+            self.timehandler=go.timeout_add(500,self.updater)
+        elif(update_speed=='paused'):
+            go.source_remove(self.timehandler)
+            self.timehandler=go.timeout_add(1000000000,self.updater)
+
     # method for notebook switcher
     #def on_notebook_switch_page(self,notebook,page,page_num,data=None):
 

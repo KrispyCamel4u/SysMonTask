@@ -125,39 +125,39 @@
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkRadioMenuItem" id="paused">
+                              <object class="GtkMenuItem" id="paused">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Paused</property>
                                 <property name="use_underline">True</property>
-                                <property name="draw_as_radio">True</property>
+                                <signal name="activate" handler="updatespeed_on_activate" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkRadioMenuItem" id="low">
+                              <object class="GtkMenuItem" id="low">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Low</property>
                                 <property name="use_underline">True</property>
-                                <property name="draw_as_radio">True</property>
+                                <signal name="activate" handler="updatespeed_on_activate" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkRadioMenuItem" id="normal">
+                              <object class="GtkMenuItem" id="normal">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">Normal</property>
                                 <property name="use_underline">True</property>
-                                <property name="draw_as_radio">True</property>
+                                <signal name="activate" handler="updatespeed_on_activate" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkRadioMenuItem" id="high">
+                              <object class="GtkMenuItem" id="high">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
                                 <property name="label" translatable="yes">High</property>
                                 <property name="use_underline">True</property>
-                                <property name="draw_as_radio">True</property>
+                                <signal name="activate" handler="updatespeed_on_activate" swapped="no"/>
                               </object>
                             </child>
                           </object>
