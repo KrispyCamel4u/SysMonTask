@@ -259,23 +259,27 @@ def gpuinit(self):
     self.gpuEncodingArray=[0]*100
     self.gpuDecodingArray=[0]*100
     self.gpuVramArray=[0]*100
+    try:
+        p=os.popen('nvidia-smi -q -x')
+        xmlout=p.read()
+        p.close()
+        gpuinfoRoot=fromstring(xmlout)
+        print('okk')
+        self.gpuWidget=gpuTabWidget()
+        self.performanceStack.add_titled(self.gpuWidget,'gpuStack','GPU')
+        self.gpuName=gpuinfoRoot.find('gpu').find('product_name').text
+        self.gpuWidget.gpuinfolabel.set_text(self.gpuName)
+        self.totalvram=gpuinfoRoot.find('gpu').find('fb_memory_usage').find('total').text
+        self.gpuWidget.gpuvramlabelvalue.set_text(self.totalvram)
+        self.gpuWidget.gpudriverlabelvalue.set_text(gpuinfoRoot.find('driver_version').text)
+        self.gpuWidget.gpucudalabelvalue.set_text(gpuinfoRoot.find('cuda_version').text)
+        self.gpuWidget.gpumaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('graphics_clock').text)
+        self.gpuWidget.gpuvrammaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('mem_clock').text)
 
-    p=os.popen('nvidia-smi -q -x')
-    xmlout=p.read()
-    p.close()
-    gpuinfoRoot=fromstring(xmlout)
-    print('okk')
-    self.gpuWidget=gpuTabWidget()
-    self.performanceStack.add_titled(self.gpuWidget,'gpuStack','GPU')
-    self.gpuWidget.gpuinfolabel.set_text(gpuinfoRoot.find('gpu').find('product_name').text)
-    self.totalvram=gpuinfoRoot.find('gpu').find('fb_memory_usage').find('total').text
-    self.gpuWidget.gpuvramlabelvalue.set_text(self.totalvram)
-    self.gpuWidget.gpudriverlabelvalue.set_text(gpuinfoRoot.find('driver_version').text)
-    self.gpuWidget.gpucudalabelvalue.set_text(gpuinfoRoot.find('cuda_version').text)
-    self.gpuWidget.gpumaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('graphics_clock').text)
-    self.gpuWidget.gpuvrammaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('mem_clock').text)
-
-    self.gpuWidget.givedata(self)
+        self.gpuWidget.givedata(self)
+    except:
+        print('no nvidia gpu found')
+        self.isNvidiagpu=0
 
     
 def gpuUpdate(self):
@@ -284,15 +288,15 @@ def gpuUpdate(self):
     p.close()
     gpuinfoRoot=fromstring(xmlout)
     self.vramused=gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text
-    gpuutil=gpuinfoRoot.find('gpu').find('utilization').find('gpu_util').text
-    self.gpuWidget.gpuutilisationlabelvalue.set_text(gpuutil)
+    self.gpuutil=gpuinfoRoot.find('gpu').find('utilization').find('gpu_util').text
+    self.gpuWidget.gpuutilisationlabelvalue.set_text(self.gpuutil)
     self.gpuWidget.gpuvramusagelabelvalue.set_text(self.vramused[:-3]+'/'+self.totalvram)
     self.gpuWidget.gputemplabelvalue.set_text(gpuinfoRoot.find('gpu').find('temperature').find('gpu_temp').text)
     self.gpuWidget.gpushaderspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('graphics_clock').text)
     self.gpuWidget.gpuvramspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('mem_clock').text)
 
     self.gpuUtilArray.pop()
-    self.gpuUtilArray.insert(0,int(gpuutil[:-1]))
+    self.gpuUtilArray.insert(0,int(self.gpuutil[:-1]))
     self.gpuVramArray.pop()
     self.gpuVramArray.insert(0,int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
     self.gpuEncodingArray.pop()

@@ -157,6 +157,68 @@ class netSidepaneWidget(g.Box):
 
         return False
 
+@GtkTemplate(ui='gpuSidepane.glade')
+class gpuSidepaneWidget(g.Box):
+
+    # Required else you would need to specify the full module
+    # name in mywidget.ui (__main__+MyWidget)
+    __gtype_name__ = 'gpuSidepaneWidget'
+    
+    gpusidepanetextlabel= GtkTemplate.Child()
+    gpusidepanelabelvalue = GtkTemplate.Child()
+    gpusidepanedrawarea=GtkTemplate.Child()
+
+
+    # Alternative way to specify multiple widgets
+    #label1, entry = GtkTemplate.Child.widgets(2)
+
+    def __init__(self):
+        super(g.Box, self).__init__()
+        
+        # This must occur *after* you initialize your base
+        self.init_template()
+    
+    def givedata(self,secondself):
+        self.gpuutilArray=secondself.gpuUtilArray
+    
+    @GtkTemplate.Callback
+    def gpuSidepaneDrawArea_draw(self,dr,cr):
+        cr.set_line_width(2)
+
+        w=self.gpusidepanedrawarea.get_allocated_width()
+        h=self.gpusidepanedrawarea.get_allocated_height()
+        scalingfactor=h/100.0
+        #creating outer rectangle
+        cr.set_source_rgba(0,.454,.878,1)
+        cr.set_line_width(3)
+        cr.rectangle(0,0,w,h)
+        cr.stroke()
+        
+        
+        stepsize=w/99.0
+        #print("in draw stepsize",stepsize)
+        for i in range(0,99):
+            # not effcient way to fill the bars (drawing)
+            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i])+2)
+            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1])+2)
+            cr.line_to((i+1)*stepsize,h)
+            cr.line_to(i*stepsize,h)
+            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i])+2)
+
+            cr.fill()
+            cr.stroke()
+            # for outer line
+            cr.set_line_width(1.5)
+            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i])+2)
+            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1])+2)
+            cr.stroke()
+
+
+        return False
+
+
 
 def sidepaneinit(self):
     print("initialisating sidepane")
@@ -181,6 +243,12 @@ def sidepaneinit(self):
             self.netSidepaneWidgetList[i].netsidepanetextlabel.set_text(self.netNameList[i])
             self.netSidepaneWidgetList[i].givedata(self,i)
     
+    if(self.isNvidiagpu==1):
+        self.gpuSidePaneWidget=gpuSidepaneWidget()
+        self.sidepaneBox.pack_start(self.gpuSidePaneWidget,True,True,0)
+        self.gpuSidePaneWidget.gpusidepanetextlabel.set_text(self.gpuName.split()[-2]+self.gpuName.split()[-1])
+        self.gpuSidePaneWidget.givedata(self)
+    
 
 
 
@@ -202,3 +270,7 @@ def sidePaneUpdate(self):
                 self.diskSidepaneWidgetList[i].givedata(self,i)
             except:
                 pass
+    
+    if(self.isNvidiagpu==1):
+        self.gpuSidePaneWidget.gpusidepanelabelvalue.set_text(self.gpuutil)
+        self.gpuSidePaneWidget.givedata(self)
