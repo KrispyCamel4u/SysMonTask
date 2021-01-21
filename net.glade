@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.36.0 -->
 <interface>
-  <requires lib="gtk+" version="3.22"/>
+  <requires lib="gtk+" version="3.16"/>
   <template class="networkWidget" parent="GtkScrolledWindow">
     <property name="width_request">400</property>
     <property name="height_request">500</property>
@@ -32,7 +32,6 @@
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
                     <property name="valign">end</property>
-                    <property name="margin_left">15</property>
                     <property name="margin_start">15</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Ethernet</property>
@@ -54,7 +53,6 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="margin_left">15</property>
                     <property name="margin_start">15</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Throughput</property>
@@ -70,7 +68,6 @@
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
                     <property name="valign">end</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_end">15</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">
@@ -90,7 +87,6 @@ NA</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_end">15</property>
                     <property name="hexpand">False</property>
                     <property name="label" translatable="yes">100 MB/s</property>
@@ -135,8 +131,6 @@ NA</property>
                 <property name="border_width">5</property>
                 <child>
                   <object class="GtkGrid">
-                    <property name="width_request">300</property>
-                    <property name="height_request">200</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
@@ -328,7 +322,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="margin_top">10</property>
                         <property name="hexpand">True</property>
@@ -344,7 +337,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="margin_top">10</property>
                         <property name="hexpand">True</property>
@@ -360,7 +352,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">IPv6 Address:</property>
@@ -375,7 +366,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">NA</property>
@@ -390,7 +380,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
                       </object>
@@ -404,7 +393,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
                       </object>
@@ -418,7 +406,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
                         <property name="justify">center</property>
@@ -433,7 +420,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
                       </object>
@@ -447,7 +433,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
                       </object>
@@ -461,7 +446,6 @@ NA</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
                       </object>

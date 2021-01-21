@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.36.0 -->
 <interface>
   <requires lib="gtk+" version="3.16"/>
-  <template class="diskTabWidget" parent="GtkScrolledWindow">
+  <template class="gpuTabWidget" parent="GtkScrolledWindow">
     <property name="visible">True</property>
     <property name="can_focus">True</property>
     <property name="hexpand">True</property>
@@ -25,15 +25,14 @@
                 <property name="margin_top">2</property>
                 <property name="hexpand">True</property>
                 <child>
-                  <object class="GtkLabel" id="disktextlabel">
+                  <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
                     <property name="valign">center</property>
-                    <property name="margin_left">15</property>
                     <property name="margin_start">15</property>
                     <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Disk  </property>
+                    <property name="label" translatable="yes">GPU</property>
                     <property name="width_chars">9</property>
                     <property name="max_width_chars">9</property>
                     <attributes>
@@ -48,27 +47,11 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="margin_left">15</property>
-                    <property name="margin_start">15</property>
-                    <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Active Time</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="diskinfolabel">
+                  <object class="GtkLabel" id="gpuinfolabel">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">end</property>
                     <property name="valign">center</property>
-                    <property name="margin_right">15</property>
                     <property name="margin_end">20</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">NA</property>
@@ -82,15 +65,288 @@
                     <property name="top_attach">0</property>
                   </packing>
                 </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkGrid">
+                <property name="width_request">600</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="row_homogeneous">True</property>
+                <property name="column_homogeneous">True</property>
                 <child>
-                  <object class="GtkLabel">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="halign">end</property>
-                    <property name="margin_right">15</property>
-                    <property name="margin_end">20</property>
-                    <property name="hexpand">False</property>
-                    <property name="label" translatable="yes">100%</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_start">15</property>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">Utilisation</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                            <property name="margin_end">2</property>
+                            <property name="hexpand">False</property>
+                            <property name="label" translatable="yes">100%</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkDrawingArea" id="gpuutildrawarea">
+                        <property name="width_request">280</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_start">15</property>
+                        <property name="margin_end">4</property>
+                        <property name="hexpand">True</property>
+                        <signal name="draw" handler="gpuutildrawarea_draw" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_start">2</property>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">Vram usage</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="gpuvramlabelvalue">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                            <property name="valign">end</property>
+                            <property name="margin_right">20</property>
+                            <property name="margin_end">20</property>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">NA</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkDrawingArea" id="gpuvramdrawarea">
+                        <property name="width_request">280</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">15</property>
+                        <property name="margin_right">15</property>
+                        <property name="margin_start">4</property>
+                        <property name="margin_end">15</property>
+                        <property name="hexpand">True</property>
+                        <signal name="draw" handler="gpuvramdrawarea_draw" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_left">15</property>
+                            <property name="margin_start">15</property>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">Encoding</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                            <property name="margin_right">2</property>
+                            <property name="margin_end">2</property>
+                            <property name="hexpand">False</property>
+                            <property name="label" translatable="yes">100%</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkDrawingArea" id="gpuencodingdrawarea">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">15</property>
+                        <property name="margin_right">4</property>
+                        <property name="margin_start">15</property>
+                        <property name="margin_end">4</property>
+                        <property name="hexpand">True</property>
+                        <signal name="draw" handler="gpuencodingdrawarea_draw" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">start</property>
+                            <property name="margin_left">2</property>
+                            <property name="margin_start">2</property>
+                            <property name="hexpand">True</property>
+                            <property name="label" translatable="yes">Decoding</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="halign">end</property>
+                            <property name="margin_right">20</property>
+                            <property name="margin_end">20</property>
+                            <property name="hexpand">False</property>
+                            <property name="label" translatable="yes">100%</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkDrawingArea" id="gpudecodingdrawarea">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="margin_left">4</property>
+                        <property name="margin_right">15</property>
+                        <property name="margin_start">4</property>
+                        <property name="margin_end">15</property>
+                        <property name="hexpand">True</property>
+                        <signal name="draw" handler="gpudecodingdrawarea_draw" swapped="no"/>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -105,88 +361,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkDrawingArea" id="diskdrawarea1">
-                <property name="width_request">600</property>
-                <property name="height_request">150</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">15</property>
-                <property name="margin_right">15</property>
-                <property name="margin_start">15</property>
-                <property name="margin_end">15</property>
-                <property name="margin_top">3</property>
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
-                <signal name="draw" handler="on_diskDrawArea1_draw" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkGrid">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="margin_left">15</property>
-                    <property name="margin_start">15</property>
-                    <property name="margin_top">15</property>
-                    <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">Disk Transfer Rate</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="diskcurrenspeedlabelvalue">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">end</property>
-                    <property name="valign">end</property>
-                    <property name="margin_right">20</property>
-                    <property name="margin_end">20</property>
-                    <property name="hexpand">True</property>
-                    <property name="label" translatable="yes">1000MB</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">3</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkDrawingArea" id="diskdrawarea2">
-                <property name="height_request">100</property>
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">15</property>
-                <property name="margin_right">15</property>
-                <property name="margin_start">15</property>
-                <property name="margin_end">15</property>
-                <property name="hexpand">False</property>
-                <signal name="draw" handler="on_diskDrawArea2_draw" swapped="no"/>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkPaned">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -197,7 +371,8 @@
                     <property name="width_request">280</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="column_homogeneous">True</property>
+                    <property name="margin_end">30</property>
+                    <property name="column_spacing">15</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
@@ -207,7 +382,7 @@
                         <property name="margin_start">15</property>
                         <property name="margin_top">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Active Time</property>
+                        <property name="label" translatable="yes">Utilisation</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -219,9 +394,10 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
+                        <property name="margin_end">5</property>
                         <property name="margin_top">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Read/Write Time </property>
+                        <property name="label" translatable="yes">Dedicated Memory usage</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -229,7 +405,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="diskactivelabelvalue">
+                      <object class="GtkLabel" id="gpuutilisationlabelvalue">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
@@ -255,7 +431,7 @@
                         <property name="margin_left">15</property>
                         <property name="margin_start">15</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Read Speed</property>
+                        <property name="label" translatable="yes">Temperature</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -263,10 +439,11 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="diskresponselabelvalue">
+                      <object class="GtkLabel" id="gpuvramusagelabelvalue">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
+                        <property name="margin_end">5</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">NA</property>
                         <attributes>
@@ -285,7 +462,7 @@
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Write Speed</property>
+                        <property name="label" translatable="yes">Speed(shader)</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -293,7 +470,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="diskreadlabelvalue">
+                      <object class="GtkLabel" id="gputemplabelvalue">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
@@ -314,7 +491,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="diskwritelabelvalue">
+                      <object class="GtkLabel" id="gpushaderspeedlabelvalue">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
@@ -333,32 +510,10 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="margin_left">15</property>
-                        <property name="margin_start">15</property>
-                        <property name="margin_top">10</property>
-                        <property name="hexpand">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">4</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="margin_top">10</property>
-                        <property name="hexpand">True</property>
-                      </object>
-                      <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">4</property>
-                      </packing>
+                      <placeholder/>
                     </child>
                     <child>
                       <placeholder/>
@@ -377,8 +532,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="margin_left">44</property>
-                    <property name="margin_start">44</property>
+                    <property name="margin_start">30</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <child>
@@ -386,10 +540,10 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="margin_top">10</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Driver version:</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -397,7 +551,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="gpudriverlabelvalue">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
@@ -405,6 +559,7 @@
                         <property name="margin_start">25</property>
                         <property name="margin_top">10</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -419,6 +574,7 @@
                         <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Cuda version:</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -426,13 +582,14 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="gpucudalabelvalue">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
                         <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -447,6 +604,7 @@
                         <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Gpu Max speed:</property>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -454,13 +612,14 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="gpumaxspeedlabelvalue">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
                         <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -476,6 +635,7 @@
                         <property name="margin_left">10</property>
                         <property name="margin_start">10</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Vram spead:</property>
                         <property name="justify">center</property>
                       </object>
                       <packing>
@@ -484,17 +644,50 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel">
+                      <object class="GtkLabel" id="gpuvramspeedlabelvalue">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="halign">start</property>
                         <property name="margin_left">25</property>
                         <property name="margin_start">25</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
                         <property name="top_attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="valign">start</property>
+                        <property name="margin_left">10</property>
+                        <property name="margin_start">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Vram Max spead:</property>
+                        <property name="justify">center</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">0</property>
+                        <property name="top_attach">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="gpuvrammaxspeedlabelvalue">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin_left">25</property>
+                        <property name="margin_start">25</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
+                      </object>
+                      <packing>
+                        <property name="left_attach">1</property>
+                        <property name="top_attach">4</property>
                       </packing>
                     </child>
                   </object>

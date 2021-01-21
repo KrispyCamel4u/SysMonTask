@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.36.0 -->
 <interface>
-  <requires lib="gtk+" version="3.0"/>
+  <requires lib="gtk+" version="3.16"/>
   <template class="diskSidepaneWidget" parent="GtkBox">
+    <property name="width_request">230</property>
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="halign">start</property>
@@ -15,7 +16,6 @@
         <property name="can_focus">False</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="margin_left">8</property>
         <property name="margin_start">8</property>
         <property name="margin_top">8</property>
         <property name="margin_bottom">6</property>
@@ -33,7 +33,6 @@
         <property name="can_focus">False</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="margin_left">10</property>
         <property name="margin_start">10</property>
         <child>
           <object class="GtkLabel" id="disksidepanetextlabel">

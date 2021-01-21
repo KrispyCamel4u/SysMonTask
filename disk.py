@@ -52,12 +52,14 @@ class diskTabWidget(g.ScrolledWindow):
         speedstep=100
         maximumcurrentspeed=max(max(self.diskreadArray),max(self.diskwriteArray))
         currentscalespeed=self.diskmxfactor*speedstep
-        while(currentscalespeed<maximumcurrentspeed):
-            self.diskmxfactor+=1
-            currentscalespeed=self.diskmxfactor*speedstep
-        while(currentscalespeed>maximumcurrentspeed and self.diskmxfactor>1):
-            self.diskmxfactor-=1
-            currentscalespeed=self.diskmxfactor*speedstep
+        if(currentscalespeed<maximumcurrentspeed):
+            while(currentscalespeed<maximumcurrentspeed):
+                self.diskmxfactor+=1
+                currentscalespeed=self.diskmxfactor*speedstep
+        else:
+            while(currentscalespeed>maximumcurrentspeed+speedstep and self.diskmxfactor>1):
+                self.diskmxfactor-=1
+                currentscalespeed=self.diskmxfactor*speedstep
         
         self.diskcurrenspeedlabelvalue.set_text(str(currentscalespeed)+'MB')
 

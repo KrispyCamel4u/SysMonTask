@@ -3,12 +3,14 @@
 #gi.require_version("Gtk", "3.24")
 
 from gi.repository import Gtk as g , GObject as go
-import os,re,psutil as ps,cairo
+import psutil as ps,cairo
+import os,re
 
 from mem import *
 from sidepane import *
 from disk import *
 from net import *
+from gpu import *
 
 class myclass:
     flag=0      #flag for the updator 
@@ -27,6 +29,9 @@ class myclass:
         myclass.netinitialisation=netinit
         myclass.netTabUpdate=netUpdate
 
+        myclass.gpuinitialisation=gpuinit
+        myclass.gpuTabUpdate=gpuUpdate
+
         self.gladefile="taskManager.glade"
         self.builder=g.Builder()
         self.builder.add_from_file(self.gladefile)
@@ -42,6 +47,7 @@ class myclass:
         self.memoryinitalisation()
         self.diskinitialisation()
         self.netinitialisation()
+        self.gpuinitialisation()
 
 
         # for about dialog 
@@ -96,6 +102,13 @@ class myclass:
         print("quit from menu",g.Buildable.get_name(menuitem))
         g.main_quit()
 
+    def on_refresh_activate(self,menuitem,data=None):
+        print("refreshing")
+        self.memoryinitalisation()
+        self.diskinitialisation()
+        self.netinitialisation()
+        self.sidepaneinitialisation()
+    
     # method to show the about dialog
     def on_about_activate(self,menuitem,data=None):
         print("aboutdialog opening")
@@ -201,6 +214,8 @@ class myclass:
             self.netTabUpdate() 
             for i in range(0,self.numOfNets):
                 g.Widget.queue_draw(self.netWidgetList[i].netdrawarea)
+        if(self.isNvidiagpu==1):
+            self.gpuTabUpdate()
 
         self.sidepaneUpdate()
 
@@ -214,6 +229,10 @@ class myclass:
             g.Widget.queue_draw(self.diskWidgetList[i].diskdrawarea1)
             g.Widget.queue_draw(self.diskWidgetList[i].diskdrawarea2)
 
+        g.Widget.queue_draw(self.gpuWidget.gpuutildrawarea)
+        g.Widget.queue_draw(self.gpuWidget.gpuvramdrawarea)
+        g.Widget.queue_draw(self.gpuWidget.gpuencodingdrawarea)
+        g.Widget.queue_draw(self.gpuWidget.gpudecodingdrawarea)
         ##  sidepane  
         g.Widget.queue_draw(self.cpuSidePaneDrawArea)
         g.Widget.queue_draw(self.memSidePaneDrawArea)
