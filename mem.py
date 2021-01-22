@@ -29,7 +29,7 @@ def memorytabinit(self):
     self.memInfoLabel.set_text(str(self.memTotal)+'GiB')
 
     try:
-        p=os.popen('sudo dmidecode -t memory|grep -E -i "memory speed"')
+        p=os.popen('dmidecode -t memory|grep -E -i "memory speed"')
         dmidecodetemp=p.readlines()
         p.close()
         memspeed=100000000
@@ -51,7 +51,7 @@ def memorytabinit(self):
         pass
 
     try:
-        p=os.popen('sudo dmidecode -t memory|grep -E -m1 -i "form factor"')
+        p=os.popen('dmidecode -t memory|grep -E -m1 -i "form factor"')
         self.memFormLabelValue.set_text(re.sub('\s','',p.read().split(':')[1]))
         p.close()
     except:

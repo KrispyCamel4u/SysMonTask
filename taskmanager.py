@@ -104,10 +104,23 @@ class myclass:
 
     def on_refresh_activate(self,menuitem,data=None):
         print("refreshing")
-        # self.memoryinitalisation()
-        # self.diskinitialisation()
-        # self.netinitialisation()
-        # self.sidepaneinitialisation()
+        if(self.isNvidiagpu==1):
+            g.Widget.destroy(self.gpuWidget)
+            g.Widget.destroy(self.gpuSidePaneWidget)
+        for i in range(0,self.numOfDisks):
+            g.Widget.destroy(self.diskWidgetList[i])
+            g.Widget.destroy(self.diskSidepaneWidgetList[i])
+        for i in range(self.numOfNets):
+            g.Widget.destroy(self.netWidgetList[i])
+            g.Widget.destroy(self.netSidepaneWidgetList[i])
+        
+        # g.main_quit()
+        # os.system('runuser -l root -c "python3 taskmanager.py" &')
+        self.memoryinitalisation()
+        self.diskinitialisation()
+        self.netinitialisation()
+        self.gpuinitialisation()
+        self.sidepaneinitialisation()
     
     # method to show the about dialog
     def on_about_activate(self,menuitem,data=None):
@@ -229,8 +242,6 @@ class myclass:
         if len(self.netNameList)!=0:
             # print('dismis')
             self.netTabUpdate() 
-            for i in range(0,self.numOfNets):
-                g.Widget.queue_draw(self.netWidgetList[i].netdrawarea)
         if(self.isNvidiagpu==1):
             self.gpuTabUpdate()
 
@@ -246,16 +257,24 @@ class myclass:
             g.Widget.queue_draw(self.diskWidgetList[i].diskdrawarea1)
             g.Widget.queue_draw(self.diskWidgetList[i].diskdrawarea2)
 
+        for i in range(0,self.numOfNets):
+            g.Widget.queue_draw(self.netWidgetList[i].netdrawarea)
+
         g.Widget.queue_draw(self.gpuWidget.gpuutildrawarea)
         g.Widget.queue_draw(self.gpuWidget.gpuvramdrawarea)
         g.Widget.queue_draw(self.gpuWidget.gpuencodingdrawarea)
         g.Widget.queue_draw(self.gpuWidget.gpudecodingdrawarea)
+
+
         ##  sidepane  
         g.Widget.queue_draw(self.cpuSidePaneDrawArea)
         g.Widget.queue_draw(self.memSidePaneDrawArea)
-        
         for i in range(0,self.numOfDisks):
             g.Widget.queue_draw(self.diskSidepaneWidgetList[i].disksidepanedrawarea)
+        for i in range(self.numOfNets):
+            g.Widget.queue_draw(self.netSidepaneWidgetList[i].netsidepanedrawarea)
+        if(self.isNvidiagpu==1):
+            g.Widget.queue_draw(self.gpuSidePaneWidget.gpusidepanedrawarea)
 
 
         return True
