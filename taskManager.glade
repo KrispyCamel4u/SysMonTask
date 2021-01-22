@@ -8,10 +8,10 @@
     <property name="program_name">Task Manager</property>
     <property name="version">0.1</property>
     <property name="comments" translatable="yes">Windows Task Manager For Linux</property>
-    <property name="website">www.camelneeraj.me</property>
+    <property name="website">https://github.com/KrispyCamel4u</property>
     <property name="authors">Neeraj Kumar</property>
-    <property name="logo">../../Downloads/taskManager.jpeg</property>
-    <property name="license_type">mit-x11</property>
+    <property name="logo_icon_name">utilities-system-monitor-symbolic</property>
+    <property name="license_type">bsd</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can_focus">False</property>
