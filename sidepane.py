@@ -4,8 +4,9 @@
 from gi.repository import Gtk as g,cairo
 from gi_composites import GtkTemplate
 
+from sysmontask import files_dir
 
-@GtkTemplate(ui='diskSidepane.glade')
+@GtkTemplate(ui=files_dir+'/diskSidepane.glade')
 class diskSidepaneWidget(g.Box):
 
     # Required else you would need to specify the full module
@@ -66,7 +67,7 @@ class diskSidepaneWidget(g.Box):
 
         return False
 
-@GtkTemplate(ui='netSidepane.glade')
+@GtkTemplate(ui=files_dir+'/netSidepane.glade')
 class netSidepaneWidget(g.Box):
 
     # Required else you would need to specify the full module
@@ -157,7 +158,7 @@ class netSidepaneWidget(g.Box):
 
         return False
 
-@GtkTemplate(ui='gpuSidepane.glade')
+@GtkTemplate(ui=files_dir+'/gpuSidepane.glade')
 class gpuSidepaneWidget(g.Box):
 
     # Required else you would need to specify the full module

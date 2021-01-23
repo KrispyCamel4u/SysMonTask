@@ -1,9 +1,12 @@
 from gi.repository import Gtk as g
-import os,re,psutil as ps,math,time,cairo
+import psutil as ps,cairo
+from time import time
 from gi_composites import GtkTemplate
+from os import popen
 
+from sysmontask import files_dir
 
-@GtkTemplate(ui='net.glade')
+@GtkTemplate(ui=files_dir+'/net.glade')
 class networkWidget(g.ScrolledWindow):
 
     # Required else you would need to specify the full module
@@ -147,7 +150,7 @@ def netinit(self):
             self.netWidgetList[i].nettextlabel.set_text(self.netNameList[i])
             ##self.netWidgetList[i].netinfolabel.set_text(self.netsize[i])                       ###change for the name
             nettemp=ps.net_io_counters(pernic=True)
-            self.nett1=time.time()
+            self.nett1=time()
             for adpts in nettemp:
                 if adpts==self.netNameList[i]:
                     self.netstate1.append(nettemp[adpts])
@@ -165,7 +168,7 @@ def netinit(self):
 def netUpdate(self):
     nettemp=ps.net_io_counters(pernic=True)
     nettempaddr=ps.net_if_addrs()
-    self.nett2=time.time()##
+    self.nett2=time()##
     timenetDiff=self.nett2-self.nett1
     self.netstate2=[]
     self.byterecpersecString=[]

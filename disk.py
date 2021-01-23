@@ -3,11 +3,14 @@
 # gi.require_version("Gtk", "3.24")
 
 from gi.repository import Gtk as g
-import os,re,psutil as ps,math,time,cairo
+import psutil as ps,cairo
+from time import time
+from os import popen
 from gi_composites import GtkTemplate
 
+from sysmontask import files_dir
 
-@GtkTemplate(ui='disk.glade')
+@GtkTemplate(ui=files_dir+'/disk.glade')
 class diskTabWidget(g.ScrolledWindow):
 
     # Required else you would need to specify the full module
@@ -177,7 +180,7 @@ def diskinit(self):
     self.disklist=[]
     self.disksize=[]
     try:
-        p=os.popen('lsblk -d -o NAME,SIZE')
+        p=popen('lsblk -d -o NAME,SIZE')
         partitions=p.readlines()
         p.close()
         for parts in partitions:
@@ -202,7 +205,7 @@ def diskinit(self):
         self.diskWidgetList[i].disktextlabel.set_text(self.disklist[i])
         self.diskWidgetList[i].diskinfolabel.set_text(self.disksize[i])
         disktemp=ps.disk_io_counters(perdisk=True)
-        self.diskt1=time.time()
+        self.diskt1=time()
         for drives in disktemp:
             if drives==self.disklist[i]:
                self.diskstate1.append(disktemp[drives])
@@ -219,7 +222,7 @@ def diskinit(self):
     
 def diskTabUpdate(self):
     disktemp=ps.disk_io_counters(perdisk=True)
-    self.diskt2=time.time()##
+    self.diskt2=time()##
     timediskDiff=self.diskt2-self.diskt1
     self.diskstate2=[]
     for i in range(0,self.numOfDisks):

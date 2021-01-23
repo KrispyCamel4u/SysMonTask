@@ -46,7 +46,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
     <property name="authors">Neeraj Kumar(camel.neeraj)</property>
     <property name="artists">Neeraj Kumar(camel.neeraj)</property>
-    <property name="logo">icons8-system-task-80.png</property>
+    <property name="logo">SysMonTask.png</property>
     <property name="wrap_license">True</property>
     <property name="license_type">custom</property>
     <child internal-child="vbox">
@@ -84,7 +84,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
     <property name="height_request">600</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">SysMonTask</property>
-    <property name="icon">icons8-heart-monitor-100.png</property>
+    <property name="icon">SysMonTask.png</property>
     <signal name="check-resize" handler="resizer" swapped="no"/>
     <signal name="destroy" handler="on_main_window_destroy" swapped="no"/>
     <child>

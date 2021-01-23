@@ -1,0 +1,15 @@
+[Desktop Entry]
+Name=SysMonTask
+Comment=monitor system state
+
+# change it here for the executable 
+TryExec=/home/neeraj/projects/task_manager/taskmanager.py
+Exec=/home/neeraj/projects/task_manager/taskmanager.py
+
+# change here for icon location 
+Icon=/home/neeraj/projects/task_manager/SysMonTask.png
+Terminal=false
+Type=Application
+StartupNotify=true
+Categories=GNOME;GTK;System;Monitor;
+Keywords=Monitor;System;CPU;Memory;Network;History;Usage;Performance;Task;Manager;Activity;

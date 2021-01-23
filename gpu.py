@@ -3,11 +3,14 @@
 # gi.require_version("Gtk", "3.24")
 
 from gi.repository import Gtk as g
-import os,re,psutil as ps,math,time,cairo
+import psutil as ps,cairo
+from os import popen
 from gi_composites import GtkTemplate
 from xml.etree.ElementTree import fromstring
 
-@GtkTemplate(ui='gpu.glade')
+from sysmontask import files_dir
+
+@GtkTemplate(ui=files_dir+'/gpu.glade')
 class gpuTabWidget(g.ScrolledWindow):
 
     # Required else you would need to specify the full module
@@ -260,7 +263,7 @@ def gpuinit(self):
     self.gpuDecodingArray=[0]*100
     self.gpuVramArray=[0]*100
     try:
-        p=os.popen('nvidia-smi -q -x')
+        p=popen('nvidia-smi -q -x')
         xmlout=p.read()
         p.close()
         gpuinfoRoot=fromstring(xmlout)
@@ -283,7 +286,7 @@ def gpuinit(self):
 
     
 def gpuUpdate(self):
-    p=os.popen('nvidia-smi -q -x')
+    p=popen('nvidia-smi -q -x')
     xmlout=p.read()
     p.close()
     gpuinfoRoot=fromstring(xmlout)
