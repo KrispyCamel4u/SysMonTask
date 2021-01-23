@@ -14,9 +14,9 @@ from gpu import *
 
 class myclass:
     flag=0      #flag for the updator 
-
-    def __init__(self):
-
+    resizerflag=0
+    def __init__(self,passs):
+        self.passs=passs
         myclass.memoryinitalisation=memorytabinit
         myclass.memoryTab=memoryTabUpdate
         #myclass.memDrawFunc1=on_memDrawArea1_draw
@@ -44,6 +44,7 @@ class myclass:
 
 
         self.sidepaneBox=self.builder.get_object('sidepanebox')
+
         self.memoryinitalisation()
         self.diskinitialisation()
         self.netinitialisation()
@@ -116,7 +117,6 @@ class myclass:
         
         # g.main_quit()
         # os.system('runuser -l root -c "python3 taskmanager.py" &')
-        self.memoryinitalisation()
         self.diskinitialisation()
         self.netinitialisation()
         self.gpuinitialisation()
@@ -129,6 +129,11 @@ class myclass:
         self.aboutdialog.hide()
         print("aboutdialog closed")
     
+    def resizer(self,item,data=None):
+        if(myclass.resizerflag==0):
+            print('hello')
+            self.Window.set_size_request(-1,-1)
+            myclass.resizerflag+=1
 
     def updatespeed_on_activate(self,menuitem,data=None):
         print("update speed")
@@ -259,11 +264,11 @@ class myclass:
 
         for i in range(0,self.numOfNets):
             g.Widget.queue_draw(self.netWidgetList[i].netdrawarea)
-
-        g.Widget.queue_draw(self.gpuWidget.gpuutildrawarea)
-        g.Widget.queue_draw(self.gpuWidget.gpuvramdrawarea)
-        g.Widget.queue_draw(self.gpuWidget.gpuencodingdrawarea)
-        g.Widget.queue_draw(self.gpuWidget.gpudecodingdrawarea)
+        if(self.isNvidiagpu==1):
+            g.Widget.queue_draw(self.gpuWidget.gpuutildrawarea)
+            g.Widget.queue_draw(self.gpuWidget.gpuvramdrawarea)
+            g.Widget.queue_draw(self.gpuWidget.gpuencodingdrawarea)
+            g.Widget.queue_draw(self.gpuWidget.gpudecodingdrawarea)
 
 
         ##  sidepane  
@@ -501,5 +506,9 @@ class myclass:
 
 
 if __name__=="__main__":
-    main=myclass()
+    p=os.popen('zenity --password')
+    passs=p.readline()[:-1]    
+    p.close()
+    passs=re.sub(' ','\ ',passs)
+    main=myclass(passs)
     g.main()

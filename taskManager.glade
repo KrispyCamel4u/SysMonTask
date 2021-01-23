@@ -44,9 +44,11 @@
     </child>
   </object>
   <object class="GtkWindow" id="main_window">
+    <property name="height_request">600</property>
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Task Manager</property>
+    <property name="title" translatable="yes">SysMonTask</property>
     <property name="icon_name">preferences-desktop-display</property>
+    <signal name="check-resize" handler="resizer" swapped="no"/>
     <signal name="destroy" handler="on_main_window_destroy" swapped="no"/>
     <child>
       <object class="GtkBox">
@@ -435,20 +437,34 @@
                 </child>
                 <child>
                   <object class="GtkBox">
+                    <property name="width_request">620</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
                     <child>
-                      <object class="GtkStackSwitcher">
+                      <object class="GtkScrolledWindow">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="halign">center</property>
-                        <property name="valign">start</property>
-                        <property name="stack">performancestack</property>
+                        <property name="can_focus">True</property>
+                        <property name="shadow_type">in</property>
+                        <child>
+                          <object class="GtkViewport">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <child>
+                              <object class="GtkStackSwitcher">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="halign">center</property>
+                                <property name="valign">start</property>
+                                <property name="stack">performancestack</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">False</property>
+                        <property name="fill">True</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
@@ -459,7 +475,6 @@
                         <child>
                           <object class="GtkScrolledWindow" id="cpustack">
                             <property name="width_request">400</property>
-                            <property name="height_request">500</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
@@ -560,7 +575,7 @@ NA</property>
                                     </child>
                                     <child>
                                       <object class="GtkDrawingArea" id="cpudrawarea">
-                                        <property name="width_request">600</property>
+                                        <property name="width_request">580</property>
                                         <property name="height_request">200</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
@@ -1029,7 +1044,6 @@ NA</property>
                         <child>
                           <object class="GtkScrolledWindow" id="memstack">
                             <property name="width_request">400</property>
-                            <property name="height_request">500</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
@@ -1129,7 +1143,7 @@ NA</property>
                                     </child>
                                     <child>
                                       <object class="GtkDrawingArea" id="memdrawarea1">
-                                        <property name="width_request">600</property>
+                                        <property name="width_request">580</property>
                                         <property name="height_request">150</property>
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
