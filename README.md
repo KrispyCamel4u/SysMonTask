@@ -1,5 +1,5 @@
 # SysMonTask
-Linux system monitor with the compactness and usefulness of windows task manager to allow higher control and moniterisation.
+Linux system monitor with the compactness and usefulness of windows task manager to allow higher control and monitoring.
 
 ### v1.0.0 
 - Performance moniterisation graphs
