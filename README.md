@@ -2,7 +2,7 @@
 Linux system monitor with the compactness and usefulness of windows task manager to allow higher control and monitoring.
 
 ### v1.0.0 
-- Performance monitering graphs
+- Performance monitoring graphs
 - Devices supported:
   * CPU
   * Memory
@@ -29,13 +29,13 @@ If installed, version will be shown, otherwise install with:
 ```
 $ sudo apt install zenity
 ```
-*SysMonTask will work without zenity also but some information dependent of root privilege might be incorrect.*
+*SysMonTask will work without zenity also but some information dependent on root privilege might be incorrect.*
 
 Running directly from terminal requires you to setup PATH to 
 ```
 /opt/SysMonTask/
 ```
-which is default installation directory.
+which is the default installation directory.
 After setting PATH, run:
 ```
 $ sysmontask
