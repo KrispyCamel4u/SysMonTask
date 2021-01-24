@@ -18,6 +18,8 @@ To use:
 - *Require Ubuntu 20.04 or higher or equivalent*
 - Tested on Ubuntu 20.04 LTS, popOS 20.10 
 
+![Screenshot from 2021-01-24 11-00-18](https://user-images.githubusercontent.com/48773008/105622210-7ab6a580-5e35-11eb-9a43-8f09c0efbdb2.png)
+
 It is recommended to have zenity installed(for privilege uplifting prompt), to check run:
 ```
 $ zenity --version
