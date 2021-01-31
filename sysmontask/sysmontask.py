@@ -1,16 +1,42 @@
 #!/usr/bin/env python3
-#import gi
-#gi.require_version("Gtk", "3.24")
+# import gi
+# gi.require_version("Gtk", "3.")
 
-from gi.repository import Gtk as g , GObject as go
+from gi.repository import Gtk as g , GLib as go
 import psutil as ps,cairo
-import os,re
+from os import popen
+from re import sub
+import os
 
-from mem import *
-from sidepane import *
-from disk import *
-from net import *
-from gpu import *
+if(ps.__version__>='5.7.1'):
+    pass
+else:
+    os.system('zenity --error --text="require psutil >=5.7.1 \nCan not start with the current version. \nPress OK to continue."')
+    p=popen('zenity --question --text="Do you want to update psutil?" && echo $?')
+    if(p.read()[:-1]=='0'):
+        print('updatating psutil')
+        os.system("pip3 install 'psutil>=5.7.1'")
+        print('done updating')
+        os.system('zenity --info --text="updated pip, exiting! \nKindly start sysmontask again :)"')
+    exit()
+    
+
+try:
+    # for running the main file
+    files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files/" ## change this location for glade files
+    from mem import *
+    from sidepane import *
+    from disk import *
+    from net import *
+    from gpu import *
+except:
+    # for module level  
+    files_dir="/usr/share/sysmontask/glade_files/"
+    from sysmontask.mem import *
+    from sysmontask.sidepane import *
+    from sysmontask.disk import *
+    from sysmontask.net import *
+    from sysmontask.gpu import *
 
 class myclass:
     flag=0      #flag for the updator 
@@ -32,7 +58,7 @@ class myclass:
         myclass.gpuinitialisation=gpuinit
         myclass.gpuTabUpdate=gpuUpdate
 
-        self.gladefile="taskManager.glade"
+        self.gladefile=files_dir+"/sysmontask.glade"
         self.builder=g.Builder()
         self.builder.add_from_file(self.gladefile)
         self.builder.connect_signals(self)
@@ -168,7 +194,7 @@ class myclass:
             #print("in if")
             try:
                 ## for the first time only to get the name of the cpu
-                p=os.popen('cat /proc/cpuinfo |grep -m1 "model name"')
+                p=popen('cat /proc/cpuinfo |grep -m1 "model name"')
                 self.cpuname=p.read().split(':')[1].split('\n')[0]
                 #print(self.cpuname)                                          # cpu name
                 self.cpuInfoLabel.set_text(self.cpuname)
@@ -181,7 +207,7 @@ class myclass:
 
             self.cpuLogicalLabelValue.set_text(str(ps.cpu_count()))
             try:
-                p=os.popen('lscpu|grep -i -E "(vt-x)|(amd-v)"')
+                p=popen('lscpu|grep -i -E "(vt-x)|(amd-v)"')
                 temp=p.read()
                 if temp:
                     temptext="Enabled"
@@ -193,16 +219,16 @@ class myclass:
                 print("Failed to get Virtualisation information")
 
             try:
-                p=os.popen('lscpu|grep -i -m1 "L1d cache"')
-                self.cpuL1LabelValue.set_text(re.sub("[\s]","",p.read().split(':')[1]))
+                p=popen('lscpu|grep -i -m1 "L1d cache"')
+                self.cpuL1LabelValue.set_text(sub("[\s]","",p.read().split(':')[1]))
                 p.close()
                 
-                p=os.popen('lscpu|grep -i -m1 "L2 cache"')
-                self.cpuL2LabelValue.set_text(re.sub('[\s]','',p.read().split(':')[1]))
+                p=popen('lscpu|grep -i -m1 "L2 cache"')
+                self.cpuL2LabelValue.set_text(sub('[\s]','',p.read().split(':')[1]))
                 p.close()
 
-                p=os.popen('lscpu|grep -i "L3 cache"')
-                self.cpuL3LabelValue.set_text(re.sub('[\s]','',p.read().split(':')[1]))
+                p=popen('lscpu|grep -i "L3 cache"')
+                self.cpuL3LabelValue.set_text(sub('[\s]','',p.read().split(':')[1]))
                 p.close()
             except:
                 print("Failed to get Cache information")
@@ -227,8 +253,8 @@ class myclass:
         #print("setting number of processes and threads")
         self.cpuProcessesLabelValue.set_text(str(len(ps.pids())))
         try:
-            p=os.popen("ps axms|wc -l")
-            self.cpuThreadsLabelValue.set_text(re.sub('[\s]','',p.read()))
+            p=popen("ps axms|wc -l")
+            self.cpuThreadsLabelValue.set_text(sub('[\s]','',p.read()))
             p.close()
         except:
             print("Failed to get Threads")
@@ -504,11 +530,19 @@ class myclass:
 
 
 
-
-if __name__=="__main__":
-    p=os.popen('zenity --password')
+def start():
+    p=popen('zenity --password')
     passs=p.readline()[:-1]    
     p.close()
-    passs=re.sub(' ','\ ',passs)
+    passs=sub(' ','\ ',passs)
+    main=myclass(passs)
+    g.main()
+
+    
+if __name__=="__main__":
+    p=popen('zenity --password')
+    passs=p.readline()[:-1]    
+    p.close()
+    passs=sub(' ','\ ',passs)
     main=myclass(passs)
     g.main()

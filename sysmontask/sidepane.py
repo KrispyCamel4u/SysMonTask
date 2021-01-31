@@ -4,7 +4,11 @@
 from gi.repository import Gtk as g,cairo
 from gi_composites import GtkTemplate
 
-from sysmontask import files_dir
+
+if __name__=='sysmontask.sidepane':
+    from sysmontask.sysmontask import files_dir
+else:
+    from sysmontask import files_dir
 
 @GtkTemplate(ui=files_dir+'/diskSidepane.glade')
 class diskSidepaneWidget(g.Box):

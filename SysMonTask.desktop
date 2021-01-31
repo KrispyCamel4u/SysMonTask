@@ -3,11 +3,11 @@ Name=SysMonTask
 Comment=monitor system state
 
 # change it here for the executable 
-TryExec=/home/neeraj/projects/task_manager/taskmanager.py
-Exec=/home/neeraj/projects/task_manager/taskmanager.py
+TryExec=sysmontask
+Exec=sysmontask
 
 # change here for icon location 
-Icon=/home/neeraj/projects/task_manager/SysMonTask.png
+Icon=/usr/share/sysmontask/icons/SysMonTask.png
 Terminal=false
 Type=Application
 StartupNotify=true

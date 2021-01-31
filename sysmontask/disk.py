@@ -8,7 +8,10 @@ from time import time
 from os import popen
 from gi_composites import GtkTemplate
 
-from sysmontask import files_dir
+if __name__=='sysmontask.disk':
+    from sysmontask.sysmontask import files_dir
+else:
+    from sysmontask import files_dir
 
 @GtkTemplate(ui=files_dir+'/disk.glade')
 class diskTabWidget(g.ScrolledWindow):

@@ -4,7 +4,10 @@ from time import time
 from gi_composites import GtkTemplate
 from os import popen
 
-from sysmontask import files_dir
+if __name__=='sysmontask.net':
+    from sysmontask.sysmontask import files_dir
+else:
+    from sysmontask import files_dir
 
 @GtkTemplate(ui=files_dir+'/net.glade')
 class networkWidget(g.ScrolledWindow):

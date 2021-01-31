@@ -8,7 +8,10 @@ from os import popen
 from gi_composites import GtkTemplate
 from xml.etree.ElementTree import fromstring
 
-from sysmontask import files_dir
+if __name__=='sysmontask.gpu':
+    from sysmontask.sysmontask import files_dir
+else:
+    from sysmontask import files_dir
 
 @GtkTemplate(ui=files_dir+'/gpu.glade')
 class gpuTabWidget(g.ScrolledWindow):

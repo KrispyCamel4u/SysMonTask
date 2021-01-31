@@ -1,0 +1,7 @@
+include AUTHORS
+include LICENSE
+include README.md
+include SysMonTask.desktop
+recursive-include glade_files *
+recursive-include sysmontask *
+recursive-include icons *

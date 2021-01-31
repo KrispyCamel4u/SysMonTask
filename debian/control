@@ -1,0 +1,12 @@
+Source: sysmontask
+Maintainer: Neeraj Kumar <neerajjangra4u@gmail.com>
+Build-Depends: debhelper,dh-python,python3-all,python3-setuptools
+Section: devel
+Priority: optional
+Standards-Version: 3.8.6
+X-Python3-Version: >= 3.6
+
+Package: sysmontask
+Architecture: all
+Description: System Monitor With UI Like Windows
+Depends: ${python3:Depends},zenity
