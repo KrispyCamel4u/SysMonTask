@@ -16,6 +16,8 @@ To install the binary for ubuntu and its family members
 $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
   ....
 $ sudo apt install sysmontask
+  ....
+$ pip3 install pygi-composite-templates
 ```
 Hurray, You're goot to go in understanding capabilities of your system:)
 
