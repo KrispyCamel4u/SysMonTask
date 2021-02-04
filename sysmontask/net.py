@@ -165,6 +165,7 @@ def netinit(self):
             # print('give dat')
     else:
         print("Net:No active network adapter found")
+        self.numOfNets=0
     
     
 

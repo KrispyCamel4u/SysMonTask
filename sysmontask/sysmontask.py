@@ -22,16 +22,17 @@ else:
     
 
 try:
-    # for running the main file
-    files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files/" ## change this location for glade files
+    for running as main file 
+
+    files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
     from mem import *
     from sidepane import *
     from disk import *
     from net import *
     from gpu import *
 except:
-    # for module level  
-    files_dir="/usr/share/sysmontask/glade_files/"
+    # for module level through  apt install comment it if running as main file
+    files_dir="/usr/share/sysmontask/glade_files"
     from sysmontask.mem import *
     from sysmontask.sidepane import *
     from sysmontask.disk import *
@@ -142,7 +143,7 @@ class myclass:
             g.Widget.destroy(self.netSidepaneWidgetList[i])
         
         # g.main_quit()
-        # os.system('runuser -l root -c "python3 taskmanager.py" &')
+
         self.diskinitialisation()
         self.netinitialisation()
         self.gpuinitialisation()
@@ -268,6 +269,7 @@ class myclass:
             pass
         self.cpuSidePaneLabelValue.set_text(cpuUtilString+' '+cpuSpeedstring)
 
+        ## updating 
         self.memoryTab()
         self.disktabUpdate()
         if len(self.netNameList)!=0:

@@ -10,7 +10,6 @@ def get_data_files():
 
     return data_files
 
-
 setup(
     name='sysmontask',
     version='1.0.0',
@@ -21,7 +20,7 @@ setup(
     license='BSD-3',
     include_package_data=True,
     data_files=get_data_files(),
-    install_requires=['psutil >=5.7.1','pygi-composite-templates','pycairo','PyGObject'],
+    install_requires=['psutil >=5.7.1','pygi-composite-templates','pycairo','PyGObject','pip3'],
     packages=find_packages(),
     entry_points=dict(
         console_scripts=['sysmontask=sysmontask.sysmontask:start']
