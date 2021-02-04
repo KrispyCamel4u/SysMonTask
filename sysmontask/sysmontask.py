@@ -22,7 +22,7 @@ else:
     
 
 try:
-    for running as main file 
+#     for running as main file 
 
     files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
     from mem import *
