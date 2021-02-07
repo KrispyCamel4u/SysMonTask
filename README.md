@@ -1,4 +1,22 @@
-# SysMonTask
+# SysMonTask  
+[![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
+
+<p align="left">
+<a href="https://github.com/KrispyCamel4u/SysMonTask/commit-activity">
+    <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
+</a>
+ <a href="https://github.com/KrispyCamel4u/SysMonTask/tags/">
+    <img src="https://img.shields.io/github/v/tag/KrispyCamel4u/SysMonTask.svg?sort=semver">
+</a>
+<a href="https://github.com/KrispyCamel4u/SysMonTask/master/LICENSE">
+    <img src="https://img.shields.io/github/license/KrispyCamel4u/SysMonTask.svg">
+</a>
+
+<a href="https://github.com/KrispyCamel4u">
+    <img src="https://img.shields.io/badge/Need%20help%3F-Ask-27B89C">
+</a>
+</p>
+
 Linux system monitor with the compactness and usefulness of windows task manager to allow higher control and monitoring.
 
 ### v1.0.0 
@@ -26,7 +44,7 @@ Then start application from menu.
 #### Highlights
 ![Screenshot from 2021-01-24 11-00-18](https://user-images.githubusercontent.com/48773008/105622210-7ab6a580-5e35-11eb-9a43-8f09c0efbdb2.png)
 
-
+ 
 ### If you are using dark mode and didn't like the look then follow below specified steps for dark mode disabled package:
 *Note: Below mentioned facts and information is only applicable to this method of installation only*
   1. Uninstall if you've installed via terminal
