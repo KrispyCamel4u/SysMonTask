@@ -183,14 +183,14 @@ def diskinit(self):
     self.disklist=[]
     self.disksize=[]
     try:
-        p=popen('lsblk -d -o NAME,SIZE')
+        p=popen('lsblk -d | grep -e ^NAME -e disk')
         partitions=p.readlines()
         p.close()
         for parts in partitions:
             tempparts=parts.split()
-            if 'loop' not in tempparts[0] and 'NAME' not in  tempparts[0]:
+            if 'NAME' not in  tempparts[0]:
                 self.disklist.append(tempparts[0])
-                self.disksize.append(tempparts[1])
+                self.disksize.append(tempparts[3])
                 print(tempparts[0])
     except:
         print("Failed to get Disks")
