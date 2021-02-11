@@ -2,6 +2,37 @@ from gi.repository import Gtk as g , GLib as go
 import psutil as ps,cairo,time
 from math import pow
 mibdevider=pow(2,20)
+
+def byte_to_human(value):
+    if value > 1024:   ###KiB
+        if value > 1048576:    ##MiB
+            if value> 1073741824:
+                scalefactor=1073741824
+                suffix='GiB/s'
+            else:
+                scalefactor=1048576
+                suffix='MiB/s'
+        else:
+            scalefactor=1024
+            suffix='KiB/s'
+    else:
+        return "{:.1f} ".format(0)+'KiB/s'
+    return "{:.1f} ".format(value/scalefactor)+suffix
+
+def sorting_func(model, row1, row2, user_data):
+    sort_column, _ = model.get_sort_column_id()
+    val1 = model.get_value(row1, sort_column)
+    val2 = model.get_value(row2, sort_column)
+    if not type(val1)==int:
+        val1 = float(val1.split()[0])
+        val2 = float(val2.split()[0])
+    if val1<val2:
+        return -1
+    elif val1==val2:
+        return 0
+    else:
+        return 1
+
 def searcher(self,sprocs,root):
     childlist=sprocs.children()
     if(sprocs.name()!='systemd'): 
@@ -25,12 +56,13 @@ def searcher(self,sprocs,root):
                 mem_info=procs.memory_info()
                 cpu_percent="{:.1f}".format(cpu_percent)+' %'
                 mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                mem_util='{:.1f}'.format(mem_util)+' MB'
+                mem_util='{:.1f}'.format(mem_util)+' MiB'
                 itr=self.processTreeStore.append(root,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
-                ,mem_util,'0 MB/s','0 MB/s',procs.username()," ".join(procs.cmdline())])
+                ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',procs.username()," ".join(procs.cmdline())])
                 self.processTreeIterList[procs.pid]=itr
                 self.processList[procs.pid]=procs
                 self.procDiskprev[procs.pid]=[0,0]
+                self.procT1[procs.pid]=0
             else:
                 itr=None
             searcher(self,procs,itr)
@@ -39,11 +71,14 @@ def procInit(self):
     self.processTree=self.builder.get_object('processtree')
 
     # self.data=[['chrome',30,50,0,1],['firefox',10,20,0,2],['sysmon',1,0,3,1]]
-    self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str)
+    self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str)
     # self.processTreeStore=self.builder.get_object('processTreeStore')
 
     # for data in self.data:
     #     self.processTreeStore.append(None,data)
+
+    self.processTreeStore.set_sort_func(4,sorting_func,None)
+
     pids=ps.pids()
 
     # self.di={}
@@ -51,6 +86,9 @@ def procInit(self):
     self.processList={}
     self.processTreeIterList={}
     self.processChildList={}
+    self.columnList={}
+    self.procT1={}
+
     for pi in pids:
         procs=ps.Process(pi)
 
@@ -65,9 +103,8 @@ def procInit(self):
     self.processTree.set_model(self.processTreeStore)
 
 
-    for i,col in enumerate(['pid','Name','rCPU','CPU','rMemory','Memory','rDisk','Disk','Network','command']):
+    for i,col in enumerate(['pid','Name','% rCPU','% CPU','rMemory\n (MiB)','Memory\n (MiB)','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Network','command']):
         renderer=g.CellRendererText()
-
         column=g.TreeViewColumn(col,renderer,text=i)
         column.set_sort_column_id(i)
         column.set_resizable(True)
@@ -76,9 +113,9 @@ def procInit(self):
         column.set_alignment(0)
         column.set_sort_indicator(True)
         self.processTree.append_column(column)
-        
-    self.procT1=0
-
+        self.columnList[col]=column   
+        self.processTreeStore.set_sort_func(i,sorting_func,None)
+     
 # def childremover(self, pid):
 #     temp=self.processChildList[pid]
 #     self.processChildList.pop(pid)
@@ -90,7 +127,6 @@ def procInit(self):
 #         childremover(self,childId)
 
 def procUpdate(self):
-
     pids=ps.pids()
     # new process appending
     for pi in pids:
@@ -104,10 +140,10 @@ def procUpdate(self):
                         cpu_percent="{:.1f}".format(cpu_percent)+' %'
                         mem_info=proc.memory_info()
                         mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                        mem_util='{:.1f}'.format(mem_util)+' MB'
+                        mem_util='{:.1f}'.format(mem_util)+' MiB'
                         if parent.pid in self.processList:
                             itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
-                            cpu_percent,cpu_percent,mem_util,mem_util,'0 MB/s','0 MB/s',proc.username()," ".join(proc.cmdline())])
+                            cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()," ".join(proc.cmdline())])
                             self.processTreeIterList[pi]=itr
                             self.processList[pi]=proc
                             self.processChildList[parent.pid].append(pi)
@@ -117,7 +153,7 @@ def procUpdate(self):
                             break
                         elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and parent.username()=='neeraj':
                             itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
-                            cpu_percent,cpu_percent,mem_util,mem_util,'0 MB/s','0 MB/s',proc.username()," ".join(proc.cmdline())])
+                            cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()," ".join(proc.cmdline())])
                             self.processTreeIterList[pi]=itr
                             self.processList[pi]=proc
                             self.processChildList[pi]=[]
@@ -138,6 +174,7 @@ def procUpdate(self):
                 self.processList.pop(pidds)
                 self.processTreeIterList.pop(pidds)
                 tempchi=self.processChildList.copy()
+
                 self.procDiskprev.pop(pidds)
                 for key in tempchi:
                     if key==pidds:
@@ -152,16 +189,19 @@ def procUpdate(self):
                 cpu_percent="{:.1f}".format(cpu_percent)+' %'
                 mem_info=self.processList[pidds].memory_info()
                 mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                mem_util='{:.1f}'.format(mem_util)+' MB'
+                mem_util='{:.1f}'.format(mem_util)+' MiB'
                 # prev=float(self.processTreeStore.get_value(self.processTreeIterList[pidds],6)[:-5])
                 currArray=self.processList[pidds].io_counters()[2:4]
-                self.procT2=time.time()
-                sp=max((currArray[0]-self.procDiskprev[pidds][0]),(currArray[1]-self.procDiskprev[pidds][1]))/(self.procT2-self.procT1)
-                rwspeed="{:.1f} MB/s".format(sp)
+                procT2=time.time()
+                wspeed=(currArray[1]-self.procDiskprev[pidds][1])/(procT2-self.procT1[pidds])
+                wspeed=byte_to_human(wspeed)
+                rspeed=(currArray[0]-self.procDiskprev[pidds][0])/(procT2-self.procT1[pidds])
+                rspeed=byte_to_human(rspeed)
                 if self.processList[pidds].name()=='nautilus':
-                    print(currArray,self.procDiskprev[pidds],sp,self.procT2-self.procT1)
-                self.processTreeStore.set(itr,2,cpu_percent,3,cpu_percent,4,mem_util,5,mem_util,6,rwspeed,7,rwspeed)
+                    print(currArray,rspeed,wspeed,procT2-self.procT1[pidds])
+                self.processTreeStore.set(itr,2,cpu_percent,3,cpu_percent,4,mem_util,5,mem_util,6,rspeed,7,rspeed,8,wspeed,9,wspeed)
                 self.procDiskprev[pidds]=currArray[:]
+                self.procT1[pidds]=procT2
         except:
             print('error in process updating')
 
@@ -184,9 +224,8 @@ def procUpdate(self):
             self.processTreeStore.set(self.processTreeIterList[pid],2,"{:.1f}".format(rcpu_percent+cpu_percent)+' %')
             mem_util=self.processTreeStore.get_value(self.processTreeIterList[pid],5)
             mem_util=float(mem_util[:-3])
-            self.processTreeStore.set(self.processTreeIterList[pid],4,"{:.1f}".format(rmem_util+mem_util)+' MB')
+            self.processTreeStore.set(self.processTreeIterList[pid],4,"{:.1f}".format(rmem_util+mem_util)+' MiB')
 
-    self.procT1=self.procT2
     return True
 
     
