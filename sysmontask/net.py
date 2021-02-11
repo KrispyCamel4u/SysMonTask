@@ -167,7 +167,18 @@ def netinit(self):
         print("Net:No active network adapter found")
         self.numOfNets=0
     
-    
+def suffixer(value):
+    if value > 1000:   ###MB
+        if value > 1000000:    ##GB
+            netscalefactor=1000000
+            suffix='GB'
+        else:
+            netscalefactor=1000
+            suffix='MB'
+    else:
+        netscalefactor=1
+        suffix='KB'
+    return netscalefactor,suffix
 
 def netUpdate(self):
     nettemp=ps.net_io_counters(pernic=True)
@@ -193,49 +204,21 @@ def netUpdate(self):
             totalbytesent=nettemp[self.netNameList[i]][0]/1000
 
             ## total received
-            if totalbyterec > 1000:   ###MB
-                if totalbyterec > 1000000:    ##GB
-                    netscalefactor=1000000
-                    suffix='GB'
-                else:
-                    netscalefactor=1000
-                    suffix='MB'
-            else:
-                netscalefactor=1
-                suffix='KB'
+            netscalefactor,suffix=suffixer(totalbyterec)
         
             self.netWidgetList[i].nettotalreclabelvalue.set_text("{:.1f}".format(totalbyterec/netscalefactor)+suffix)
 
             ## total bytes sent
-            if totalbytesent > 1000:   ###MB
-                if totalbyterec > 1000000:    ##GB
-                    netscalefactor=1000000
-                    suffix='GB'
-                else:
-                    netscalefactor=1000
-                    suffix='MB'
-            else:
-                netscalefactor=1
-                suffix='KB'
+            netscalefactor,suffix=suffixer(totalbytesent)
             self.netWidgetList[i].nettotalsentlabelvalue.set_text("{:.1f}".format(totalbytesent/netscalefactor)+suffix)
 
             ## send per sec (uploading speed)
-            if bytesendpersec > 1000:   ###MB
-                netscalefactor=1000
-                suffix='MB/s'
-            else:
-                netscalefactor=1
-                suffix='KB/s'
+            netscalefactor,suffix=suffixer(bytesendpersec)
             self.bytesendpersecString.append("{:.1f}".format(bytesendpersec/netscalefactor)+suffix)
             self.netWidgetList[i].netsendlabelvalue.set_text(self.bytesendpersecString[i])
 
             ## received per sec (downloading speed)
-            if byterecpersec > 1000:   ###MB
-                netscalefactor=1000
-                suffix='MB/s'
-            else:
-                netscalefactor=1
-                suffix='KB/s'
+            netscalefactor,suffix=suffixer(byterecpersec)
             self.byterecpersecString.append("{:.1f}".format(byterecpersec/netscalefactor)+suffix)
             self.netWidgetList[i].netreclabelvalue.set_text(self.byterecpersecString[i])
 
