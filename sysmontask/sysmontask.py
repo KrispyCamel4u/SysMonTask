@@ -156,9 +156,11 @@ class myclass:
         for i in range(self.numOfNets):
             g.Widget.destroy(self.netWidgetList[i])
             g.Widget.destroy(self.netSidepaneWidgetList[i])
+        g.Widget.destroy(self.processTree)
+        # g.Widget.destroy(self.processTreeStore)
         
         # g.main_quit()
-
+        self.procinitialisation()
         self.diskinitialisation()
         self.netinitialisation()
         self.gpuinitialisation()
