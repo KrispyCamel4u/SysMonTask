@@ -81,6 +81,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
     </child>
   </object>
   <object class="GtkWindow" id="main_window">
+    <property name="width_request">850</property>
     <property name="height_request">600</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">SysMonTask</property>
@@ -500,7 +501,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="width_request">630</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
@@ -538,7 +538,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                         <property name="can_focus">False</property>
                         <child>
                           <object class="GtkScrolledWindow" id="cpustack">
-                            <property name="width_request">400</property>
+                            <property name="height_request">500</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
@@ -1107,7 +1107,6 @@ NA</property>
                         </child>
                         <child>
                           <object class="GtkScrolledWindow" id="memstack">
-                            <property name="width_request">400</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>

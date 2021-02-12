@@ -261,6 +261,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                               <object class="GtkTreeView" id="processtree">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="enable_grid_lines">both</property>
                                 <property name="enable_tree_lines">True</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>
@@ -499,7 +500,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="width_request">630</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
@@ -537,7 +537,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                         <property name="can_focus">False</property>
                         <child>
                           <object class="GtkScrolledWindow" id="cpustack">
-                            <property name="width_request">400</property>
+                            <property name="height_request">500</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
@@ -1106,7 +1106,6 @@ NA</property>
                         </child>
                         <child>
                           <object class="GtkScrolledWindow" id="memstack">
-                            <property name="width_request">400</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
