@@ -73,7 +73,7 @@ def memorytabinit(self):
 
 def memoryTabUpdate(self):
     memory=ps.virtual_memory()
-    self.usedd=round((memory[0]-memory[1])/pow(2,30),1)
+    self.usedd=round((memory[0]-memory[1])/pow(2,30),1)      
     self.memAvailable=round(memory[1]/pow(2,30),1)
     self.memFree=round(memory[4]/pow(2,30),1)
     

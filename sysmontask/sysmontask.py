@@ -470,7 +470,6 @@ class myclass:
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
             cr.stroke()
 
-
         return False
         
         #side pane cpu draw
