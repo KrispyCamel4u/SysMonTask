@@ -309,17 +309,17 @@ def diskTabUpdate(self):
         
         self.diskActiveString.append(str(int(self.diskDiff[i][8]/10))+'%')
         self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString[i])
-        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diskDiff[i][2]/1000000)+'MB')
-        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diskDiff[i][3]/1000000)+'MB')
+        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diskDiff[i][2]/1048576)+'MiB')
+        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diskDiff[i][3]/1048576)+'MiB')
 
         self.diskActiveArray[i].pop()
         self.diskActiveArray[i].insert(0,(self.diskDiff[i][8])/(10*timediskDiff))##
 
         self.diskReadArray[i].pop()
-        self.diskReadArray[i].insert(0,self.diskDiff[i][2]/((timediskDiff)*1000000))
+        self.diskReadArray[i].insert(0,self.diskDiff[i][2]/((timediskDiff)*1048576))
 
         self.diskWriteArray[i].pop()
-        self.diskWriteArray[i].insert(0,self.diskDiff[i][3]/((timediskDiff)*1000000))
+        self.diskWriteArray[i].insert(0,self.diskDiff[i][3]/((timediskDiff)*1048576))
 
         self.diskWidgetList[i].givedata(self,i)
 
