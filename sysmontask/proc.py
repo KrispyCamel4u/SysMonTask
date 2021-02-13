@@ -1,7 +1,13 @@
-from gi.repository import Gtk as g , GLib as go
+from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck
 import psutil as ps,cairo,time
+import re
 from math import pow
+
 mibdevider=pow(2,20)
+screen=Wnck.Screen.get_default()
+icon_theme=g.IconTheme().get_default()
+icon_theme.append_search_path('/usr/share/icons')
+icon_list=icon_theme.list_icons(None)
 
 def byte_to_human(value,persec=True):
     if value > 1024:   ###KiB
@@ -63,6 +69,28 @@ def sorting_func(model, row1, row2, user_data):
     else:
         return 1
 
+def icon_finder(pname,pid):
+    screen.force_update()
+    r=re.compile(pname,re.IGNORECASE)
+    matchlist = list(filter(r.match, icon_list))
+    if len(matchlist)!=0:
+        return icon_theme.load_icon(matchlist[0], 16, 0)
+
+    for win in screen.get_windows():
+        # print(win.get_name()
+        
+        if pid==win.get_pid() or re.search(pname,win.get_name(),re.IGNORECASE):
+            return win.get_icon().scale_simple(20,20,2)
+    
+    r=re.compile(".*{}.*".format(pname),re.IGNORECASE)
+    matchlist = list(filter(r.match, icon_list))
+    if len(matchlist)!=0:
+        return icon_theme.load_icon(matchlist[0], 16, 0)
+
+    return icon_theme.load_icon('application-default', 16, 0)
+    
+        
+
 def searcher(self,sprocs,root):
     childlist=sprocs.children()
     if(sprocs.name()!='systemd'): 
@@ -81,14 +109,14 @@ def searcher(self,sprocs,root):
                     # print(sprocs.name()) 
                     # print(sprocs.pid,' ',procs.pid)
                     self.processChildList[sprocs.pid].append(procs.pid)
-
+                
                 cpu_percent=procs.cpu_percent()
                 mem_info=procs.memory_info()
                 cpu_percent="{:.1f}".format(cpu_percent)+' %'
                 mem_util=(mem_info[0]-mem_info[2])/mibdevider
                 mem_util='{:.1f}'.format(mem_util)+' MiB'
                 itr=self.processTreeStore.append(root,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
-                ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',procs.username()," ".join(procs.cmdline())])
+                ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',procs.username()," ".join(procs.cmdline()),icon_finder(procs.name(),procs.pid)])
                 self.processTreeIterList[procs.pid]=itr
                 self.processList[procs.pid]=procs
                 self.procDiskprev[procs.pid]=[0,0]
@@ -101,7 +129,7 @@ def procInit(self):
     self.processTree=self.builder.get_object('processtree')
 
     # self.data=[['chrome',30,50,0,1],['firefox',10,20,0,2],['sysmon',1,0,3,1]]
-    self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str)
+    self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str,GdkPixbuf.Pixbuf)
     # self.processTreeStore=self.builder.get_object('processTreeStore')
 
     # for data in self.data:
@@ -138,9 +166,21 @@ def procInit(self):
     self.processTree.set_model(self.processTreeStore)
 
 
-    for i,col in enumerate(['pid','Name','rCPU','CPU','rMemory','Memory','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Owner','command']):
+    for i,col in enumerate(['pid','Name','rCPU','CPU','rMemory','Memory','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Owner','Command']):
         renderer=g.CellRendererText()
-        column=g.TreeViewColumn(col,renderer,text=i)
+        if col=='Command':
+            renderer.props.wrap_width=-1
+        if col=='Name':
+            icon_renderer=g.CellRendererPixbuf()
+            column=g.TreeViewColumn(col)
+            column.pack_start(icon_renderer,False)
+            column.add_attribute(icon_renderer,'pixbuf',12)
+            column.pack_start(renderer,False)
+            column.add_attribute(renderer,'text',1)
+        else:
+            column=g.TreeViewColumn(col,renderer,text=i)
+        
+
         column.set_sort_column_id(i)
         column.set_resizable(True)
         column.set_reorderable(True)
@@ -171,7 +211,8 @@ def procUpdate(self):
                         mem_util='{:.1f}'.format(mem_util)+' MiB'
                         if parent.pid in self.processList:
                             itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
-                            cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()," ".join(proc.cmdline())])
+                            cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()
+                            ," ".join(proc.cmdline()),icon_finder(proc.name(),proc.pid)])
                             self.processTreeIterList[pi]=itr
                             self.processList[pi]=proc
                             self.processChildList[parent.pid].append(pi)
