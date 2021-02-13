@@ -3,20 +3,29 @@ import psutil as ps,cairo,time
 from math import pow
 mibdevider=pow(2,20)
 
-def byte_to_human(value):
+def byte_to_human(value,persec=True):
     if value > 1024:   ###KiB
         if value > 1048576:    ##MiB
             if value> 1073741824:
-                scalefactor=1073741824
-                suffix='GiB/s'
+                if value>1073741824*1024:
+                    scalefactor=1073741824*1024
+                    suffix='TiB'
+                else:
+                    scalefactor=1073741824
+                    suffix='GiB'
             else:
                 scalefactor=1048576
-                suffix='MiB/s'
+                suffix='MiB'
         else:
             scalefactor=1024
-            suffix='KiB/s'
+            suffix='KiB'
     else:
-        return "{:.1f} ".format(0)+'KiB/s'
+        if persec:
+            return "{:.1f} ".format(0)+'KiB/s'
+        return "{:.1f} ".format(0)+'KiB'
+
+    if persec:
+        suffix+='/s'
     return "{:.1f} ".format(value/scalefactor)+suffix
 
 def sorting_func(model, row1, row2, user_data):

@@ -6,8 +6,10 @@ from os import popen
 
 if __name__=='sysmontask.net':
     from sysmontask.sysmontask import files_dir
+    from sysmontask.proc import byte_to_human
 else:
     from sysmontask import files_dir
+    from proc import byte_to_human
 
 @GtkTemplate(ui=files_dir+'/net.glade')
 class networkWidget(g.ScrolledWindow):
@@ -167,18 +169,6 @@ def netinit(self):
         print("Net:No active network adapter found")
         self.numOfNets=0
     
-def suffixer(value):
-    if value > 1000:   ###MB
-        if value > 1000000:    ##GB
-            netscalefactor=1000000
-            suffix='GB'
-        else:
-            netscalefactor=1000
-            suffix='MB'
-    else:
-        netscalefactor=1
-        suffix='KB'
-    return netscalefactor,suffix
 
 def netUpdate(self):
     nettemp=ps.net_io_counters(pernic=True)
@@ -204,22 +194,17 @@ def netUpdate(self):
             totalbytesent=nettemp[self.netNameList[i]][0]/1000
 
             ## total received
-            netscalefactor,suffix=suffixer(totalbyterec)
-        
-            self.netWidgetList[i].nettotalreclabelvalue.set_text("{:.1f}".format(totalbyterec/netscalefactor)+suffix)
+            self.netWidgetList[i].nettotalreclabelvalue.set_text(byte_to_human(totalbyterec,persec=False))
 
             ## total bytes sent
-            netscalefactor,suffix=suffixer(totalbytesent)
-            self.netWidgetList[i].nettotalsentlabelvalue.set_text("{:.1f}".format(totalbytesent/netscalefactor)+suffix)
+            self.netWidgetList[i].nettotalsentlabelvalue.set_text(byte_to_human(totalbytesent,persec=False))
 
             ## send per sec (uploading speed)
-            netscalefactor,suffix=suffixer(bytesendpersec)
-            self.bytesendpersecString.append("{:.1f}".format(bytesendpersec/netscalefactor)+suffix)
+            self.bytesendpersecString.append(byte_to_human(bytesendpersec))
             self.netWidgetList[i].netsendlabelvalue.set_text(self.bytesendpersecString[i])
 
             ## received per sec (downloading speed)
-            netscalefactor,suffix=suffixer(byterecpersec)
-            self.byterecpersecString.append("{:.1f}".format(byterecpersec/netscalefactor)+suffix)
+            self.byterecpersecString.append(byte_to_human(byterecpersec))
             self.netWidgetList[i].netreclabelvalue.set_text(self.byterecpersecString[i])
 
             self.netReceiveArray[i].pop()
@@ -233,6 +218,7 @@ def netUpdate(self):
             self.netWidgetList[i].net4addrlablevalue.set_text(nettempaddr[self.netNameList[i]][0][1])
             self.netWidgetList[i].net6addrlabelvalue.set_text(nettempaddr[self.netNameList[i]][1][1])
         except:
+            print('some error in net update')
             pass
 
 
