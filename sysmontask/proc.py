@@ -24,8 +24,29 @@ def sorting_func(model, row1, row2, user_data):
     val1 = model.get_value(row1, sort_column)
     val2 = model.get_value(row2, sort_column)
     if not type(val1)==int:
-        val1 = float(val1.split()[0])
-        val2 = float(val2.split()[0])
+        temp1=val1.split()
+        val1 = float(temp1[0])
+        if 'K' in temp1[1]:
+            multiplier=1024
+        elif 'M' in temp1[1]:
+            multiplier=1048576
+        elif 'G' in temp1[1]:
+            multiplier=1073741824
+        elif 'T' in temp1[1]:
+            multiplier=1073741824*1024
+        val1*=multiplier
+
+        temp2=val2.split()
+        val2 = float(temp2[0])
+        if 'K' in temp2[1]:
+            multiplier=1024
+        elif 'M' in temp2[1]:
+            multiplier=1048576
+        elif 'G' in temp2[1]:
+            multiplier=1073741824
+        elif 'T' in temp1[1]:
+            multiplier=1073741824*1024
+        val2*=multiplier
     if val1<val2:
         return -1
     elif val1==val2:
@@ -77,7 +98,7 @@ def procInit(self):
     # for data in self.data:
     #     self.processTreeStore.append(None,data)
 
-    self.processTreeStore.set_sort_func(4,sorting_func,None)
+    # self.processTreeStore.set_sort_func(4,sorting_func,None)
 
     pids=ps.pids()
 
@@ -88,6 +109,11 @@ def procInit(self):
     self.processChildList={}
     self.columnList={}
     self.procT1={}
+
+    ### total disk io counter calculation are done in proc.py
+    self.diskTotalT1=0
+    diskio=ps.disk_io_counters()
+    self.diskTotalState1=[diskio[2],diskio[3]]
 
     for pi in pids:
         procs=ps.Process(pi)
@@ -103,7 +129,7 @@ def procInit(self):
     self.processTree.set_model(self.processTreeStore)
 
 
-    for i,col in enumerate(['pid','Name','% rCPU','% CPU','rMemory\n (MiB)','Memory\n (MiB)','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Network','command']):
+    for i,col in enumerate(['pid','Name','rCPU','CPU','rMemory','Memory','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Owner','command']):
         renderer=g.CellRendererText()
         column=g.TreeViewColumn(col,renderer,text=i)
         column.set_sort_column_id(i)
@@ -115,16 +141,9 @@ def procInit(self):
         self.processTree.append_column(column)
         self.columnList[col]=column   
         self.processTreeStore.set_sort_func(i,sorting_func,None)
-     
-# def childremover(self, pid):
-#     temp=self.processChildList[pid]
-#     self.processChildList.pop(pid)
-#     for childId in temp:
-#         if childId in self.processList:
-#             self.processList.pop(childId)
-#         if childId in self.processTreeIterList:
-#             self.processTreeIterList.pop(childId)
-#         childremover(self,childId)
+
+    self.columnList['rDiskRead'].set_visible(False)
+    self.columnList['rDiskWrite'].set_visible(False)
 
 def procUpdate(self):
     pids=ps.pids()
@@ -148,7 +167,9 @@ def procUpdate(self):
                             self.processList[pi]=proc
                             self.processChildList[parent.pid].append(pi)
                             self.processChildList[pi]=[]
-                            self.procDiskprev[pi]=[0,0]   ##
+
+                            self.procDiskprev[pi]=[0,0]     ##
+                            self.procT1[pi]=0
                             print('appending',pi)
                             break
                         elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and parent.username()=='neeraj':
@@ -157,7 +178,9 @@ def procUpdate(self):
                             self.processTreeIterList[pi]=itr
                             self.processList[pi]=proc
                             self.processChildList[pi]=[]
+
                             self.procDiskprev[pi]=[0,0]  ##
+                            self.procT1[pi]=0
                             print('appending',pi)
                             break
             except:
@@ -191,15 +214,16 @@ def procUpdate(self):
                 mem_util=(mem_info[0]-mem_info[2])/mibdevider
                 mem_util='{:.1f}'.format(mem_util)+' MiB'
                 # prev=float(self.processTreeStore.get_value(self.processTreeIterList[pidds],6)[:-5])
+                
                 currArray=self.processList[pidds].io_counters()[2:4]
                 procT2=time.time()
                 wspeed=(currArray[1]-self.procDiskprev[pidds][1])/(procT2-self.procT1[pidds])
                 wspeed=byte_to_human(wspeed)
                 rspeed=(currArray[0]-self.procDiskprev[pidds][0])/(procT2-self.procT1[pidds])
                 rspeed=byte_to_human(rspeed)
-                if self.processList[pidds].name()=='nautilus':
-                    print(currArray,rspeed,wspeed,procT2-self.procT1[pidds])
+
                 self.processTreeStore.set(itr,2,cpu_percent,3,cpu_percent,4,mem_util,5,mem_util,6,rspeed,7,rspeed,8,wspeed,9,wspeed)
+
                 self.procDiskprev[pidds]=currArray[:]
                 self.procT1[pidds]=procT2
         except:
@@ -225,6 +249,23 @@ def procUpdate(self):
             mem_util=self.processTreeStore.get_value(self.processTreeIterList[pid],5)
             mem_util=float(mem_util[:-3])
             self.processTreeStore.set(self.processTreeIterList[pid],4,"{:.1f}".format(rmem_util+mem_util)+' MiB')
+
+    self.columnList['CPU'].set_title('{0} %\nCPU'.format(self.cpuUtil))
+    self.columnList['rCPU'].set_title('{0} %\nrCPU'.format(self.cpuUtil))
+    self.columnList['rMemory'].set_title('{0} %\nrMemory'.format(self.memPercent))
+    self.columnList['Memory'].set_title('{0} %\nMemory'.format(self.memPercent))
+    
+    ## Total disk io for all disks
+    diskio=ps.disk_io_counters()
+    diskTotalT2=time.time()
+    totalrspeed=(diskio[2]-self.diskTotalState1[0])/(diskTotalT2-self.diskTotalT1)
+    totalwspeed=(diskio[3]-self.diskTotalState1[1])/(diskTotalT2-self.diskTotalT1)
+
+    self.columnList['DiskRead'].set_title('{0}\nDiskRead'.format(byte_to_human(totalrspeed)))
+    self.columnList['DiskWrite'].set_title('{0}\nDiskWrite'.format(byte_to_human(totalwspeed)))
+
+    self.diskTotalState1=diskio[2:4]
+    self.diskTotalT1=diskTotalT2
 
     return True
 
