@@ -52,8 +52,8 @@ from proc import *
 class myclass:
     flag=0      #flag for the updator 
     resizerflag=0
-    def __init__(self,passs):
-        self.passs=passs
+    def __init__(self):
+        # self.passs=passs
         myclass.memoryinitalisation=memorytabinit
         myclass.memoryTab=memoryTabUpdate
         #myclass.memDrawFunc1=on_memDrawArea1_draw
@@ -556,7 +556,7 @@ def start():
     # p.close()
     # passs=sub(' ','\ ',passs)
     passs=''
-    main=myclass(passs)
+    main=myclass()
     g.main()
 
     
@@ -566,5 +566,5 @@ if __name__=="__main__":
     # p.close()
     # passs=sub(' ','\ ',passs)
     passs=''
-    main=myclass(passs)
+    main=myclass()
     g.main()

@@ -1,4 +1,4 @@
-from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck
+from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck, Gio
 import psutil as ps,cairo,time
 import re
 from math import pow
@@ -6,9 +6,15 @@ from math import pow
 mibdevider=pow(2,20)
 screen=Wnck.Screen.get_default()
 icon_theme=g.IconTheme().get_default()
-icon_theme.append_search_path('/usr/share/icons')
-icon_list=icon_theme.list_icons(None)
-
+icon_theme.append_search_path('/usr/share/')
+theme_icon_list=icon_theme.list_icons(None)
+gio_apps=Gio.AppInfo.get_all()
+# for app in Gio.AppInfo.get_all():
+#     exetuable=app.get_executable()
+#     if exetuable:
+#         gio_apps[exetuable.split('/')[-1]]=app.get_icon()
+#     else:
+#         gio_apps[]=app.get_icon()
 def byte_to_human(value,persec=True):
     if value > 1024:   ###KiB
         if value > 1048576:    ##MiB
@@ -38,6 +44,7 @@ def sorting_func(model, row1, row2, user_data):
     sort_column, _ = model.get_sort_column_id()
     val1 = model.get_value(row1, sort_column)
     val2 = model.get_value(row2, sort_column)
+    multiplier=1
     if not type(val1)==int:
         temp1=val1.split()
         val1 = float(temp1[0])
@@ -69,25 +76,56 @@ def sorting_func(model, row1, row2, user_data):
     else:
         return 1
 
-def icon_finder(pname,pid):
-    screen.force_update()
+def icon_finder(process):
+    global gio_apps
+    pname=process.name()
+    pid=process.pid
+
+    if pname=='sh':
+        pname='bash'
+    # 1st pref using icon theme
     r=re.compile(pname,re.IGNORECASE)
-    matchlist = list(filter(r.match, icon_list))
+    matchlist = list(filter(r.match, theme_icon_list))
     if len(matchlist)!=0:
+        # print(pname,' ','convention')
         return icon_theme.load_icon(matchlist[0], 16, 0)
 
+    # 2nd pref using Gio.AppInfo
+    for app in gio_apps:
+        app_name=re.sub(' ','-',app.get_display_name())
+        gicon=app.get_icon()
+        if re.search(pname,app_name,re.IGNORECASE):  
+            # print('1st',pname)      
+            return icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE).load_icon()
+
+        app_name=re.sub('','\.desktop',app.get_id())
+        app_name=re.sub('\.','-',app_name)       
+        if re.search(pname,app_name,re.IGNORECASE):
+            # print('2st',pname) 
+            return icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE).load_icon()
+
+        app_name=app.get_commandline()
+        if app_name:
+            if re.search(pname,app_name,re.IGNORECASE):
+                # print('3st',pname,app_name) 
+                return icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE).load_icon()
+    
+    # 3rd pref using Wnck module to get the active screen 
+    screen.force_update()
     for win in screen.get_windows():
         # print(win.get_name()
         
         if pid==win.get_pid() or re.search(pname,win.get_name(),re.IGNORECASE):
             return win.get_icon().scale_simple(20,20,2)
-    
+
+    # 4th pref using regex to search *name*
     r=re.compile(".*{}.*".format(pname),re.IGNORECASE)
-    matchlist = list(filter(r.match, icon_list))
+    matchlist = list(filter(r.match, theme_icon_list))
     if len(matchlist)!=0:
         return icon_theme.load_icon(matchlist[0], 16, 0)
 
-    return icon_theme.load_icon('application-default', 16, 0)
+    # last prefs
+    return icon_theme.load_icon('application-x-executable', 16, 0)
     
         
 
@@ -116,7 +154,7 @@ def searcher(self,sprocs,root):
                 mem_util=(mem_info[0]-mem_info[2])/mibdevider
                 mem_util='{:.1f}'.format(mem_util)+' MiB'
                 itr=self.processTreeStore.append(root,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
-                ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',procs.username()," ".join(procs.cmdline()),icon_finder(procs.name(),procs.pid)])
+                ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',procs.username()," ".join(procs.cmdline()),icon_finder(procs)])
                 self.processTreeIterList[procs.pid]=itr
                 self.processList[procs.pid]=procs
                 self.procDiskprev[procs.pid]=[0,0]
@@ -188,8 +226,9 @@ def procInit(self):
         column.set_alignment(0)
         column.set_sort_indicator(True)
         self.processTree.append_column(column)
-        self.columnList[col]=column   
-        self.processTreeStore.set_sort_func(i,sorting_func,None)
+        self.columnList[col]=column
+        if i!=1:   
+            self.processTreeStore.set_sort_func(i,sorting_func,None)
 
     self.columnList['rDiskRead'].set_visible(False)
     self.columnList['rDiskWrite'].set_visible(False)
@@ -212,7 +251,7 @@ def procUpdate(self):
                         if parent.pid in self.processList:
                             itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
                             cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()
-                            ," ".join(proc.cmdline()),icon_finder(proc.name(),proc.pid)])
+                            ," ".join(proc.cmdline()),icon_finder(proc)])
                             self.processTreeIterList[pi]=itr
                             self.processList[pi]=proc
                             self.processChildList[parent.pid].append(pi)
@@ -224,7 +263,8 @@ def procUpdate(self):
                             break
                         elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and parent.username()=='neeraj':
                             itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
-                            cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()," ".join(proc.cmdline())])
+                            cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()
+                            ," ".join(proc.cmdline()),icon_finder(proc)])
                             self.processTreeIterList[pi]=itr
                             self.processList[pi]=proc
                             self.processChildList[pi]=[]
