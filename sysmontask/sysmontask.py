@@ -71,6 +71,8 @@ class myclass:
 
         myclass.procinitialisation=procInit
         myclass.procUpdate=procUpdate
+        myclass.row_selected=row_selected
+        myclass.kill_process=kill_process
 
         self.gladefile=files_dir+"/sysmontask.glade"
         self.builder=g.Builder()

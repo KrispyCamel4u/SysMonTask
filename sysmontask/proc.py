@@ -1,6 +1,6 @@
 from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck, Gio
 import psutil as ps,cairo,time
-import re
+import re,os,signal
 from math import pow
 
 mibdevider=pow(2,20)
@@ -76,6 +76,17 @@ def sorting_func(model, row1, row2, user_data):
     else:
         return 1
 
+def row_selected(self,selection):
+    model,row=selection.get_selected()
+    self.selected_process_pid=model[row][0]
+
+def kill_process(self,widget):
+    try:
+        print('killing',self.selected_process_pid)
+        os.kill(self.selected_process_pid,signal.SIGTERM)
+    except:
+        print('some error in killing')
+
 def icon_finder(process):
     global gio_apps
     pname=process.name()
@@ -83,14 +94,10 @@ def icon_finder(process):
 
     if pname=='sh':
         pname='bash'
-    # 1st pref using icon theme
+    
+    # 2nd pref using Gio.AppInfo
     r=re.compile(pname,re.IGNORECASE)
     matchlist = list(filter(r.match, theme_icon_list))
-    if len(matchlist)!=0:
-        # print(pname,' ','convention')
-        return icon_theme.load_icon(matchlist[0], 16, 0)
-
-    # 2nd pref using Gio.AppInfo
     for app in gio_apps:
         app_name=re.sub(' ','-',app.get_display_name())
         gicon=app.get_icon()
@@ -104,13 +111,25 @@ def icon_finder(process):
             # print('2st',pname) 
             return icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE).load_icon()
 
+        if len(matchlist)!=0:
+            # print(pname,' ','convention')
+            return icon_theme.load_icon(matchlist[0], 16, 0)
+
         app_name=app.get_commandline()
         if app_name:
             if re.search(pname,app_name,re.IGNORECASE):
                 # print('3st',pname,app_name) 
                 return icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE).load_icon()
     
-    # 3rd pref using Wnck module to get the active screen 
+    # 1st pref using icon theme
+    # r=re.compile(pname,re.IGNORECASE)
+    # matchlist = list(filter(r.match, theme_icon_list))
+    # if len(matchlist)!=0:
+    #     # print(pname,' ','convention')
+    #     return icon_theme.load_icon(matchlist[0], 16, 0)
+
+
+    # 3rd pref using Wnck module to get the active screen
     screen.force_update()
     for win in screen.get_windows():
         # print(win.get_name()
@@ -165,7 +184,8 @@ def searcher(self,sprocs,root):
 
 def procInit(self):
     self.processTree=self.builder.get_object('processtree')
-
+    self.process_kill_button=self.builder.get_object('processKillButton')
+    self.process_kill_button.connect('clicked',self.kill_process)
     # self.data=[['chrome',30,50,0,1],['firefox',10,20,0,2],['sysmon',1,0,3,1]]
     self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str,GdkPixbuf.Pixbuf)
     # self.processTreeStore=self.builder.get_object('processTreeStore')
@@ -229,6 +249,9 @@ def procInit(self):
         self.columnList[col]=column
         if i!=1:   
             self.processTreeStore.set_sort_func(i,sorting_func,None)
+
+    selected_row=self.processTree.get_selection()
+    selected_row.connect("changed",self.row_selected)
 
     self.columnList['rDiskRead'].set_visible(False)
     self.columnList['rDiskWrite'].set_visible(False)
