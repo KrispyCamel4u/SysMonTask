@@ -7,47 +7,36 @@ import psutil as ps,cairo
 from os import popen
 from re import sub
 import os
-from rooter import *
-
-if(ps.__version__>='5.7.1'):
-    pass
-else:
-    os.system('zenity --error --text="require psutil >=5.7.1 \nCan not start with the current version. \nPress OK to continue."')
-    p=popen('zenity --question --text="Do you want to update psutil?" && echo $?')
-    if(p.read()[:-1]=='0'):
-        print('updatating psutil')
-        os.system("pip3 install 'psutil>=5.7.1'")
-        print('done updating')
-        os.system('zenity --info --text="updated pip, exiting! \nKindly start sysmontask again :)"')
-    exit()
     
-files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
-from mem import *
-from sidepane import *
-from disk import *
-from net import *
-from gpu import *
-from proc import *
+# files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
+# from mem import *
+# from sidepane import *
+# from disk import *
+# from net import *
+# from gpu import *
+# from proc import *
 
-# try:
-#     # for running as main file 
+try:
+    # for running as main file 
 
-#     files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
-#     from mem import *
-#     from sidepane import *
-#     from disk import *
-#     from net import *
-#     from gpu import *
-#     from proc import *
-# except:
-#     # for module level through  apt install comment it if running as main file
-#     files_dir="/usr/share/sysmontask/glade_files"
-#     from sysmontask.mem import *
-#     from sysmontask.sidepane import *
-#     from sysmontask.disk import *
-#     from sysmontask.net import *
-#     from sysmontask.gpu import *
-#     from sysmontask.proc import *
+    files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
+    from mem import *
+    from sidepane import *
+    from disk import *
+    from net import *
+    from gpu import *
+    from proc import *
+    from rooter import *
+except:
+    # for module level through  apt install comment it if running as main file
+    files_dir="/usr/share/sysmontask/glade_files"
+    from sysmontask.mem import *
+    from sysmontask.sidepane import *
+    from sysmontask.disk import *
+    from sysmontask.net import *
+    from sysmontask.gpu import *
+    from sysmontask.proc import *
+    from sysmontask.rooter import *
 
 class myclass:
     flag=0      #flag for the updator 
@@ -76,13 +65,14 @@ class myclass:
 
         self.gladefile=files_dir+"/sysmontask.glade"
         self.builder=g.Builder()
-        print('h')
         self.builder.add_from_file(self.gladefile)
         self.builder.connect_signals(self)
         self.Window=self.builder.get_object("main_window")
         self.quit=self.builder.get_object("quit")
         self.quit.connect('activate',self.on_quit_activate)
         
+        self.Window.set_icon_from_file('/usr/share/sysmontask/icons/SysMonTask.png')
+
         self.performanceStack=self.builder.get_object('performancestack')
 
 
@@ -551,22 +541,13 @@ class myclass:
 
 
 
-getPrivilege()
 def start():
-    # p=popen('zenity --password')
-    # passs=p.readline()[:-1]    
-    # p.close()
-    # passs=sub(' ','\ ',passs)
-    passs=''
+    getPrivilege()
     main=myclass()
     g.main()
 
     
 if __name__=="__main__":
-    # p=popen('zenity --password')
-    # passs=p.readline()[:-1]    
-    # p.close()
-    # passs=sub(' ','\ ',passs)
-    passs=''
+    getPrivilege()
     main=myclass()
     g.main()

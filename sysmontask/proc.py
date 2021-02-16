@@ -81,52 +81,74 @@ def row_selected(self,selection):
     self.selected_process_pid=model[row][0]
 
 def kill_process(self,widget):
-    try:
+    # try:
+    print('keller on the way',self.selected_process_pid)
+    dialog=confirmation_popup(self.Window,self)
+    response=dialog.run()
+    if response==g.ResponseType.OK:
         print('killing',self.selected_process_pid)
         os.kill(self.selected_process_pid,signal.SIGTERM)
-    except:
-        print('some error in killing')
+    dialog.destroy()
+    time.sleep(0.1)
+    procUpdate(self)
+    # dialog=g.Dialog('Confirmation',self.Window,g.DialogFlags.MODAL,(g.STOCK_CANCEL,g.ResponseType.CANCEL,
+    #    g.STOCK_OK,g.ResponseType.OK))
+    # dialog.vbox.add(g.Label('hello'))
+    # dialog.show_all()
+    # res=dialog.run()
+    # print(res)
+    # dialog.destroy()
+    # except:
+    #     print('some error in killing')
+
+class confirmation_popup(g.Dialog):
+    def __init__(self,parentWindow,parent):
+       g.Dialog.__init__(self,'Confirmation',parentWindow,g.DialogFlags.MODAL,(g.STOCK_CANCEL,g.ResponseType.CANCEL,
+       g.STOCK_OK,g.ResponseType.OK))
+       self.set_border_width(20)
+       content_area=self.get_content_area() 
+       content_area.add(g.Label('Are you sure you want to kill the process?\nPid:{0} Name:{1}'.format(parent.selected_process_pid,parent.processList[parent.selected_process_pid].name())))
+       self.show_all()
 
 def icon_finder(process):
     global gio_apps
     pname=process.name()
     pid=process.pid
+    default_icon=icon_theme.load_icon('application-x-executable', 16, 0)
 
     if pname=='sh':
         pname='bash'
     
     # 2nd pref using Gio.AppInfo
-    r=re.compile(pname,re.IGNORECASE)
-    matchlist = list(filter(r.match, theme_icon_list))
     for app in gio_apps:
         app_name=re.sub(' ','-',app.get_display_name())
         gicon=app.get_icon()
-        if re.search(pname,app_name,re.IGNORECASE):  
+
+        if gicon and gicon.to_string()=='application-x-executable':
+            continue
+
+        if re.search(pname,app_name,re.IGNORECASE) and gicon:  
             # print('1st',pname)      
             return icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE).load_icon()
 
         app_name=re.sub('','\.desktop',app.get_id())
         app_name=re.sub('\.','-',app_name)       
-        if re.search(pname,app_name,re.IGNORECASE):
+        if re.search(pname,app_name,re.IGNORECASE) and gicon:
             # print('2st',pname) 
             return icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE).load_icon()
 
-        if len(matchlist)!=0:
-            # print(pname,' ','convention')
-            return icon_theme.load_icon(matchlist[0], 16, 0)
-
         app_name=app.get_commandline()
         if app_name:
-            if re.search(pname,app_name,re.IGNORECASE):
+            if re.search(pname,app_name,re.IGNORECASE) and gicon:
                 # print('3st',pname,app_name) 
                 return icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE).load_icon()
     
     # 1st pref using icon theme
-    # r=re.compile(pname,re.IGNORECASE)
-    # matchlist = list(filter(r.match, theme_icon_list))
-    # if len(matchlist)!=0:
-    #     # print(pname,' ','convention')
-    #     return icon_theme.load_icon(matchlist[0], 16, 0)
+    r=re.compile(pname,re.IGNORECASE)
+    matchlist = list(filter(r.match, theme_icon_list))
+    if len(matchlist)!=0:
+        # print(pname,' ','convention')
+        return icon_theme.load_icon(matchlist[0], 16, 0)
 
 
     # 3rd pref using Wnck module to get the active screen
@@ -144,7 +166,7 @@ def icon_finder(process):
         return icon_theme.load_icon(matchlist[0], 16, 0)
 
     # last prefs
-    return icon_theme.load_icon('application-x-executable', 16, 0)
+    return default_icon
     
         
 
@@ -156,36 +178,41 @@ def searcher(self,sprocs,root):
     if len(childlist)==0:
         return 
     else:
-        for procs in childlist:
-            if (root!=None) or ('/libexec/' not in "".join(procs.cmdline()) and 'daemon' not in "".join(procs.cmdline()) and procs.username()=='neeraj'):
-                # if(sprocs.name()=='systemd'):
-                #     if(len(procs.children())!=0):
-                #         print(procs.name())
-                #         root=self.processTreeStore.append(None,[0,'name',0,0,0,'name','name'])
-                if(sprocs.name()!='systemd'):
-                    # print(sprocs.name()) 
-                    # print(sprocs.pid,' ',procs.pid)
-                    self.processChildList[sprocs.pid].append(procs.pid)
-                
-                cpu_percent=procs.cpu_percent()
-                mem_info=procs.memory_info()
-                cpu_percent="{:.1f}".format(cpu_percent)+' %'
-                mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                mem_util='{:.1f}'.format(mem_util)+' MiB'
-                itr=self.processTreeStore.append(root,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
-                ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',procs.username()," ".join(procs.cmdline()),icon_finder(procs)])
-                self.processTreeIterList[procs.pid]=itr
-                self.processList[procs.pid]=procs
-                self.procDiskprev[procs.pid]=[0,0]
-                self.procT1[procs.pid]=0
-            else:
-                itr=None
-            searcher(self,procs,itr)
+        try:
+            for procs in childlist:
+                if (root!=None) or ('/libexec/' not in "".join(procs.cmdline()) and 'daemon' not in "".join(procs.cmdline()) and 'dbus' not in "".join(procs.cmdline()) ):
+                    # if(sprocs.name()=='systemd'):
+                    #     if(len(procs.children())!=0):
+                    #         print(procs.name())
+                    #         root=self.processTreeStore.append(None,[0,'name',0,0,0,'name','name'])
+                    if(sprocs.name()!='systemd'):
+                        # print(sprocs.name()) 
+                        # print(sprocs.pid,' ',procs.pid)
+                        self.processChildList[sprocs.pid].append(procs.pid)
+                    
+                    cpu_percent=procs.cpu_percent()
+                    mem_info=procs.memory_info()
+                    cpu_percent="{:.1f}".format(cpu_percent)+' %'
+                    mem_util=(mem_info[0]-mem_info[2])/mibdevider
+                    mem_util='{:.1f}'.format(mem_util)+' MiB'
+                    itr=self.processTreeStore.append(root,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
+                    ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',procs.username()," ".join(procs.cmdline()),icon_finder(procs)])
+                    self.processTreeIterList[procs.pid]=itr
+                    self.processList[procs.pid]=procs
+                    self.procDiskprev[procs.pid]=[0,0]
+                    self.procT1[procs.pid]=0
+                else:
+                    itr=None
+                searcher(self,procs,itr)
+        except:
+            print('some error in searcher')
 
 def procInit(self):
     self.processTree=self.builder.get_object('processtree')
+    self.processTree_background=self.builder.get_object('processtreeBackground')
     self.process_kill_button=self.builder.get_object('processKillButton')
     self.process_kill_button.connect('clicked',self.kill_process)
+
     # self.data=[['chrome',30,50,0,1],['firefox',10,20,0,2],['sysmon',1,0,3,1]]
     self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str,GdkPixbuf.Pixbuf)
     # self.processTreeStore=self.builder.get_object('processTreeStore')
@@ -264,38 +291,40 @@ def procUpdate(self):
             # print('my process')
             try:
                 proc=ps.Process(pi)
-                if '/libexec/' not in "".join(proc.cmdline()) and 'daemon' not in "".join(proc.cmdline()) and proc.username()=='neeraj':
-                    for parent in proc.parents():
-                        cpu_percent=proc.cpu_percent()/ps.cpu_count()
-                        cpu_percent="{:.1f}".format(cpu_percent)+' %'
-                        mem_info=proc.memory_info()
-                        mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                        mem_util='{:.1f}'.format(mem_util)+' MiB'
-                        if parent.pid in self.processList:
-                            itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
-                            cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()
-                            ," ".join(proc.cmdline()),icon_finder(proc)])
-                            self.processTreeIterList[pi]=itr
-                            self.processList[pi]=proc
-                            self.processChildList[parent.pid].append(pi)
-                            self.processChildList[pi]=[]
+                if '/libexec/' not in "".join(proc.cmdline()) and 'daemon' not in "".join(proc.cmdline()) and 'dbus' not in "".join(proc.cmdline()) :
+                    parents_processess=proc.parents()
+                    if self.processSystemd in parents_processess:
+                        for parent in parents_processess:
+                            cpu_percent=proc.cpu_percent()/ps.cpu_count()
+                            cpu_percent="{:.1f}".format(cpu_percent)+' %'
+                            mem_info=proc.memory_info()
+                            mem_util=(mem_info[0]-mem_info[2])/mibdevider
+                            mem_util='{:.1f}'.format(mem_util)+' MiB'
+                            if parent.pid in self.processList:
+                                itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
+                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()
+                                ," ".join(proc.cmdline()),icon_finder(proc)])
+                                self.processTreeIterList[pi]=itr
+                                self.processList[pi]=proc
+                                self.processChildList[parent.pid].append(pi)
+                                self.processChildList[pi]=[]
 
-                            self.procDiskprev[pi]=[0,0]     ##
-                            self.procT1[pi]=0
-                            print('appending',pi)
-                            break
-                        elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and parent.username()=='neeraj':
-                            itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
-                            cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()
-                            ," ".join(proc.cmdline()),icon_finder(proc)])
-                            self.processTreeIterList[pi]=itr
-                            self.processList[pi]=proc
-                            self.processChildList[pi]=[]
+                                self.procDiskprev[pi]=[0,0]     ##
+                                self.procT1[pi]=0
+                                print('appending',pi)
+                                break
+                            elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and 'dbus' not in "".join(parent.cmdline()):
+                                itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
+                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()
+                                ," ".join(proc.cmdline()),icon_finder(proc)])
+                                self.processTreeIterList[pi]=itr
+                                self.processList[pi]=proc
+                                self.processChildList[pi]=[]
 
-                            self.procDiskprev[pi]=[0,0]  ##
-                            self.procT1[pi]=0
-                            print('appending',pi)
-                            break
+                                self.procDiskprev[pi]=[0,0]  ##
+                                self.procT1[pi]=0
+                                print('appending',pi)
+                                break
             except:
                 print('some error in appending')
 

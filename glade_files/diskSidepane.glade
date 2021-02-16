@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.16"/>
   <template class="diskSidepaneWidget" parent="GtkBox">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <property name="halign">start</property>
     <property name="valign">start</property>
     <child>
       <object class="GtkDrawingArea" id="disksidepanedrawarea">
-        <property name="width_request">110</property>
-        <property name="height_request">64</property>
+        <property name="width-request">110</property>
+        <property name="height-request">64</property>
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="margin_start">8</property>
-        <property name="margin_top">8</property>
-        <property name="margin_bottom">6</property>
+        <property name="margin-start">8</property>
+        <property name="margin-top">8</property>
+        <property name="margin-bottom">6</property>
         <signal name="draw" handler="on_diskSidepaneDrawArea_draw" swapped="no"/>
       </object>
       <packing>
@@ -27,19 +27,20 @@
       </packing>
     </child>
     <child>
+      <!-- n-columns=1 n-rows=2 -->
       <object class="GtkGrid">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="halign">start</property>
         <property name="valign">start</property>
-        <property name="margin_start">10</property>
+        <property name="margin-start">10</property>
         <child>
           <object class="GtkLabel" id="disksidepanetextlabel">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">start</property>
-            <property name="margin_top">4</property>
+            <property name="margin-top">4</property>
             <property name="label" translatable="yes">Disk</property>
             <attributes>
               <attribute name="weight" value="medium"/>
@@ -47,21 +48,21 @@
             </attributes>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkLabel" id="disksidepanelabelvalue">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">start</property>
             <property name="label" translatable="yes">label</property>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">1</property>
+            <property name="left-attach">0</property>
+            <property name="top-attach">1</property>
           </packing>
         </child>
       </object>

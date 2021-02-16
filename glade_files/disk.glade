@@ -1,41 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.16"/>
   <template class="diskTabWidget" parent="GtkScrolledWindow">
     <property name="visible">True</property>
-    <property name="can_focus">True</property>
+    <property name="can-focus">True</property>
     <property name="hexpand">True</property>
     <property name="vexpand">True</property>
-    <property name="shadow_type">in</property>
+    <property name="shadow-type">in</property>
     <child>
       <object class="GtkViewport">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="hexpand">False</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <property name="orientation">vertical</property>
             <child>
+              <!-- n-columns=2 n-rows=2 -->
               <object class="GtkGrid" id="disktabgrid">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_top">2</property>
+                <property name="can-focus">False</property>
+                <property name="margin-top">2</property>
                 <property name="hexpand">True</property>
                 <child>
                   <object class="GtkLabel" id="disktextlabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="halign">start</property>
                     <property name="valign">center</property>
-                    <property name="margin_left">15</property>
-                    <property name="margin_start">15</property>
+                    <property name="margin-left">15</property>
+                    <property name="margin-start">15</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Disk  </property>
-                    <property name="width_chars">9</property>
-                    <property name="max_width_chars">9</property>
+                    <property name="width-chars">9</property>
+                    <property name="max-width-chars">9</property>
                     <attributes>
                       <attribute name="style" value="normal"/>
                       <attribute name="weight" value="medium"/>
@@ -43,33 +44,33 @@
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="halign">start</property>
-                    <property name="margin_left">15</property>
-                    <property name="margin_start">15</property>
+                    <property name="margin-left">15</property>
+                    <property name="margin-start">15</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Active Time</property>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">1</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="diskinfolabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="halign">end</property>
                     <property name="valign">center</property>
-                    <property name="margin_right">15</property>
-                    <property name="margin_end">20</property>
+                    <property name="margin-right">15</property>
+                    <property name="margin-end">20</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">NA</property>
                     <property name="justify">center</property>
@@ -78,23 +79,23 @@
                     </attributes>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="halign">end</property>
-                    <property name="margin_right">15</property>
-                    <property name="margin_end">20</property>
+                    <property name="margin-right">15</property>
+                    <property name="margin-end">20</property>
                     <property name="hexpand">False</property>
                     <property name="label" translatable="yes">100%</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">1</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">1</property>
                   </packing>
                 </child>
               </object>
@@ -106,15 +107,15 @@
             </child>
             <child>
               <object class="GtkDrawingArea" id="diskdrawarea1">
-                <property name="width_request">580</property>
-                <property name="height_request">150</property>
+                <property name="width-request">580</property>
+                <property name="height-request">150</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">15</property>
-                <property name="margin_right">15</property>
-                <property name="margin_start">15</property>
-                <property name="margin_end">15</property>
-                <property name="margin_top">3</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">15</property>
+                <property name="margin-right">15</property>
+                <property name="margin-start">15</property>
+                <property name="margin-end">15</property>
+                <property name="margin-top">3</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <signal name="draw" handler="on_diskDrawArea1_draw" swapped="no"/>
@@ -126,39 +127,40 @@
               </packing>
             </child>
             <child>
+              <!-- n-columns=2 n-rows=1 -->
               <object class="GtkGrid">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <child>
                   <object class="GtkLabel">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="halign">start</property>
-                    <property name="margin_left">15</property>
-                    <property name="margin_start">15</property>
-                    <property name="margin_top">15</property>
+                    <property name="margin-left">15</property>
+                    <property name="margin-start">15</property>
+                    <property name="margin-top">15</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">Disk Transfer Rate</property>
                   </object>
                   <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">0</property>
                   </packing>
                 </child>
                 <child>
                   <object class="GtkLabel" id="diskcurrenspeedlabelvalue">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="halign">end</property>
                     <property name="valign">end</property>
-                    <property name="margin_right">20</property>
-                    <property name="margin_end">20</property>
+                    <property name="margin-right">20</property>
+                    <property name="margin-end">20</property>
                     <property name="hexpand">True</property>
                     <property name="label" translatable="yes">1000MB</property>
                   </object>
                   <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">0</property>
                   </packing>
                 </child>
               </object>
@@ -170,13 +172,13 @@
             </child>
             <child>
               <object class="GtkDrawingArea" id="diskdrawarea2">
-                <property name="height_request">100</property>
+                <property name="height-request">100</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_left">15</property>
-                <property name="margin_right">15</property>
-                <property name="margin_start">15</property>
-                <property name="margin_end">15</property>
+                <property name="can-focus">False</property>
+                <property name="margin-left">15</property>
+                <property name="margin-right">15</property>
+                <property name="margin-start">15</property>
+                <property name="margin-end">15</property>
                 <property name="hexpand">False</property>
                 <signal name="draw" handler="on_diskDrawArea2_draw" swapped="no"/>
               </object>
@@ -189,32 +191,33 @@
             <child>
               <object class="GtkPaned">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="margin_top">5</property>
-                <property name="border_width">5</property>
+                <property name="can-focus">True</property>
+                <property name="margin-top">5</property>
+                <property name="border-width">5</property>
                 <child>
+                  <!-- n-columns=3 n-rows=4 -->
                   <object class="GtkGrid">
-                    <property name="width_request">224</property>
+                    <property name="width-request">224</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_top">10</property>
+                        <property name="margin-top">10</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">Active Time</property>
                       </object>
                       <packing>
-                        <property name="left_attach">2</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="diskactivelabelvalue">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="halign">start</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">NA</property>
@@ -224,41 +227,41 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="left_attach">2</property>
-                        <property name="top_attach">1</property>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">1</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="halign">start</property>
-                        <property name="margin_top">10</property>
+                        <property name="margin-top">10</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">Read Speed</property>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">0</property>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">0</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="halign">start</property>
                         <property name="hexpand">True</property>
                         <property name="label" translatable="yes">Write Speed</property>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">2</property>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">2</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="diskreadlabelvalue">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="halign">start</property>
                         <property name="valign">start</property>
                         <property name="hexpand">True</property>
@@ -270,14 +273,14 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">1</property>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">1</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="diskwritelabelvalue">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="halign">start</property>
                         <property name="valign">start</property>
                         <property name="hexpand">True</property>
@@ -289,15 +292,15 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="left_attach">1</property>
-                        <property name="top_attach">3</property>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">3</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="1">
-                        <property name="width_request">0</property>
+                        <property name="width-request">0</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="halign">end</property>
                         <property name="label" translatable="yes">|</property>
                         <attributes>
@@ -307,15 +310,15 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">3</property>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">3</property>
                       </packing>
                     </child>
                     <child>
                       <object class="GtkLabel" id="2">
-                        <property name="width_request">0</property>
+                        <property name="width-request">0</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="halign">end</property>
                         <property name="label" translatable="yes">|</property>
                         <attributes>
@@ -325,8 +328,8 @@
                         </attributes>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">1</property>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">1</property>
                       </packing>
                     </child>
                     <child>
@@ -350,10 +353,10 @@
                 <child>
                   <object class="GtkTreeView" id="diskUsagesTreeView">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="margin_start">10</property>
-                    <property name="margin_end">10</property>
-                    <property name="margin_top">10</property>
+                    <property name="can-focus">True</property>
+                    <property name="margin-start">10</property>
+                    <property name="margin-end">10</property>
+                    <property name="margin-top">10</property>
                     <property name="hexpand">True</property>
                     <child internal-child="selection">
                       <object class="GtkTreeSelection"/>
