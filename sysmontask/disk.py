@@ -10,8 +10,10 @@ from gi_composites import GtkTemplate
 
 if __name__=='sysmontask.disk':
     from sysmontask.sysmontask import files_dir
+    from sysmontask.proc import sorting_func,byte_to_human
 else:
     from sysmontask import files_dir
+    from proc import sorting_func,byte_to_human
 
 @GtkTemplate(ui=files_dir+'/disk.glade')
 class diskTabWidget(g.ScrolledWindow):
@@ -29,6 +31,7 @@ class diskTabWidget(g.ScrolledWindow):
     diskreadlabelvalue=GtkTemplate.Child()
     diskwritelabelvalue=GtkTemplate.Child()
     diskcurrenspeedlabelvalue=GtkTemplate.Child()
+    diskUsagesTreeView=GtkTemplate.Child()
 
     # Alternative way to specify multiple widgets
     #label1, entry = GtkTemplate.Child.widgets(2)
@@ -178,6 +181,7 @@ class diskTabWidget(g.ScrolledWindow):
 
         return False        
 
+
 def diskinit(self):
 
     self.disklist=[]
@@ -202,6 +206,12 @@ def diskinit(self):
     self.diskReadArray=[]
     self.diskWriteArray=[]
     self.numOfDisks=len(self.disklist)
+
+    # partitions
+    self.diskPartitions={}
+    self.diskListStores={}
+    partitions=ps.disk_partitions()
+
     for i in range(0,self.numOfDisks):
         self.diskWidgetList[i]=diskTabWidget()
         self.performanceStack.add_titled(self.diskWidgetList[i],'diskStack'+str(i),'Disk'+str(i))
@@ -213,12 +223,53 @@ def diskinit(self):
             if drives==self.disklist[i]:
                self.diskstate1.append(disktemp[drives])
 
+        # partition info        
+        self.diskPartitions[i]=[]
+        for part in partitions:
+            if self.disklist[i] in part[0]:
+                self.diskPartitions[i]+=[part]
+        ## for treeview of disk usage
+        self.diskListStores[i]=g.ListStore(str,str,str,str,str,int,bool)
+        
+        for part in self.diskPartitions[i]:
+            temp=ps.disk_usage(part[1])
+            self.diskListStores[i].append([part[0],part[1],part[2],byte_to_human(temp[0],persec=False),byte_to_human(temp[1],persec=False),temp[3],False])
+
+        self.diskWidgetList[i].diskUsagesTreeView.set_model(self.diskListStores[i])
+
+        for k,col in enumerate(['Device','MountPoint','Type','Total','Used']):
+            renderer=g.CellRendererText()
+            if col=='Used':
+                column=g.TreeViewColumn(col)
+                progRenderer=g.CellRendererProgress()
+                # progRenderer.props.text='50%'
+                # progRenderer.props.fraction=0.5
+                column.pack_start(renderer,False)
+                column.add_attribute(renderer,"text",4)
+                column.pack_start(progRenderer,False)
+                column.add_attribute(progRenderer,"value",5)
+                # column=g.TreeViewColumn(col,progRenderer,value=5,inverted=6)
+                
+            else:
+                column=g.TreeViewColumn(col,renderer,text=k)
+
+            column.set_sort_column_id(k)
+            column.set_resizable(True)
+            column.set_reorderable(True)
+            # column.set_expand(True)
+            column.set_alignment(0)
+            column.set_sort_indicator(True)
+            self.diskWidgetList[i].diskUsagesTreeView.append_column(column)
+               
+            # self.processTreeStore.set_sort_func(i,sorting_func,None)
+        self.diskListStores[i].set_sort_func(3,sorting_func,None)
 
         self.diskActiveArray.append([0]*100)
         self.diskReadArray.append([0]*100)
         self.diskWriteArray.append([0]*100)
 
         self.diskWidgetList[i].givedata(self,i)
+    
     
     
                 
@@ -238,17 +289,17 @@ def diskTabUpdate(self):
         
         self.diskActiveString.append(str(int(self.diskDiff[i][8]/10))+'%')
         self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString[i])
-        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diskDiff[i][2]/1000000)+'MB')
-        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diskDiff[i][3]/1000000)+'MB')
+        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diskDiff[i][2]/1048576)+'MiB/s')
+        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diskDiff[i][3]/1048576)+'MiB/s')
 
         self.diskActiveArray[i].pop()
         self.diskActiveArray[i].insert(0,(self.diskDiff[i][8])/(10*timediskDiff))##
 
         self.diskReadArray[i].pop()
-        self.diskReadArray[i].insert(0,self.diskDiff[i][2]/((timediskDiff)*1000000))
+        self.diskReadArray[i].insert(0,self.diskDiff[i][2]/((timediskDiff)*1048576))
 
         self.diskWriteArray[i].pop()
-        self.diskWriteArray[i].insert(0,self.diskDiff[i][3]/((timediskDiff)*1000000))
+        self.diskWriteArray[i].insert(0,self.diskDiff[i][3]/((timediskDiff)*1048576))
 
         self.diskWidgetList[i].givedata(self,i)
 

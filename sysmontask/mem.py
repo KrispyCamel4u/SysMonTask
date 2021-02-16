@@ -26,11 +26,13 @@ def memorytabinit(self):
 
     self.memDrawArea2=self.builder.get_object('memdrawarea2')
 
-    self.memTotal=round(ps.virtual_memory()[0]/pow(2,30),1)
+    self.memTotal=round(ps.virtual_memory()[0]/pow(2,30),1)  # in GiBs
+    # self.memTotalInMiB=self.memTotal*pow(2,10)
     self.memInfoLabel.set_text(str(self.memTotal)+'GiB')
 
     try:
-        p=popen('echo '+self.passs+ '| sudo -S dmidecode -t memory|grep -E -i "memory speed"')
+        # p=popen('echo '+self.passs+ '| sudo -S dmidecode -t memory|grep -E -i "memory speed"')
+        p=popen('dmidecode -t memory|grep -E -i "memory speed"')
         dmidecodetemp=p.readlines()
         p.close()
         memspeed=100000000
@@ -52,7 +54,8 @@ def memorytabinit(self):
         pass
 
     try:
-        p=popen('echo '+self.passs+'| sudo -S dmidecode -t memory|grep -E -m1 -i "form factor"')
+        # p=popen('echo '+self.passs+'| sudo -S dmidecode -t memory|grep -E -m1 -i "form factor"')
+        p=popen('dmidecode -t memory|grep -E -m1 -i "form factor"')
         self.memFormLabelValue.set_text(re.sub('\s','',p.read().split(':')[1]))
         p.close()
     except:
@@ -70,7 +73,7 @@ def memorytabinit(self):
 
 def memoryTabUpdate(self):
     memory=ps.virtual_memory()
-    self.usedd=round((memory[0]-memory[1])/pow(2,30),1)
+    self.usedd=round((memory[0]-memory[1])/pow(2,30),1)      
     self.memAvailable=round(memory[1]/pow(2,30),1)
     self.memFree=round(memory[4]/pow(2,30),1)
     

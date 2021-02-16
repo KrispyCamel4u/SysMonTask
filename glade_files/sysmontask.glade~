@@ -237,6 +237,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                   <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="margin-bottom">10</property>
                     <property name="vexpand">True</property>
                     <property name="shadow-type">in</property>
                     <child>
@@ -272,7 +273,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="has-tooltip">True</property>
-                                <property name="margin-bottom">7</property>
                                 <property name="enable-grid-lines">both</property>
                                 <property name="enable-tree-lines">True</property>
                                 <child internal-child="selection">

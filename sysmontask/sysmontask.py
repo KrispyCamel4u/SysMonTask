@@ -7,22 +7,17 @@ import psutil as ps,cairo
 from os import popen
 from re import sub
 import os
-
-if(ps.__version__>='5.7.1'):
-    pass
-else:
-    os.system('zenity --error --text="require psutil >=5.7.1 \nCan not start with the current version. \nPress OK to continue."')
-    p=popen('zenity --question --text="Do you want to update psutil?" && echo $?')
-    if(p.read()[:-1]=='0'):
-        print('updatating psutil')
-        os.system("pip3 install 'psutil>=5.7.1'")
-        print('done updating')
-        os.system('zenity --info --text="updated pip, exiting! \nKindly start sysmontask again :)"')
-    exit()
     
+# files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
+# from mem import *
+# from sidepane import *
+# from disk import *
+# from net import *
+# from gpu import *
+# from proc import *
 
 try:
-#     for running as main file 
+    # for running as main file 
 
     files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
     from mem import *
@@ -30,6 +25,8 @@ try:
     from disk import *
     from net import *
     from gpu import *
+    from proc import *
+    from rooter import *
 except:
     # for module level through  apt install comment it if running as main file
     files_dir="/usr/share/sysmontask/glade_files"
@@ -38,12 +35,14 @@ except:
     from sysmontask.disk import *
     from sysmontask.net import *
     from sysmontask.gpu import *
+    from sysmontask.proc import *
+    from sysmontask.rooter import *
 
 class myclass:
     flag=0      #flag for the updator 
     resizerflag=0
-    def __init__(self,passs):
-        self.passs=passs
+    def __init__(self):
+        # self.passs=passs
         myclass.memoryinitalisation=memorytabinit
         myclass.memoryTab=memoryTabUpdate
         #myclass.memDrawFunc1=on_memDrawArea1_draw
@@ -59,6 +58,11 @@ class myclass:
         myclass.gpuinitialisation=gpuinit
         myclass.gpuTabUpdate=gpuUpdate
 
+        myclass.procinitialisation=procInit
+        myclass.procUpdate=procUpdate
+        myclass.row_selected=row_selected
+        myclass.kill_process=kill_process
+
         self.gladefile=files_dir+"/sysmontask.glade"
         self.builder=g.Builder()
         self.builder.add_from_file(self.gladefile)
@@ -67,16 +71,17 @@ class myclass:
         self.quit=self.builder.get_object("quit")
         self.quit.connect('activate',self.on_quit_activate)
         
+        self.Window.set_icon_from_file('/usr/share/sysmontask/icons/SysMonTask.png')
+
         self.performanceStack=self.builder.get_object('performancestack')
 
 
         self.sidepaneBox=self.builder.get_object('sidepanebox')
-
         self.memoryinitalisation()
         self.diskinitialisation()
         self.netinitialisation()
         self.gpuinitialisation()
-
+        self.procinitialisation()
 
         # for about dialog 
         self.aboutdialog=self.builder.get_object("aboutdialog")
@@ -93,6 +98,7 @@ class myclass:
 
         # timer binding 
         self.timehandler=go.timeout_add(self.timeinterval,self.updater)
+        self.timehandler=go.timeout_add(2000,self.procUpdate)
 
         ## cpu draw tab labels
         self.cpuInfoLabel=self.builder.get_object('cpuinfolabel')
@@ -119,7 +125,8 @@ class myclass:
 
         self.sidepaneinitialisation()
 
-        #time.sleep(2)
+        #time.sleep(2)p
+        print('before show')
         self.Window.show()
 
     def on_main_window_destroy(self,object,data=None):
@@ -141,9 +148,11 @@ class myclass:
         for i in range(self.numOfNets):
             g.Widget.destroy(self.netWidgetList[i])
             g.Widget.destroy(self.netSidepaneWidgetList[i])
+        g.Widget.destroy(self.processTree)
+        # g.Widget.destroy(self.processTreeStore)
         
         # g.main_quit()
-
+        self.procinitialisation()
         self.diskinitialisation()
         self.netinitialisation()
         self.gpuinitialisation()
@@ -182,8 +191,8 @@ class myclass:
     #def on_notebook_switch_page(self,notebook,page,page_num,data=None):
 
     # button click method
-    def on_button_clicked(self,widget):
-        print(widget.get_property('label'),"clicked")
+    # def on_button_clicked(self,widget):
+    #     print(widget.get_property('label'),"clicked")
 
     ## repeatedily called out fucntion
     def updater(self):
@@ -205,7 +214,7 @@ class myclass:
                 print("Failed to get model information")
 
             self.cpuCoreLabelValue.set_text(str(ps.cpu_count(logical=False)))
-
+            
             self.cpuLogicalLabelValue.set_text(str(ps.cpu_count()))
             try:
                 p=popen('lscpu|grep -i -E "(vt-x)|(amd-v)"')
@@ -270,6 +279,7 @@ class myclass:
         self.cpuSidePaneLabelValue.set_text(cpuUtilString+' '+cpuSpeedstring)
 
         ## updating 
+        # self.procUpdate()
         self.memoryTab()
         self.disktabUpdate()
         if len(self.netNameList)!=0:
@@ -452,7 +462,6 @@ class myclass:
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
             cr.stroke()
 
-
         return False
         
         #side pane cpu draw
@@ -533,18 +542,12 @@ class myclass:
 
 
 def start():
-    p=popen('zenity --password')
-    passs=p.readline()[:-1]    
-    p.close()
-    passs=sub(' ','\ ',passs)
-    main=myclass(passs)
+    getPrivilege()
+    main=myclass()
     g.main()
 
     
 if __name__=="__main__":
-    p=popen('zenity --password')
-    passs=p.readline()[:-1]    
-    p.close()
-    passs=sub(' ','\ ',passs)
-    main=myclass(passs)
+    getPrivilege()
+    main=myclass()
     g.main()

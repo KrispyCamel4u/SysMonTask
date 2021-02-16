@@ -12,7 +12,7 @@ def get_data_files():
 
 setup(
     name='sysmontask',
-    version='1.0.0',
+    version='1.1.0',
     description='System Monitor With UI Like Windows',
     url='http://github.com/krispycamel4u',
     author='Neeraj Kumar',
@@ -20,7 +20,7 @@ setup(
     license='BSD-3',
     include_package_data=True,
     data_files=get_data_files(),
-    install_requires=['psutil >=5.7.1','pygi-composite-templates','pycairo','PyGObject','pip3'],
+    install_requires=['psutil >=5.8','pygi-composite-templates','pycairo','PyGObject'],
     packages=find_packages(),
     entry_points=dict(
         console_scripts=['sysmontask=sysmontask.sysmontask:start']
