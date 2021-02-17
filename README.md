@@ -31,7 +31,8 @@ Then start application from menu.
 
 Hurray, You're goot to go in understanding capabilities of your system:)
 
-## What's New:
+## What's New: [![Generic badge](https://img.shields.io/badge/What's_New-History-red.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/HISTORY.md) [![Generic badge](https://img.shields.io/badge/Read_More-Docs-blueviolet.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
+
 ### v1.1.0
 - User Processess Tab
     * Processes filtering for user for fast look-ups.
@@ -45,6 +46,8 @@ Hurray, You're goot to go in understanding capabilities of your system:)
 ![Screenshot from 2021-02-17 17-54-27](https://user-images.githubusercontent.com/48773008/108204170-79814b80-7149-11eb-8b1f-843a1efa8d42.png)
 
 ![Screenshot from 2021-01-24 11-00-18](https://user-images.githubusercontent.com/48773008/105622210-7ab6a580-5e35-11eb-9a43-8f09c0efbdb2.png)
+
+![Screenshot from 2021-02-17 18-09-43](https://user-images.githubusercontent.com/48773008/108212228-a33f7000-7153-11eb-9d3d-2c56d411efc7.png)
 
 ### v1.0.0 
 - Performance monitoring graphs
