@@ -35,8 +35,8 @@ Hurray, You're goot to go in understanding capabilities of your system:)
 
 ### v1.1.0
 - User Processess Tab
-    * Processes filtering for user for fast look-ups.
-    * rCPU, rMemory (recursive-CPU,recursive-Memery) columns (for more info read below).
+    * Processes filtering for user for fast look-ups. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md))
+    * rCPU, rMemory (recursive-CPU,recursive-Memery) columns. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)).
     * Support for aggregate values on coloumn headers.
     * Icon support, Available Killer. 
 - Mounted Disk List  
