@@ -1,4 +1,4 @@
-# SysMonTask  
+# SysMonTask  <img align="right" width="100" height="100" src="https://user-images.githubusercontent.com/48773008/108200308-4d170080-7144-11eb-8354-0c528c7b1ac2.png">
 [![forthebadge made-with-python](http://ForTheBadge.com/images/badges/made-with-python.svg)](https://www.python.org/)
 
 <p align="left">
@@ -19,6 +19,33 @@
 
 Linux system monitor with the compactness and usefulness of windows task manager to allow higher control and monitoring.
 
+## Installation
+To install the binary for ubuntu and its family members
+```
+$ sudo add-apt-repository ppa:camel-neeraj/sysmontask
+  ....
+$ sudo apt install sysmontask
+  ....
+```
+Then start application from menu.
+
+Hurray, You're goot to go in understanding capabilities of your system:)
+
+## What's New:
+### v1.1.0
+- User Processess Tab
+    * Processes filtering for user for fast look-ups.
+    * rCPU, rMemory (recursive-CPU,recursive-Memery) columns (for more info read below).
+    * Support for aggregate values on coloumn headers.
+    * Icon support, Available Killer. 
+- Mounted Disk List  
+
+
+#### Highlights
+![Screenshot from 2021-02-17 17-54-27](https://user-images.githubusercontent.com/48773008/108204170-79814b80-7149-11eb-8b1f-843a1efa8d42.png)
+
+![Screenshot from 2021-01-24 11-00-18](https://user-images.githubusercontent.com/48773008/105622210-7ab6a580-5e35-11eb-9a43-8f09c0efbdb2.png)
+
 ### v1.0.0 
 - Performance monitoring graphs
 - Devices supported:
@@ -28,23 +55,6 @@ Linux system monitor with the compactness and usefulness of windows task manager
   * Network adapters
   * only single Nvidia GPU
 
-## Installation
-To install the binary for ubuntu and its family members
-```
-$ sudo add-apt-repository ppa:camel-neeraj/sysmontask
-  ....
-$ sudo apt install sysmontask
-  ....
-$ pip3 install pygi-composite-templates
-```
-Hurray, You're goot to go in understanding capabilities of your system:)
-
-Then start application from menu.
-
-#### Highlights
-![Screenshot from 2021-01-24 11-00-18](https://user-images.githubusercontent.com/48773008/105622210-7ab6a580-5e35-11eb-9a43-8f09c0efbdb2.png)
-
- 
 ### If you are using dark mode and didn't like the look then follow below specified steps for dark mode disabled package:
 *Note: Below mentioned facts and information is only applicable to this method of installation only*
   1. Uninstall if you've installed via terminal
@@ -57,20 +67,9 @@ Then start application from menu.
 - *Require Ubuntu 20.04 or higher or equivalent*
 - Tested on Ubuntu 20.04 LTS, popOS 20.10 
 
-It is recommended to have zenity installed(for privilege uplifting prompt), to check run:
-```
-$ zenity --version
-3.32.0
-```
-If installed, version will be shown, otherwise install with:
-```
-$ sudo apt install zenity
-```
-*SysMonTask will work without zenity also but some information dependent on root privilege might be incorrect.*
-
 Running directly from terminal requires you to setup PATH to 
 ```
-/opt/SysMonTask/
+/opt/sysmontask
 ```
 which is the default installation directory.
 After setting PATH, run:
