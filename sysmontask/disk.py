@@ -6,7 +6,11 @@ from gi.repository import Gtk as g
 import psutil as ps,cairo
 from time import time
 from os import popen
-from gi_composites import GtkTemplate
+
+try:
+    from gi_composites import GtkTemplate
+except:
+    from sysmontask.gi_composites import GtkTemplate
 
 if __name__=='sysmontask.disk':
     from sysmontask.sysmontask import files_dir

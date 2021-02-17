@@ -1,8 +1,13 @@
 from gi.repository import Gtk as g
 import psutil as ps,cairo
 from time import time
-from gi_composites import GtkTemplate
 from os import popen
+
+try:
+    from gi_composites import GtkTemplate
+except:
+    from sysmontask.gi_composites import GtkTemplate
+
 
 if __name__=='sysmontask.net':
     from sysmontask.sysmontask import files_dir

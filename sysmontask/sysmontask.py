@@ -3,11 +3,20 @@
 # gi.require_version("Gtk", "3.")
 
 from gi.repository import Gtk as g , GLib as go
-import psutil as ps,cairo
+import cairo
 from os import popen
 from re import sub
 import os
-    
+
+try:
+    import psutil as ps
+    if( not ps.__version__>='5.7.3'):
+        raise Exception
+except:
+    if os.getuid()==0:
+        print('Installing psutil system wide')
+        os.system('pip3 install -U psutil')
+        exit()
 # files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
 # from mem import *
 # from sidepane import *

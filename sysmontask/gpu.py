@@ -5,8 +5,12 @@
 from gi.repository import Gtk as g
 import psutil as ps,cairo
 from os import popen
-from gi_composites import GtkTemplate
 from xml.etree.ElementTree import fromstring
+
+try:
+    from gi_composites import GtkTemplate
+except:
+    from sysmontask.gi_composites import GtkTemplate
 
 if __name__=='sysmontask.gpu':
     from sysmontask.sysmontask import files_dir

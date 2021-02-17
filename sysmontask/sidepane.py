@@ -2,7 +2,10 @@
 # gi.require_version("Gtk", "3.24")
 
 from gi.repository import Gtk as g,cairo
-from gi_composites import GtkTemplate
+try:
+    from gi_composites import GtkTemplate
+except:
+    from sysmontask.gi_composites import GtkTemplate
 
 
 if __name__=='sysmontask.sidepane':
