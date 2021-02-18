@@ -7,6 +7,7 @@
   * killer for killing process
 - Mounted Disk statistics (on disk performance tab)
 - use of pkexec for priviledge uplifting
+- Can start with different system themes
 
 #### Bug fixes
 - no net adapter stops execution (added error handling)
