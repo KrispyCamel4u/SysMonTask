@@ -57,7 +57,7 @@ class networkWidget(g.ScrolledWindow):
         w=self.netdrawarea.get_allocated_width()
         h=self.netdrawarea.get_allocated_height()
 
-        speedstep=250          #500KB/s
+        speedstep=250*1024          #500KB/s
         maximumcurrentspeed=max(max(self.netRecSpeedArray),max(self.netSendSpeedArray))
         currentscalespeed=self.netmxScalingFactor*speedstep
         while(currentscalespeed<maximumcurrentspeed):
@@ -67,14 +67,7 @@ class networkWidget(g.ScrolledWindow):
             self.netmxScalingFactor-=1
             currentscalespeed=self.netmxScalingFactor*speedstep
         
-        if(currentscalespeed>=1000):
-            suffix='MB/s'
-            netscalefactor=1000
-        else:
-            suffix='KB/s'
-            netscalefactor=1
-        
-        self.netspeedscalelabelvalue.set_text(str(currentscalespeed/netscalefactor)+suffix)
+        self.netspeedscalelabelvalue.set_text(byte_to_human(currentscalespeed))
 
         scalingfactor=h/currentscalespeed
         #creating outer rectangle
@@ -193,10 +186,10 @@ def netUpdate(self):
     for i in range(0,self.numOfNets):
         try:
             self.netDiff.append([x2-x1 for x1,x2 in zip(self.netstate1[i],self.netstate2[i])])
-            bytesendpersec=(self.netDiff[i][0]/timenetDiff)/1000           ##default in KB
-            byterecpersec=(self.netDiff[i][1]/timenetDiff)/1000  
-            totalbyterec=nettemp[self.netNameList[i]][1]/1000            ##default in KB
-            totalbytesent=nettemp[self.netNameList[i]][0]/1000
+            bytesendpersec=(self.netDiff[i][0]/timenetDiff)           ##default in KB
+            byterecpersec=(self.netDiff[i][1]/timenetDiff) 
+            totalbyterec=nettemp[self.netNameList[i]][1]           ##default in KB
+            totalbytesent=nettemp[self.netNameList[i]][0]
 
             ## total received
             self.netWidgetList[i].nettotalreclabelvalue.set_text(byte_to_human(totalbyterec,persec=False))
