@@ -20,13 +20,15 @@
 Linux system monitor with the compactness and usefulness of windows task manager to allow higher control and monitoring.
 
 ## Installation
-To install the binary for ubuntu and its family members
+To install the binary for ubuntu and its family members **(only for: 16.04,18.04,20.04 and 20.10 and equivalent)**
 ```
 $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
   ....
 $ sudo apt install sysmontask
   ....
 ```
+Alternatively, if you don't want to add ppa then download the binaries from releases. And install by double clicking on it.
+
 Then start application from menu.
 
 Hurray, You're goot to go in understanding capabilities of your system:)
@@ -40,7 +42,34 @@ Hurray, You're goot to go in understanding capabilities of your system:)
     * Support for aggregate values on coloumn headers.
     * Icon support, Available Killer. 
 - Mounted Disk List  
+- Can start with different system themes 
 
+**To set theme, Run:**
+
+By Default sysmontask will use the system-wide setting for themes. If you use any of dark theme(dark mode), that dark theme(dark mode) will be applied to sysmontask. If you use any of light theme(default/light mode), that light theme(default/light mode) will be used by sysmontask. 
+
+To Force apply a particular available theme(light or dark) regardless of system-wide theme, use the below commands:
+```
+$ sudo sysmontask.set_light
+  0 : Raleigh
+  1 : HighContrast
+  2 : Pop
+  3 : Default
+  4 : Adwaita
+  5 : Emacs
+  Index for Corresponding Theme that you want to apply?:2
+  Setting of Light Theme Done:)
+$ sudo sysmontask.set_dark
+  0 : Pop-dark
+  1 : Adwaita-dark
+  Index for Corresponding Theme that you want to apply?:0
+  Setting of Dark Theme Done:)
+  ```
+This setting will be permanent. If you want to revert back to system-wide theme settings for sysmontask, run:
+```
+$ sudo sysmontask.set_default
+  Setting done:)
+```
 
 #### Highlights
 ![Screenshot from 2021-02-17 17-54-27](https://user-images.githubusercontent.com/48773008/108204170-79814b80-7149-11eb-8b1f-843a1efa8d42.png)
@@ -57,37 +86,4 @@ Hurray, You're goot to go in understanding capabilities of your system:)
   * Disks
   * Network adapters
   * only single Nvidia GPU
-
-### If you are using dark mode and didn't like the look then follow below specified steps for dark mode disabled package:
-*Note: Below mentioned facts and information is only applicable to this method of installation only*
-  1. Uninstall if you've installed via terminal
-  ```
-  $ sudo apt remove sysmontask
-  ```
-  2. Download latest package from Releases
-  3. Install SysMonTask[version].deb
- 
-- *Require Ubuntu 20.04 or higher or equivalent*
-- Tested on Ubuntu 20.04 LTS, popOS 20.10 
-
-Running directly from terminal requires you to setup PATH to 
-```
-/opt/sysmontask
-```
-which is the default installation directory.
-After setting PATH, run:
-```
-$ sysmontask
-```
-from any location.
-
-#### Bug Reporting and Debugging information
-In case of bugs/crashes/incompatibilities please drop a mail to
-[neerajkumar.nitt@gmail.com](url) or report in GitHub Issues.
-
-For getting the details of error, run SysMonTask from terminal.
-```
-$ /opt/SysMonTask/sysmontask
-```
-
 
