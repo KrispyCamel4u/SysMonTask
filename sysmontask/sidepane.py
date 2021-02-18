@@ -107,7 +107,7 @@ class netSidepaneWidget(g.Box):
         w=self.netsidepanedrawarea.get_allocated_width()
         h=self.netsidepanedrawarea.get_allocated_height()
 
-        speedstep=250          #250KB/s
+        speedstep=250*1024          #250KB/s
         maximumcurrentspeed=max(max(self.netRecSpeedArray),max(self.netSendSpeedArray))
         currentscalespeed=self.netmxScalingFactor*speedstep
         while(currentscalespeed<maximumcurrentspeed):
