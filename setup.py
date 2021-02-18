@@ -23,6 +23,10 @@ setup(
     install_requires=['psutil >=5.8','pip','PyGObject'],
     packages=find_packages(),
     entry_points=dict(
-        console_scripts=['sysmontask=sysmontask.sysmontask:start']
+        console_scripts=[
+            'sysmontask=sysmontask.sysmontask:start',
+            'sysmontask.set_default=sysmontask.theme_setter:set_theme_default',
+            'sysmontask.set_light=sysmontask.theme_setter:set_theme_light',
+            'sysmontask.set_dark=sysmontask.theme_setter:set_theme_dark']
     )
 )
