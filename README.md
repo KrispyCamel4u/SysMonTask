@@ -27,11 +27,11 @@ $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
 $ sudo apt install sysmontask
   ....
 ```
-Alternatively, if you don't want to add ppa then download the binaries from releases. And install by double clicking on it.
+Alternatively, if you don't want to add ppa(Personal Package Archives) then download the binaries from releases. And install by double clicking on it.
 
 Then start application from menu.
 
-Hurray, You're goot to go in understanding capabilities of your system:)
+Hurray, You're good to go in understanding capabilities of your system:)
 
 ## What's New: [![Generic badge](https://img.shields.io/badge/What's_New-History-red.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/HISTORY.md) [![Generic badge](https://img.shields.io/badge/Read_More-Docs-blueviolet.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
 
