@@ -215,12 +215,18 @@ def searcher(self,sprocs,root):
                         self.processChildList[sprocs.pid].append(procs.pid)
                     
                     cpu_percent=procs.cpu_percent()
-                    mem_info=procs.memory_info()
                     cpu_percent="{:.1f}".format(cpu_percent)+' %'
+
+                    mem_info=procs.memory_info()
+                    rss='{:.1f}'.format(mem_info[0]/mibdevider)+' MiB' #resident memory in string
+                    shared='{:.1f}'.format(mem_info[2]/mibdevider)+' MiB' #shared memory in string
                     mem_util=(mem_info[0]-mem_info[2])/mibdevider
                     mem_util='{:.1f}'.format(mem_util)+' MiB'
+
                     itr=self.processTreeStore.append(root,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
-                    ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',procs.username()," ".join(procs.cmdline()),icon_finder(procs)])
+                    ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,procs.username()," ".join(procs.cmdline()),
+                    icon_finder(procs)])
+
                     self.processTreeIterList[procs.pid]=itr
                     self.processList[procs.pid]=procs
                     self.procDiskprev[procs.pid]=[0,0]
@@ -242,7 +248,8 @@ def procInit(self):
     self.process_kill_button.connect('clicked',self.kill_process)
 
     # self.data=[['chrome',30,50,0,1],['firefox',10,20,0,2],['sysmon',1,0,3,1]]
-    self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str,GdkPixbuf.Pixbuf)
+    #                                 0   1   2   3   4   5   6   7   8   9   10   11  12  13       14
+    self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str,str,str,GdkPixbuf.Pixbuf)
     # self.processTreeStore=self.builder.get_object('processTreeStore')
 
     # for data in self.data:
@@ -277,13 +284,12 @@ def procInit(self):
     searcher(self,self.processSystemd,None)
     
     self.processTree.set_model(self.processTreeStore)
-    self.column_header_list=['pid','Name','rCPU','CPU','rMemory','Memory','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Owner','Command']
+    #                          0    1       2      3        4       5           6       7           8               9           10              11      12       13       
+    self.column_header_list=['pid','Name','rCPU','CPU','rMemory','Memory','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Resident\nMemory','Shared','Owner','Command']
 
     self.column_select_popover_check_buttons={}
+    self.column_header_labels=[]
     self.column_select_popover=g.Menu()
-    # self.column_select_popover=g.Popover()
-    # self.vbox=g.Box(orientation=g.Orientation.VERTICAL)
-    # self.column_select_popover.add(self.vbox)
 
     for i,col in enumerate(self.column_header_list):
         renderer=g.CellRendererText()
@@ -293,12 +299,23 @@ def procInit(self):
             icon_renderer=g.CellRendererPixbuf()
             column=g.TreeViewColumn(col)
             column.pack_start(icon_renderer,False)
-            column.add_attribute(icon_renderer,'pixbuf',12)
+            column.add_attribute(icon_renderer,'pixbuf',14)
             column.pack_start(renderer,False)
             column.add_attribute(renderer,'text',1)
+            
         else:
             column=g.TreeViewColumn(col,renderer,text=i)
         
+        ## forcing the column header to have the widget to get the button
+        label = g.Label(col)
+        label.show()
+        self.column_header_labels.append(label)
+        column.set_widget(label)
+
+        widget = column.get_widget()
+        while not isinstance(widget, g.Button):
+            widget = widget.get_parent()
+        widget.connect('button-press-event',self.column_button_press)
 
         column.set_sort_column_id(i)
         column.set_resizable(True)
@@ -324,17 +341,14 @@ def procInit(self):
 
     selected_row=self.processTree.get_selection()
     selected_row.connect("changed",self.row_selected)
-    # print("error occured in selecting row")
-
-    self.processTree.connect('button-press-event',self.column_button_press)
+    
+    # self.processTree.connect('button-press-event',self.column_button_press)
     # self.processTree.connect(popover=self.column_select_popover)
 
-    # self.columnList['rDiskRead'].set_visible(False)
-    # self.columnList['rDiskWrite'].set_visible(False)
-    # self.columnList[6].set_visible(False)
-    # self.columnList[8].set_visible(False)
     self.column_select_popover_check_buttons[6].set_active(False)
     self.column_select_popover_check_buttons[8].set_active(False)
+    self.column_select_popover_check_buttons[10].set_active(False)
+    self.column_select_popover_check_buttons[11].set_active(False)
 
 def procUpdate(self):
     pids=ps.pids()
@@ -350,12 +364,16 @@ def procUpdate(self):
                         for parent in parents_processess:
                             cpu_percent=proc.cpu_percent()/ps.cpu_count()
                             cpu_percent="{:.1f}".format(cpu_percent)+' %'
+
                             mem_info=proc.memory_info()
+                            rss='{:.1f}'.format(mem_info[0]/mibdevider)+' MiB'
+                            shared='{:.1f}'.format(mem_info[2]/mibdevider)+' MiB'
                             mem_util=(mem_info[0]-mem_info[2])/mibdevider
                             mem_util='{:.1f}'.format(mem_util)+' MiB'
+
                             if parent.pid in self.processList:
                                 itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
-                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()
+                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
                                 ," ".join(proc.cmdline()),icon_finder(proc)])
                                 self.processTreeIterList[pi]=itr
                                 self.processList[pi]=proc
@@ -368,7 +386,7 @@ def procUpdate(self):
                                 break
                             elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and 'dbus' not in "".join(parent.cmdline()):
                                 itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
-                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',proc.username()
+                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
                                 ," ".join(proc.cmdline()),icon_finder(proc)])
                                 self.processTreeIterList[pi]=itr
                                 self.processList[pi]=proc
@@ -405,7 +423,10 @@ def procUpdate(self):
             else:
                 cpu_percent=self.processList[pidds].cpu_percent()/ps.cpu_count()
                 cpu_percent="{:.1f}".format(cpu_percent)+' %'
+
                 mem_info=self.processList[pidds].memory_info()
+                rss='{:.1f}'.format(mem_info[0]/mibdevider)+' MiB'
+                shared='{:.1f}'.format(mem_info[2]/mibdevider)+' MiB'
                 mem_util=(mem_info[0]-mem_info[2])/mibdevider
                 mem_util='{:.1f}'.format(mem_util)+' MiB'
                 # prev=float(self.processTreeStore.get_value(self.processTreeIterList[pidds],6)[:-5])
@@ -417,7 +438,7 @@ def procUpdate(self):
                 rspeed=(currArray[0]-self.procDiskprev[pidds][0])/(procT2-self.procT1[pidds])
                 rspeed=byte_to_human(rspeed)
 
-                self.processTreeStore.set(itr,2,cpu_percent,3,cpu_percent,4,mem_util,5,mem_util,6,rspeed,7,rspeed,8,wspeed,9,wspeed)
+                self.processTreeStore.set(itr,2,cpu_percent,3,cpu_percent,4,mem_util,5,mem_util,6,rspeed,7,rspeed,8,wspeed,9,wspeed,10,rss,11,shared)
 
                 self.procDiskprev[pidds]=currArray[:]
                 self.procT1[pidds]=procT2
@@ -425,6 +446,7 @@ def procUpdate(self):
             print('error in process updating')
 
     # print(self.processChildList)
+    #recursive calculations
     for pid in reversed(self.processChildList):
         # print(pid)
         rcpu_percent=0
@@ -445,10 +467,10 @@ def procUpdate(self):
             mem_util=float(mem_util[:-3])
             self.processTreeStore.set(self.processTreeIterList[pid],4,"{:.1f}".format(rmem_util+mem_util)+' MiB')
 
-    self.columnList[3].set_title('{0} %\nCPU'.format(self.cpuUtil))
-    self.columnList[2].set_title('{0} %\nrCPU'.format(self.cpuUtil))
-    self.columnList[4].set_title('{0} %\nrMemory'.format(self.memPercent))
-    self.columnList[5].set_title('{0} %\nMemory'.format(self.memPercent))
+    self.column_header_labels[3].set_text('{0} %\nCPU'.format(self.cpuUtil))
+    self.column_header_labels[2].set_text('{0} %\nrCPU'.format(self.cpuUtil))
+    self.column_header_labels[4].set_text('{0} %\nrMemory'.format(self.memPercent))
+    self.column_header_labels[5].set_text('{0} %\nMemory'.format(self.memPercent))
     
     ## Total disk io for all disks
     diskio=ps.disk_io_counters()
@@ -456,8 +478,8 @@ def procUpdate(self):
     totalrspeed=(diskio[2]-self.diskTotalState1[0])/(diskTotalT2-self.diskTotalT1)
     totalwspeed=(diskio[3]-self.diskTotalState1[1])/(diskTotalT2-self.diskTotalT1)
 
-    self.columnList[7].set_title('{0}\nDiskRead'.format(byte_to_human(totalrspeed)))
-    self.columnList[9].set_title('{0}\nDiskWrite'.format(byte_to_human(totalwspeed)))
+    self.column_header_labels[7].set_text('{0}\nDiskRead'.format(byte_to_human(totalrspeed)))
+    self.column_header_labels[9].set_text('{0}\nDiskWrite'.format(byte_to_human(totalwspeed)))
 
     self.diskTotalState1=diskio[2:4]
     self.diskTotalT1=diskTotalT2
