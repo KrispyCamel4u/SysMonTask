@@ -46,7 +46,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
     <property name="authors">Neeraj Kumar(camel.neeraj)</property>
     <property name="artists">Neeraj Kumar(camel.neeraj)</property>
-    <property name="logo">SysMonTask.png</property>
+    <property name="logo">usr/share/sysmontask/icons/SysMonTask.png</property>
     <property name="wrap-license">True</property>
     <property name="license-type">custom</property>
     <child internal-child="vbox">
@@ -76,6 +76,21 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkImage" id="image1">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-properties</property>
+  </object>
+  <object class="GtkImage" id="image2">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-page-setup</property>
+  </object>
+  <object class="GtkImage" id="image3">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-about</property>
   </object>
   <object class="GtkWindow" id="main_window">
     <property name="width-request">985</property>
@@ -108,11 +123,14 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="quit">
+                      <object class="GtkImageMenuItem" id="quit">
+                        <property name="label">gtk-quit</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Quit</property>
                         <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="always-show-image">True</property>
+                        <signal name="activate" handler="on_quit_activate" swapped="no"/>
                       </object>
                     </child>
                   </object>
@@ -131,56 +149,90 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="refresh">
+                      <object class="GtkImageMenuItem" id="refresh">
+                        <property name="label">gtk-refresh</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Refresh Now</property>
+                        <property name="use-underline">True</property>
+                        <property name="use-stock">True</property>
+                        <property name="always-show-image">True</property>
                         <signal name="activate" handler="on_refresh_activate" swapped="no"/>
                       </object>
                     </child>
                     <child>
-                      <object class="GtkMenuItem" id="updatespeed">
+                      <object class="GtkImageMenuItem" id="updatespeed">
+                        <property name="label" translatable="yes">Update Speed</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="label" translatable="yes">Update Speed</property>
+                        <property name="image">image1</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
                         <child type="submenu">
                           <object class="GtkMenu">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
-                              <object class="GtkMenuItem" id="paused">
+                              <object class="GtkCheckMenuItem" id="paused">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Paused</property>
                                 <property name="use-underline">True</property>
-                                <signal name="activate" handler="updatespeed_on_activate" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkMenuItem" id="low">
+                              <object class="GtkCheckMenuItem" id="low">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Low</property>
                                 <property name="use-underline">True</property>
-                                <signal name="activate" handler="updatespeed_on_activate" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkMenuItem" id="normal">
+                              <object class="GtkCheckMenuItem" id="normal">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">Normal</property>
                                 <property name="use-underline">True</property>
-                                <signal name="activate" handler="updatespeed_on_activate" swapped="no"/>
                               </object>
                             </child>
                             <child>
-                              <object class="GtkMenuItem" id="high">
+                              <object class="GtkCheckMenuItem" id="high">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="label" translatable="yes">High</property>
                                 <property name="use-underline">True</property>
-                                <signal name="activate" handler="updatespeed_on_activate" swapped="no"/>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="Update_Direction">
+                        <property name="label" translatable="yes">Graph Direction</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="image">image2</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                        <child type="submenu">
+                          <object class="GtkMenu">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <child>
+                              <object class="GtkCheckMenuItem" id="update_right">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Newer On Right</property>
+                                <property name="use-underline">True</property>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkCheckMenuItem" id="update_left">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Newer On Left </property>
+                                <property name="use-underline">True</property>
                               </object>
                             </child>
                           </object>
@@ -196,19 +248,20 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                 <property name="name">menuHelp</property>
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">_Help</property>
+                <property name="label" translatable="yes">Help</property>
                 <property name="use-underline">True</property>
                 <child type="submenu">
                   <object class="GtkMenu">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkMenuItem" id="about">
+                      <object class="GtkImageMenuItem" id="about">
+                        <property name="label" translatable="yes">About</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
-                        <property name="right-justified">True</property>
-                        <property name="label" translatable="yes">About</property>
-                        <property name="use-underline">True</property>
+                        <property name="image">image3</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
                         <signal name="activate" handler="on_about_activate" swapped="no"/>
                       </object>
                     </child>
@@ -244,7 +297,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkBox" id="process_tab_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
@@ -610,7 +663,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                                       <object class="GtkGrid" id="cputabgrid">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="margin-top">2</property>
                                         <property name="hexpand">True</property>
                                         <child>
                                           <object class="GtkLabel" id="cputextlabel">
@@ -686,27 +738,249 @@ NA</property>
                                       <packing>
                                         <property name="expand">False</property>
                                         <property name="fill">True</property>
-                                        <property name="position">1</property>
+                                        <property name="position">0</property>
                                       </packing>
                                     </child>
                                     <child>
-                                      <object class="GtkDrawingArea" id="cpudrawarea">
-                                        <property name="width-request">580</property>
-                                        <property name="height-request">200</property>
+                                      <object class="GtkStack" id="cpu_graph_stack">
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="events"/>
                                         <property name="margin-start">15</property>
                                         <property name="margin-end">15</property>
                                         <property name="margin-top">3</property>
                                         <property name="hexpand">True</property>
                                         <property name="vexpand">True</property>
-                                        <signal name="draw" handler="on_cpuDrawArea_draw" swapped="no"/>
+                                        <child>
+                                          <object class="GtkDrawingArea" id="cpudrawarea">
+                                            <property name="width-request">580</property>
+                                            <property name="height-request">200</property>
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="events"/>
+                                            <property name="hexpand">True</property>
+                                            <property name="vexpand">True</property>
+                                            <signal name="draw" handler="on_cpuDrawArea_draw" swapped="no"/>
+                                          </object>
+                                          <packing>
+                                            <property name="name">cpu_overall</property>
+                                            <property name="title" translatable="yes">Overall</property>
+                                          </packing>
+                                        </child>
+                                        <child>
+                                          <!-- n-columns=8 n-rows=8 -->
+                                          <object class="GtkGrid" id="logical_grid_area">
+                                            <property name="visible">True</property>
+                                            <property name="can-focus">False</property>
+                                            <property name="hexpand">True</property>
+                                            <property name="vexpand">True</property>
+                                            <property name="row-spacing">3</property>
+                                            <property name="column-spacing">3</property>
+                                            <property name="row-homogeneous">True</property>
+                                            <property name="column-homogeneous">True</property>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                          </object>
+                                          <packing>
+                                            <property name="name">logical</property>
+                                            <property name="title" translatable="yes">Logical</property>
+                                            <property name="position">1</property>
+                                          </packing>
+                                        </child>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
                                         <property name="fill">True</property>
-                                        <property name="position">2</property>
+                                        <property name="position">1</property>
                                       </packing>
                                     </child>
                                     <child>
@@ -716,208 +990,230 @@ NA</property>
                                         <property name="margin-top">5</property>
                                         <property name="border-width">5</property>
                                         <child>
-                                          <!-- n-columns=2 n-rows=6 -->
-                                          <object class="GtkGrid">
-                                            <property name="width-request">300</property>
+                                          <object class="GtkBox">
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
-                                            <property name="column-homogeneous">True</property>
+                                            <property name="orientation">vertical</property>
                                             <child>
-                                              <object class="GtkLabel">
+                                              <!-- n-columns=2 n-rows=4 -->
+                                              <object class="GtkGrid">
+                                                <property name="width-request">300</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="margin-start">15</property>
-                                                <property name="margin-top">10</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Utilisastion</property>
+                                                <property name="margin-bottom">10</property>
+                                                <property name="column-homogeneous">True</property>
+                                                <child>
+                                                  <object class="GtkLabel">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="margin-start">13</property>
+                                                    <property name="margin-top">10</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="label" translatable="yes">Utilisastion</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left-attach">0</property>
+                                                    <property name="top-attach">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="margin-top">10</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="label" translatable="yes">Speed</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left-attach">1</property>
+                                                    <property name="top-attach">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel" id="cpuutilisation">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="margin-start">13</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="label" translatable="yes">NA</property>
+                                                    <attributes>
+                                                      <attribute name="weight" value="normal"/>
+                                                      <attribute name="scale" value="1.8"/>
+                                                    </attributes>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left-attach">0</property>
+                                                    <property name="top-attach">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="margin-start">13</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="label" translatable="yes">Processes</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left-attach">0</property>
+                                                    <property name="top-attach">2</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel" id="cpuspeed">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="label" translatable="yes">NA</property>
+                                                    <attributes>
+                                                      <attribute name="weight" value="normal"/>
+                                                      <attribute name="scale" value="1.8"/>
+                                                    </attributes>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left-attach">1</property>
+                                                    <property name="top-attach">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="label" translatable="yes">Threads</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left-attach">1</property>
+                                                    <property name="top-attach">2</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel" id="cpuprocesses">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="valign">start</property>
+                                                    <property name="margin-start">13</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="vexpand">False</property>
+                                                    <property name="label" translatable="yes">NA</property>
+                                                    <attributes>
+                                                      <attribute name="weight" value="normal"/>
+                                                      <attribute name="scale" value="1.8"/>
+                                                    </attributes>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left-attach">0</property>
+                                                    <property name="top-attach">3</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel" id="cputhreads">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="valign">start</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="vexpand">False</property>
+                                                    <property name="label" translatable="yes">NA</property>
+                                                    <attributes>
+                                                      <attribute name="weight" value="normal"/>
+                                                      <attribute name="scale" value="1.8"/>
+                                                    </attributes>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left-attach">1</property>
+                                                    <property name="top-attach">3</property>
+                                                  </packing>
+                                                </child>
                                               </object>
                                               <packing>
-                                                <property name="left-attach">0</property>
-                                                <property name="top-attach">0</property>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">0</property>
                                               </packing>
                                             </child>
                                             <child>
-                                              <object class="GtkLabel">
+                                              <object class="GtkBox">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="margin-top">10</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Speed</property>
+                                                <child>
+                                                  <object class="GtkBox">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">start</property>
+                                                    <property name="orientation">vertical</property>
+                                                    <child>
+                                                      <object class="GtkLabel">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="halign">start</property>
+                                                        <property name="margin-left">13</property>
+                                                        <property name="margin-start">13</property>
+                                                        <property name="margin-top">5</property>
+                                                        <property name="label" translatable="yes">Temperature</property>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">0</property>
+                                                      </packing>
+                                                    </child>
+                                                    <child>
+                                                      <object class="GtkLabel" id="cputemplabelvalue">
+                                                        <property name="visible">True</property>
+                                                        <property name="can-focus">False</property>
+                                                        <property name="halign">start</property>
+                                                        <property name="valign">start</property>
+                                                        <property name="margin-left">13</property>
+                                                        <property name="margin-start">13</property>
+                                                        <property name="vexpand">False</property>
+                                                        <property name="label" translatable="yes">NA</property>
+                                                        <attributes>
+                                                          <attribute name="weight" value="normal"/>
+                                                          <attribute name="scale" value="1.8"/>
+                                                        </attributes>
+                                                      </object>
+                                                      <packing>
+                                                        <property name="expand">False</property>
+                                                        <property name="fill">True</property>
+                                                        <property name="position">1</property>
+                                                      </packing>
+                                                    </child>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">0</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkStackSwitcher">
+                                                    <property name="visible">True</property>
+                                                    <property name="can-focus">False</property>
+                                                    <property name="halign">center</property>
+                                                    <property name="valign">start</property>
+                                                    <property name="hexpand">True</property>
+                                                    <property name="orientation">vertical</property>
+                                                    <property name="stack">cpu_graph_stack</property>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="expand">False</property>
+                                                    <property name="fill">True</property>
+                                                    <property name="position">1</property>
+                                                  </packing>
+                                                </child>
                                               </object>
                                               <packing>
-                                                <property name="left-attach">1</property>
-                                                <property name="top-attach">0</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel" id="cpuutilisation">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="margin-start">15</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">NA</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="normal"/>
-                                                  <attribute name="scale" value="1.8"/>
-                                                </attributes>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">0</property>
-                                                <property name="top-attach">1</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="margin-start">15</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Processes</property>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">0</property>
-                                                <property name="top-attach">2</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel" id="cpuspeed">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">NA</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="normal"/>
-                                                  <attribute name="scale" value="1.8"/>
-                                                </attributes>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">1</property>
-                                                <property name="top-attach">1</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Threads</property>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">1</property>
-                                                <property name="top-attach">2</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel" id="cpuprocesses">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="valign">start</property>
-                                                <property name="margin-start">15</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="vexpand">False</property>
-                                                <property name="label" translatable="yes">NA</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="normal"/>
-                                                  <attribute name="scale" value="1.8"/>
-                                                </attributes>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">0</property>
-                                                <property name="top-attach">3</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel" id="cputhreads">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="valign">start</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="vexpand">False</property>
-                                                <property name="label" translatable="yes">NA</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="normal"/>
-                                                  <attribute name="scale" value="1.8"/>
-                                                </attributes>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">1</property>
-                                                <property name="top-attach">3</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="margin-left">15</property>
-                                                <property name="margin-start">15</property>
-                                                <property name="margin-top">10</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Temperature</property>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">0</property>
-                                                <property name="top-attach">4</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel" id="cputemplabelvalue">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="valign">start</property>
-                                                <property name="margin-left">15</property>
-                                                <property name="margin-start">15</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="vexpand">False</property>
-                                                <property name="label" translatable="yes">NA</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="normal"/>
-                                                  <attribute name="scale" value="1.8"/>
-                                                </attributes>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">0</property>
-                                                <property name="top-attach">5</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="margin-top">10</property>
-                                                <property name="hexpand">True</property>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">1</property>
-                                                <property name="top-attach">4</property>
-                                              </packing>
-                                            </child>
-                                            <child>
-                                              <object class="GtkLabel" id="cpuuptimelabelvalue">
-                                                <property name="visible">True</property>
-                                                <property name="can-focus">False</property>
-                                                <property name="halign">start</property>
-                                                <property name="valign">start</property>
-                                                <property name="hexpand">True</property>
-                                                <property name="vexpand">False</property>
-                                                <attributes>
-                                                  <attribute name="weight" value="normal"/>
-                                                  <attribute name="scale" value="1.8"/>
-                                                </attributes>
-                                              </object>
-                                              <packing>
-                                                <property name="left-attach">1</property>
-                                                <property name="top-attach">5</property>
+                                                <property name="expand">False</property>
+                                                <property name="fill">True</property>
+                                                <property name="position">1</property>
                                               </packing>
                                             </child>
                                           </object>
@@ -934,7 +1230,6 @@ NA</property>
                                             <property name="halign">start</property>
                                             <property name="margin-start">48</property>
                                             <property name="hexpand">True</property>
-                                            <property name="vexpand">True</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
@@ -1317,19 +1612,20 @@ NA</property>
                                         <property name="margin-top">5</property>
                                         <property name="border-width">5</property>
                                         <child>
-                                          <!-- n-columns=2 n-rows=6 -->
+                                          <!-- n-columns=2 n-rows=7 -->
                                           <object class="GtkGrid">
                                             <property name="width-request">300</property>
                                             <property name="visible">True</property>
                                             <property name="can-focus">False</property>
+                                            <property name="margin-bottom">15</property>
                                             <property name="column-homogeneous">True</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="margin-start">15</property>
-                                                <property name="margin-top">10</property>
+                                                <property name="margin-start">13</property>
+                                                <property name="margin-top">5</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="label" translatable="yes">In Use</property>
                                               </object>
@@ -1343,7 +1639,7 @@ NA</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="margin-top">10</property>
+                                                <property name="margin-top">5</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="label" translatable="yes">Available</property>
                                               </object>
@@ -1357,7 +1653,7 @@ NA</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="margin-start">15</property>
+                                                <property name="margin-start">13</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="label" translatable="yes">NA</property>
                                                 <attributes>
@@ -1375,7 +1671,7 @@ NA</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="margin-start">15</property>
+                                                <property name="margin-start">13</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="label" translatable="yes">Buffers</property>
                                               </object>
@@ -1420,9 +1716,8 @@ NA</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
                                                 <property name="valign">start</property>
-                                                <property name="margin-start">15</property>
+                                                <property name="margin-start">13</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="vexpand">False</property>
                                                 <property name="label" translatable="yes">NA</property>
                                                 <attributes>
                                                   <attribute name="weight" value="normal"/>
@@ -1458,8 +1753,7 @@ NA</property>
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
-                                                <property name="margin-start">15</property>
-                                                <property name="margin-top">10</property>
+                                                <property name="margin-start">13</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="label" translatable="yes">swap</property>
                                               </object>
@@ -1474,9 +1768,8 @@ NA</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
                                                 <property name="valign">start</property>
-                                                <property name="margin-start">15</property>
+                                                <property name="margin-start">13</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="vexpand">False</property>
                                                 <property name="label" translatable="yes">NA</property>
                                                 <attributes>
                                                   <attribute name="weight" value="normal"/>
@@ -1519,6 +1812,12 @@ NA</property>
                                                 <property name="top-attach">5</property>
                                               </packing>
                                             </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
+                                            <child>
+                                              <placeholder/>
+                                            </child>
                                           </object>
                                           <packing>
                                             <property name="resize">False</property>
@@ -1533,14 +1832,13 @@ NA</property>
                                             <property name="halign">start</property>
                                             <property name="margin-start">44</property>
                                             <property name="hexpand">True</property>
-                                            <property name="vexpand">True</property>
                                             <child>
                                               <object class="GtkLabel">
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
                                                 <property name="margin-start">10</property>
-                                                <property name="margin-top">10</property>
+                                                <property name="margin-top">5</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="label" translatable="yes">Speed:</property>
                                               </object>
@@ -1555,7 +1853,7 @@ NA</property>
                                                 <property name="can-focus">False</property>
                                                 <property name="halign">start</property>
                                                 <property name="margin-start">25</property>
-                                                <property name="margin-top">10</property>
+                                                <property name="margin-top">5</property>
                                                 <property name="hexpand">True</property>
                                                 <property name="label" translatable="yes">NA</property>
                                               </object>

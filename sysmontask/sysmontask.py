@@ -83,7 +83,7 @@ class myclass:
         self.Window.set_icon_from_file('/usr/share/sysmontask/icons/SysMonTask.png')
 
         self.performanceStack=self.builder.get_object('performancestack')
-
+        self.process_tab_box=self.builder.get_object('process_tab_box')
 
         self.sidepaneBox=self.builder.get_object('sidepanebox')
         self.memoryinitalisation()
@@ -101,13 +101,21 @@ class myclass:
         #drawing area for cpu
         self.cpuDrawArea=self.builder.get_object('cpudrawarea')
         self.cpuUtilArray=[0]*100   #cpu util array
+        self.cpu_logical_cores=ps.cpu_count()
+        self.cpu_logical_cores_util_arrays=[]
 
-        
+        temp=ps.cpu_percent(percpu=True)
+        for i in range(self.cpu_logical_cores):
+            self.cpu_logical_cores_util_arrays.append([0]*99)
+            self.cpu_logical_cores_util_arrays[i].append(temp[i])
+
+        self.logical_cpu_grid=self.builder.get_object('logical_grid_area')
+
         self.timeinterval=850     #time interval in mili
 
         # timer binding 
         self.timehandler=go.timeout_add(self.timeinterval,self.updater)
-        self.timehandler=go.timeout_add(2000,self.procUpdate)
+        self.Processtimehandler=go.timeout_add(2000,self.procUpdate)
 
         ## cpu draw tab labels
         self.cpuInfoLabel=self.builder.get_object('cpuinfolabel')
@@ -130,13 +138,85 @@ class myclass:
         self.cpuFanSpeedLabelValue=self.builder.get_object('cpufanspeedlabelvalue')
         self.cpuMxSpeedLabelValue=self.builder.get_object('cpumxspeedlabelvalue')
 
+        self.update_dir_right=self.builder.get_object('update_right')
+        self.update_dir_left=self.builder.get_object('update_left')
+        self.update_dir_left.connect('toggled',self.on_set_left_update)
+        self.update_dir_right.connect('toggled',self.on_set_right_update)
+        self.update_graph_direction=1  #newer on right by default
+        self.update_dir_right.set_active(True)
+        
+        self.update_speed_low=self.builder.get_object('low')
+        self.update_speed_normal=self.builder.get_object('normal')
+        self.update_speed_high=self.builder.get_object('high')
+        self.update_speed_paused=self.builder.get_object('paused')
 
+        self.update_speed_low.connect('toggled',self.on_update_speed_change)
+        self.update_speed_normal.connect('toggled',self.on_update_speed_change)
+        self.update_speed_high.connect('toggled',self.on_update_speed_change)
+        self.update_speed_paused.connect('toggled',self.on_update_speed_change)
+        
+        self.update_speed_normal.set_active(True)
+
+        
 
         self.sidepaneinitialisation()
 
         #time.sleep(2)p
-        print('before show')
         self.Window.show()
+    
+    def on_set_left_update(self,widget):
+        if widget.get_active():
+            self.update_dir_right.set_active(False)
+            self.update_graph_direction=0  #0 means newer on left 1 means newer on right
+
+            self.cpuUtilArray.reverse()
+            for i in range(self.cpu_logical_cores):
+                self.cpu_logical_cores_util_arrays[i].reverse()
+
+            self.memUsedArray1.reverse()
+
+            for i in range(self.numOfDisks):
+                self.diskActiveArray.reverse()
+                self.diskReadArray.reverse()
+                self.diskWriteArray.reverse()
+
+            for i in range(self.numOfNets):
+                self.netSendArray.reverse()
+                self.netReceiveArray.reverse()
+
+            self.gpuUtilArray.reverse()
+            self.gpuVramArray.reverse()
+            self.gpuEncodingArray.reverse()
+            self.gpuDecodingArray.reverse()
+
+        print('update Dir left',widget.get_active())
+
+    def on_set_right_update(self,widget):
+        if widget.get_active():
+            self.update_dir_left.set_active(False)
+            self.update_graph_direction=1  #0 means newer on left 1 means newer on right
+
+            self.cpuUtilArray.reverse()
+            for i in range(self.cpu_logical_cores):
+                self.cpu_logical_cores_util_arrays[i].reverse()
+
+            self.memUsedArray1.reverse()
+
+            for i in range(self.numOfDisks):
+                self.diskActiveArray.reverse()
+                self.diskReadArray.reverse()
+                self.diskWriteArray.reverse()
+
+            for i in range(self.numOfNets):
+                self.netSendArray.reverse()
+                self.netReceiveArray.reverse()
+            
+            self.gpuUtilArray.reverse()
+            self.gpuVramArray.reverse()
+            self.gpuEncodingArray.reverse()
+            self.gpuDecodingArray.reverse()
+            
+        print('update Dir right',widget.get_active())
 
     def on_main_window_destroy(self,object,data=None):
         print("print with cancel")
@@ -158,7 +238,7 @@ class myclass:
             g.Widget.destroy(self.netWidgetList[i])
             g.Widget.destroy(self.netSidepaneWidgetList[i])
         g.Widget.destroy(self.processTree)
-        # g.Widget.destroy(self.processTreeStore)
+        self.processTreeStore.clear()
         
         # g.main_quit()
         self.procinitialisation()
@@ -170,6 +250,7 @@ class myclass:
     # method to show the about dialog
     def on_about_activate(self,menuitem,data=None):
         print("aboutdialog opening")
+        # self.aboutdialog.set_icon_from_file('/usr/share/sysmontask/icons/SysMonTask.png')
         self.response=self.aboutdialog.run()
         self.aboutdialog.hide()
         print("aboutdialog closed")
@@ -180,21 +261,41 @@ class myclass:
             self.Window.set_size_request(-1,-1)
             myclass.resizerflag+=1
 
-    def updatespeed_on_activate(self,menuitem,data=None):
-        print("update speed")
-        update_speed=g.Buildable.get_name(menuitem)
-        if(update_speed=='low'):
-            go.source_remove(self.timehandler)
-            self.timehandler=go.timeout_add(1400,self.updater)
-        elif(update_speed=='normal'):
-            go.source_remove(self.timehandler)
-            self.timehandler=go.timeout_add(850,self.updater)
-        elif(update_speed=='high'):
-            go.source_remove(self.timehandler)
-            self.timehandler=go.timeout_add(500,self.updater)
-        elif(update_speed=='paused'):
-            go.source_remove(self.timehandler)
-            self.timehandler=go.timeout_add(1000000000,self.updater)
+
+    def on_update_speed_change(self,widget):
+        if widget.get_active():
+            update_speed=g.Buildable.get_name(widget)
+            if(update_speed=='low'):
+                print("update speed to low")
+                go.source_remove(self.timehandler)
+                self.timehandler=go.timeout_add(1400,self.updater)
+                self.update_speed_normal.set_active(False)
+                self.update_speed_high.set_active(False)
+                self.update_speed_paused.set_active(False)
+
+            elif(update_speed=='normal'):
+                print("update speed to normal")
+                go.source_remove(self.timehandler)
+                self.timehandler=go.timeout_add(850,self.updater)
+                self.update_speed_low.set_active(False)
+                self.update_speed_high.set_active(False)
+                self.update_speed_paused.set_active(False)
+
+            elif(update_speed=='high'):
+                print("update speed to high")
+                go.source_remove(self.timehandler)
+                self.timehandler=go.timeout_add(500,self.updater)
+                self.update_speed_normal.set_active(False)
+                self.update_speed_low.set_active(False)
+                self.update_speed_paused.set_active(False)
+
+            elif(update_speed=='paused'):
+                print("update speed to paused")
+                go.source_remove(self.timehandler)
+                self.timehandler=go.timeout_add(1000000000,self.updater)
+                self.update_speed_normal.set_active(False)
+                self.update_speed_high.set_active(False)
+                self.update_speed_low.set_active(False)
 
     # method for notebook switcher
     #def on_notebook_switch_page(self,notebook,page,page_num,data=None):
@@ -223,8 +324,7 @@ class myclass:
                 print("Failed to get model information")
 
             self.cpuCoreLabelValue.set_text(str(ps.cpu_count(logical=False)))
-            
-            self.cpuLogicalLabelValue.set_text(str(ps.cpu_count()))
+            self.cpuLogicalLabelValue.set_text(str(self.cpu_logical_cores))
             try:
                 p=popen('lscpu|grep -i -E "(vt-x)|(amd-v)"')
                 temp=p.read()
@@ -253,6 +353,60 @@ class myclass:
                 print("Failed to get Cache information")
 
             self.cpuMxSpeedLabelValue.set_text('{:.2f}'.format(self.speed[2]/1000)+' GHz')
+            self.num_of_column_per_row={
+                1:1,
+                2:2,
+                3:3,
+                4:2,
+                5:3,
+                6:3,
+                7:4,
+                8:4,
+                9:3,
+                10:5,
+                11:4,
+                12:4,
+                13:5,
+                14:5,
+                15:5,
+                16:4,
+                17:5,
+                18:5,
+                19:5,
+                20:5,
+                21:6,
+                22:6,
+                23:6,
+                24:6,
+                25:7,
+                26:7,
+                27:7,
+                28:7,
+                29:8,
+                30:8,
+                31:8,
+                32:8
+            }
+
+            ## logical
+            self.cpu_logical_cores_draw_areas=[]
+            row,column=0,0
+            for cpu_index in range(self.cpu_logical_cores):
+                draw_area=g.DrawingArea()
+                draw_area.set_name(str(cpu_index))
+                self.cpu_logical_cores_draw_areas.append(draw_area)
+                # draw_area=g.Button(label="begin{0}".format(cpu_index))
+                if column < self.num_of_column_per_row[self.cpu_logical_cores]:
+                    self.logical_cpu_grid.attach(draw_area,column,row,1,1)
+                    column+=1
+                else:
+                    column=0
+                    row+=1
+                    self.logical_cpu_grid.attach(draw_area,column,row,1,1)
+                    column+=1
+                draw_area.connect('draw',self.on_cpu_logical_drawing)
+
+            self.logical_cpu_grid.show_all()
 
             return True
 
@@ -287,8 +441,27 @@ class myclass:
             pass
         self.cpuSidePaneLabelValue.set_text(cpuUtilString+' '+cpuSpeedstring)
 
+        
+
         ## updating 
-        # self.procUpdate()
+        ## cpu utilisation graph
+        if self.update_graph_direction:
+            self.cpuUtilArray.pop(0)
+            self.cpuUtilArray.append(self.cpuUtil)
+        else:
+            self.cpuUtilArray.pop()
+            self.cpuUtilArray.insert(0,self.cpuUtil)
+
+        temp=ps.cpu_percent(percpu=True)
+        direction=self.update_graph_direction
+        for i in range(self.cpu_logical_cores):
+            if direction:
+                self.cpu_logical_cores_util_arrays[i].pop(0)
+                self.cpu_logical_cores_util_arrays[i].append(temp[i])
+            else:
+                self.cpu_logical_cores_util_arrays[i].pop()
+                self.cpu_logical_cores_util_arrays[i].insert(0,temp[i])
+
         self.memoryTab()
         self.disktabUpdate()
         if len(self.netNameList)!=0:
@@ -299,10 +472,11 @@ class myclass:
 
         self.sidepaneUpdate()
 
-        ## cpu utilisation graph
-        self.cpuUtilArray.pop()
-        self.cpuUtilArray.insert(0,self.cpuUtil)
         g.Widget.queue_draw(self.cpuDrawArea)
+
+        for i in range(self.cpu_logical_cores):
+            g.Widget.queue_draw(self.cpu_logical_cores_draw_areas[i])
+
         g.Widget.queue_draw(self.memDrawArea1)
         g.Widget.queue_draw(self.memDrawArea2)
         for i in range(0,self.numOfDisks):
@@ -311,6 +485,7 @@ class myclass:
 
         for i in range(0,self.numOfNets):
             g.Widget.queue_draw(self.netWidgetList[i].netdrawarea)
+
         if(self.isNvidiagpu==1):
             g.Widget.queue_draw(self.gpuWidget.gpuutildrawarea)
             g.Widget.queue_draw(self.gpuWidget.gpuvramdrawarea)
@@ -330,6 +505,55 @@ class myclass:
 
 
         return True
+
+    def on_cpu_logical_drawing(self,draw_area_widget,cr):
+        cr.set_line_width(2)
+        logical_cpu_id=int(draw_area_widget.get_name())
+        cpu_logical_util_array=self.cpu_logical_cores_util_arrays[logical_cpu_id]
+        w=draw_area_widget.get_allocated_width()
+        h=draw_area_widget.get_allocated_height()
+        
+        scalingfactor=h/100.0
+        #creating outer rectangle
+        cr.set_source_rgba(0,.454,.878,1)
+        cr.set_line_width(3)
+        cr.rectangle(0,0,w,h)
+        cr.stroke()
+        # creating grid lines
+        verticalGap=int(h/10)
+        horzontalGap=int(w/10)
+        for i in range(1,10):
+            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.set_line_width(0.5)
+            cr.move_to(0,i*verticalGap)
+            cr.line_to(w,i*verticalGap)
+
+            cr.move_to(i*horzontalGap,0)
+            cr.line_to(i*horzontalGap,h)
+            cr.stroke()
+        cr.stroke()
+        
+        stepsize=w/99.0
+        #print("in draw stepsize",stepsize)
+        for i in range(0,99):
+            # not effcient way to fill the bars (drawing)
+            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+            cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
+            cr.line_to((i+1)*stepsize,scalingfactor*(100-cpu_logical_util_array[i+1]))
+            cr.line_to((i+1)*stepsize,h)
+            cr.line_to(i*stepsize,h)
+            cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
+
+            cr.fill()
+            cr.stroke()
+            # for outer line
+            cr.set_line_width(1.5)
+            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
+            cr.line_to((i+1)*stepsize,scalingfactor*(100-cpu_logical_util_array[i+1]))
+            cr.stroke()
+
+        return False
 
     def on_memDrawArea1_draw(self,dr,cr):
         #print("memdraw1")

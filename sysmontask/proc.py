@@ -77,9 +77,12 @@ def sorting_func(model, row1, row2, user_data):
         return 1
 
 def row_selected(self,selection):
-    model,row=selection.get_selected()
-    self.selected_process_pid=model[row][0]
-
+    try:
+        model,row=selection.get_selected()
+        self.selected_process_pid=model[row][0]
+    except:
+        print('error in row selections')
+        
 def kill_process(self,widget):
     # try:
     print('keller on the way',self.selected_process_pid)
@@ -208,7 +211,10 @@ def searcher(self,sprocs,root):
             print('some error in searcher')
 
 def procInit(self):
-    self.processTree=self.builder.get_object('processtree')
+    # self.processTree=self.builder.get_object('processtree')
+    self.processTree=g.TreeView()
+    self.process_tab_box.add(self.processTree)
+    self.process_tab_box.show_all()
     self.processTree_background=self.builder.get_object('processtreeBackground')
     self.process_kill_button=self.builder.get_object('processKillButton')
     self.process_kill_button.connect('clicked',self.kill_process)
@@ -276,9 +282,11 @@ def procInit(self):
         self.columnList[col]=column
         if i!=1:   
             self.processTreeStore.set_sort_func(i,sorting_func,None)
-
-    selected_row=self.processTree.get_selection()
-    selected_row.connect("changed",self.row_selected)
+    try:
+        selected_row=self.processTree.get_selection()
+        selected_row.connect("changed",self.row_selected)
+    except:
+        print("error occured in selecting row")
 
     self.columnList['rDiskRead'].set_visible(False)
     self.columnList['rDiskWrite'].set_visible(False)

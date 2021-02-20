@@ -129,10 +129,11 @@ NA</property>
                 <property name="margin-top">5</property>
                 <property name="border-width">5</property>
                 <child>
-                  <!-- n-columns=3 n-rows=4 -->
+                  <!-- n-columns=3 n-rows=5 -->
                   <object class="GtkGrid">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="margin-bottom">10</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>
@@ -302,6 +303,22 @@ NA</property>
                       </packing>
                     </child>
                     <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
                       <placeholder/>
                     </child>
                     <child>
@@ -321,7 +338,6 @@ NA</property>
                     <property name="halign">start</property>
                     <property name="margin-start">15</property>
                     <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>

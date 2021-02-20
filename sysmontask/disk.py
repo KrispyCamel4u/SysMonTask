@@ -273,11 +273,9 @@ def diskinit(self):
         self.diskWriteArray.append([0]*100)
 
         self.diskWidgetList[i].givedata(self,i)
-    
-    
-    
-                
-    
+           
+
+
 def diskTabUpdate(self):
     disktemp=ps.disk_io_counters(perdisk=True)
     self.diskt2=time()##
@@ -293,19 +291,29 @@ def diskTabUpdate(self):
         
         self.diskActiveString.append(str(int(self.diskDiff[i][8]/10))+'%')
         self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString[i])
-        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diskDiff[i][2]/1048576)+'MiB/s')
-        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diskDiff[i][3]/1048576)+'MiB/s')
+        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diskDiff[i][2]/1048576)+' MiB/s')
+        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diskDiff[i][3]/1048576)+' MiB/s')
 
-        self.diskActiveArray[i].pop()
-        self.diskActiveArray[i].insert(0,(self.diskDiff[i][8])/(10*timediskDiff))##
+        if self.update_graph_direction:
+            self.diskActiveArray[i].pop(0)
+            self.diskActiveArray[i].append((self.diskDiff[i][8])/(10*timediskDiff))##
 
-        self.diskReadArray[i].pop()
-        self.diskReadArray[i].insert(0,self.diskDiff[i][2]/((timediskDiff)*1048576))
+            self.diskReadArray[i].pop(0)
+            self.diskReadArray[i].append(self.diskDiff[i][2]/((timediskDiff)*1048576))
 
-        self.diskWriteArray[i].pop()
-        self.diskWriteArray[i].insert(0,self.diskDiff[i][3]/((timediskDiff)*1048576))
+            self.diskWriteArray[i].pop(0)
+            self.diskWriteArray[i].append(self.diskDiff[i][3]/((timediskDiff)*1048576))
+        else: 
+            self.diskActiveArray[i].pop()
+            self.diskActiveArray[i].insert(0,(self.diskDiff[i][8])/(10*timediskDiff))##
 
-        self.diskWidgetList[i].givedata(self,i)
+            self.diskReadArray[i].pop()
+            self.diskReadArray[i].insert(0,self.diskDiff[i][2]/((timediskDiff)*1048576))
+
+            self.diskWriteArray[i].pop()
+            self.diskWriteArray[i].insert(0,self.diskDiff[i][3]/((timediskDiff)*1048576))
+
+            self.diskWidgetList[i].givedata(self,i)
 
 
     self.diskstate1=self.diskstate2

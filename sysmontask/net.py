@@ -205,11 +205,18 @@ def netUpdate(self):
             self.byterecpersecString.append(byte_to_human(byterecpersec))
             self.netWidgetList[i].netreclabelvalue.set_text(self.byterecpersecString[i])
 
-            self.netReceiveArray[i].pop()
-            self.netReceiveArray[i].insert(0,byterecpersec)         ## in KBs
+            if self.update_graph_direction:
+                self.netReceiveArray[i].pop(0)
+                self.netReceiveArray[i].append(byterecpersec)         ## in KBs
 
-            self.netSendArray[i].pop()
-            self.netSendArray[i].insert(0,bytesendpersec)
+                self.netSendArray[i].pop(0)
+                self.netSendArray[i].append(bytesendpersec)
+            else:
+                self.netReceiveArray[i].pop()
+                self.netReceiveArray[i].insert(0,byterecpersec)         ## in KBs
+
+                self.netSendArray[i].pop()
+                self.netSendArray[i].insert(0,bytesendpersec)
 
             self.netWidgetList[i].givedata(self,i)
 
