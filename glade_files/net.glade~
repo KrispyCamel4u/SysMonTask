@@ -1,0 +1,498 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.38.2 -->
+<interface>
+  <requires lib="gtk+" version="3.16"/>
+  <template class="networkWidget" parent="GtkScrolledWindow">
+    <property name="visible">True</property>
+    <property name="can-focus">True</property>
+    <property name="hexpand">True</property>
+    <property name="vexpand">True</property>
+    <property name="shadow-type">in</property>
+    <child>
+      <object class="GtkViewport">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="hexpand">False</property>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <!-- n-columns=2 n-rows=2 -->
+              <object class="GtkGrid" id="cputabgrid">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="margin-top">2</property>
+                <property name="hexpand">True</property>
+                <child>
+                  <object class="GtkLabel" id="nettextlabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="valign">end</property>
+                    <property name="margin-start">15</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Ethernet</property>
+                    <property name="width-chars">9</property>
+                    <property name="max-width-chars">9</property>
+                    <attributes>
+                      <attribute name="style" value="normal"/>
+                      <attribute name="weight" value="medium"/>
+                      <attribute name="scale" value="2"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="margin-start">15</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">Throughput</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="netinfolabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">end</property>
+                    <property name="valign">end</property>
+                    <property name="margin-end">15</property>
+                    <property name="hexpand">True</property>
+                    <property name="label" translatable="yes">
+NA</property>
+                    <property name="justify">center</property>
+                    <attributes>
+                      <attribute name="scale" value="1.2"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="netspeedscalelabelvalue">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">end</property>
+                    <property name="margin-end">15</property>
+                    <property name="hexpand">False</property>
+                    <property name="label" translatable="yes">100 MB/s</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">1</property>
+                    <property name="top-attach">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkDrawingArea" id="netdrawarea">
+                <property name="width-request">580</property>
+                <property name="height-request">250</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="events"/>
+                <property name="margin-start">15</property>
+                <property name="margin-end">15</property>
+                <property name="margin-top">3</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <signal name="draw" handler="on_netDrawArea_draw" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkPaned">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="margin-top">5</property>
+                <property name="border-width">5</property>
+                <child>
+                  <!-- n-columns=3 n-rows=5 -->
+                  <object class="GtkGrid">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-bottom">10</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-end">20</property>
+                        <property name="margin-top">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Receive</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-top">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Total Received</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="netreclabelvalue">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-end">20</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="scale" value="1.8"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-end">20</property>
+                        <property name="margin-top">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Send</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="nettotalreclabelvalue">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="scale" value="1.8"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-top">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Total Sent</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="netsendlabelvalue">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="valign">start</property>
+                        <property name="margin-end">20</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">False</property>
+                        <property name="label" translatable="yes">NA</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="scale" value="1.8"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="nettotalsentlabelvalue">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="valign">start</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">False</property>
+                        <property name="label" translatable="yes">NA</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="scale" value="1.8"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left-attach">2</property>
+                        <property name="top-attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="00">
+                        <property name="width-request">0</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">end</property>
+                        <property name="label" translatable="yes">|</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="scale" value="1.8"/>
+                          <attribute name="foreground" value="#ffff72587258"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="0">
+                        <property name="width-request">0</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">end</property>
+                        <property name="label" translatable="yes">|</property>
+                        <attributes>
+                          <attribute name="weight" value="normal"/>
+                          <attribute name="scale" value="1.8"/>
+                          <attribute name="foreground" value="#b6b62a292a29"/>
+                        </attributes>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">False</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+                <child>
+                  <!-- n-columns=2 n-rows=5 -->
+                  <object class="GtkGrid">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="margin-start">15</property>
+                    <property name="hexpand">True</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">10</property>
+                        <property name="margin-top">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">IPv4 Address:</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="net4addrlablevalue">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">25</property>
+                        <property name="margin-top">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">IPv6 Address:</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="net6addrlabelvalue">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">25</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">10</property>
+                        <property name="hexpand">True</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="cpuvirtualisationlabelvalue">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">25</property>
+                        <property name="hexpand">True</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="justify">center</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="cpul1labelvalue">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">25</property>
+                        <property name="hexpand">True</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Mac Address:</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="net_mac_addr_label">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="margin-start">25</property>
+                        <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">1</property>
+                        <property name="top-attach">2</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="resize">True</property>
+                    <property name="shrink">True</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
