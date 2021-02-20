@@ -71,6 +71,7 @@ class myclass:
         myclass.procUpdate=procUpdate
         myclass.row_selected=row_selected
         myclass.kill_process=kill_process
+        myclass.column_button_press=column_button_press
 
         self.gladefile=files_dir+"/sysmontask.glade"
         self.builder=g.Builder()

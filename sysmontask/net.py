@@ -33,6 +33,7 @@ class networkWidget(g.ScrolledWindow):
     nettotalsentlabelvalue= GtkTemplate.Child()
     net4addrlablevalue= GtkTemplate.Child()
     net6addrlabelvalue= GtkTemplate.Child()
+    net_mac_addr_label_value= GtkTemplate.Child()
     
 
     # Alternative way to specify multiple widgets
@@ -186,6 +187,12 @@ def netinit(self):
             for adpts in nettemp:
                 if adpts==self.netNameList[i]:
                     self.netstate1.append(nettemp[adpts])
+
+            # mac addr 
+            nettemp=ps.net_if_addrs()
+            for entry in nettemp[self.netNameList[i]]:
+                if entry.family==17:   #17 for AF_PACKET
+                    self.netWidgetList[i].net_mac_addr_label_value.set_text(str(entry.address))
 
             self.netReceiveArray.append([0]*100)
             self.netSendArray.append([0]*100)

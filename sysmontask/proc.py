@@ -82,7 +82,7 @@ def row_selected(self,selection):
         self.selected_process_pid=model[row][0]
     except:
         print('error in row selections')
-        
+
 def kill_process(self,widget):
     # try:
     print('keller on the way',self.selected_process_pid)
@@ -171,7 +171,9 @@ def icon_finder(process):
     # last prefs
     return default_icon
     
-        
+def column_button_press(self,treeview,event):
+    if event.button==3:
+        print("right click registered")
 
 def searcher(self,sprocs,root):
     childlist=sprocs.children()
@@ -246,7 +248,7 @@ def procInit(self):
     for pi in pids:
         procs=ps.Process(pi)
 
-        if(procs.username()=='neeraj'):
+        if(procs.username()!='root'):
             if procs.name()=='systemd':
                 self.systemdId=pi
                 break
@@ -278,6 +280,7 @@ def procInit(self):
         column.set_expand(True)
         column.set_alignment(0)
         column.set_sort_indicator(True)
+        
         self.processTree.append_column(column)
         self.columnList[col]=column
         if i!=1:   
@@ -287,6 +290,8 @@ def procInit(self):
         selected_row.connect("changed",self.row_selected)
     except:
         print("error occured in selecting row")
+
+    self.processTree.connect('button-press-event',self.column_button_press)
 
     self.columnList['rDiskRead'].set_visible(False)
     self.columnList['rDiskWrite'].set_visible(False)

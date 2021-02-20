@@ -456,6 +456,7 @@ NA</property>
                         <property name="halign">start</property>
                         <property name="margin-start">10</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Mac Address:</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -463,12 +464,13 @@ NA</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="cpumxspeedlabelvalue">
+                      <object class="GtkLabel" id="net_mac_addr_label_value">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">start</property>
                         <property name="margin-start">25</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
                       </object>
                       <packing>
                         <property name="left-attach">1</property>
