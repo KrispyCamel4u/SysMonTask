@@ -156,7 +156,7 @@ class myclass:
         self.update_speed_paused.connect('toggled',self.on_update_speed_change)
         
         self.update_speed_normal.set_active(True)
-
+        self.one_time=0
         
 
         self.sidepaneinitialisation()
@@ -176,13 +176,13 @@ class myclass:
             self.memUsedArray1.reverse()
 
             for i in range(self.numOfDisks):
-                self.diskActiveArray.reverse()
-                self.diskReadArray.reverse()
-                self.diskWriteArray.reverse()
+                self.diskActiveArray[i].reverse()
+                self.diskReadArray[i].reverse()
+                self.diskWriteArray[i].reverse()
 
             for i in range(self.numOfNets):
-                self.netSendArray.reverse()
-                self.netReceiveArray.reverse()
+                self.netSendArray[i].reverse()
+                self.netReceiveArray[i].reverse()
 
             self.gpuUtilArray.reverse()
             self.gpuVramArray.reverse()
@@ -203,13 +203,13 @@ class myclass:
             self.memUsedArray1.reverse()
 
             for i in range(self.numOfDisks):
-                self.diskActiveArray.reverse()
-                self.diskReadArray.reverse()
-                self.diskWriteArray.reverse()
+                self.diskActiveArray[i].reverse()
+                self.diskReadArray[i].reverse()
+                self.diskWriteArray[i].reverse()
 
             for i in range(self.numOfNets):
-                self.netSendArray.reverse()
-                self.netReceiveArray.reverse()
+                self.netSendArray[i].reverse()
+                self.netReceiveArray[i].reverse()
             
             self.gpuUtilArray.reverse()
             self.gpuVramArray.reverse()
@@ -534,24 +534,38 @@ class myclass:
         cr.stroke()
         
         stepsize=w/99.0
-        #print("in draw stepsize",stepsize)
-        for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-cpu_logical_util_array[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-cpu_logical_util_array[i+1]))
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
+
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-cpu_logical_util_array[i+1]))
+        #     cr.stroke()
+
+        # cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.set_source_rgba(.384,.749,1.0,1)
+        cr.move_to(0,scalingfactor*(100-cpu_logical_util_array[0]))
+        for i in range(0,99):
             cr.set_line_width(1.5)
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
             cr.line_to((i+1)*stepsize,scalingfactor*(100-cpu_logical_util_array[i+1]))
-            cr.stroke()
+        cr.stroke_preserve()
+        cr.set_source_rgba(.588,.823,.98,0.25)
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-cpu_logical_util_array[0]))
+        cr.fill()
+        cr.stroke()
 
         return False
 
@@ -582,23 +596,38 @@ class myclass:
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
-        for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
+        #     cr.stroke()
+
+        # efficient way to fill
+        cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
+        cr.set_line_width(1.5)
+        cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))
+        for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-            cr.stroke()
+        cr.stroke_preserve()
+
+        cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))
+        cr.fill()
+        cr.stroke()
 
 
         return False
@@ -672,29 +701,42 @@ class myclass:
 
             cr.move_to(i*horzontalGap,0)
             cr.line_to(i*horzontalGap,h)
-            cr.stroke()
         cr.stroke()
         
         stepsize=w/99.0
-        #print("in draw stepsize",stepsize)
+
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
+        #     cr.stroke()
+
+        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.set_line_width(1.5)
+        cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
         for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+        cr.stroke_preserve()
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
-            cr.stroke()
-
+        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
+        cr.fill()
+        cr.stroke()
+        
         return False
         
         #side pane cpu draw
@@ -715,24 +757,38 @@ class myclass:
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
+        #     cr.stroke()
+
+        # efficient way to fill
+        cr.set_line_width(1.5)
+        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
         for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
+        cr.stroke_preserve()
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
-            cr.stroke()
-
+        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
+        cr.fill()
+        cr.stroke()
 
         return False
 
@@ -740,8 +796,8 @@ class myclass:
         #print("tyoe",g.Buildable.get_name(dr))
         cr.set_line_width(2)
 
-        w=self.cpuSidePaneDrawArea.get_allocated_width()
-        h=self.cpuSidePaneDrawArea.get_allocated_height()
+        w=self.memSidePaneDrawArea.get_allocated_width()
+        h=self.memSidePaneDrawArea.get_allocated_height()
         scalingfactor=h/self.memTotal
         #creating outer rectangle
         cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
@@ -751,24 +807,38 @@ class myclass:
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
+        #     cr.stroke()
+
+        # efficient way to fill
+        cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
+        cr.set_line_width(1.5)
+        cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))
         for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
             cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
+        cr.stroke_preserve()
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-            cr.stroke()
-
+        cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))
+        cr.fill()
+        cr.stroke()
 
         return False
 

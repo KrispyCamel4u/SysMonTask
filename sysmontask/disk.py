@@ -97,40 +97,69 @@ class diskTabWidget(g.ScrolledWindow):
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i+1])+2)
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i])+2)
+        #     cr.fill()
+        #     cr.stroke()
+
+        #     # for outer line read speed
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i+1])+2)
+        #     cr.stroke()
+
+        #     #for write
+        #     cr.set_source_rgba(.207,.941,.682,0.3)  #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i+1])+2)
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i])+2)
+        #     cr.fill()
+        #     cr.stroke()
+
+        #     #cr.set_dash([1.0])
+        #     cr.set_source_rgba(.207,.941,.682,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i+1])+2)
+        #     cr.stroke()
+        
+        #efficient read speed drawing
+        cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+        cr.set_line_width(1.5)
+        cr.move_to(0,scalingfactor*(currentscalespeed-self.diskreadArray[0])+2)
         for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i])+2)
             cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i+1])+2)
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i])+2)
-            cr.fill()
-            cr.stroke()
+        cr.stroke_preserve()
 
-            # for outer line read speed
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i])+2)
-            cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskreadArray[i+1])+2)
-            cr.stroke()
+        cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(currentscalespeed-self.diskreadArray[i])+2)
+        cr.fill()
+        cr.stroke()
 
-            #for write
-            cr.set_source_rgba(.207,.941,.682,0.3)  #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i])+2)
+        #efficient drawing for write
+        cr.set_source_rgba(.207,.941,.682,1) #for changing the outer line color
+        cr.set_line_width(1.5)
+        cr.move_to(0,scalingfactor*(currentscalespeed-self.diskwriteArray[0])+2)
+        for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i+1])+2)
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i])+2)
-            cr.fill()
-            cr.stroke()
+        cr.stroke_preserve()
 
-            #cr.set_dash([1.0])
-            cr.set_source_rgba(.207,.941,.682,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i])+2)
-            cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i+1])+2)
-            cr.stroke()
-
+        cr.set_source_rgba(.207,.941,.682,0.3)  #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(currentscalespeed-self.diskwriteArray[0])+2)
+        cr.fill()
+        cr.stroke()
 
         return False
 
@@ -164,23 +193,37 @@ class diskTabWidget(g.ScrolledWindow):
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
-        for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
+        #     cr.stroke()
+
+        cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+        cr.set_line_width(1.5)
+        cr.move_to(0,scalingfactor*(100-self.diskactiveArray[0])+2)
+        for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
-            cr.stroke()
+        cr.stroke_preserve()
+
+        cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-self.diskactiveArray[0])+2)
+        cr.fill()
+        cr.stroke()
 
 
         return False        
