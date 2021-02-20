@@ -72,6 +72,7 @@ class myclass:
         myclass.row_selected=row_selected
         myclass.kill_process=kill_process
         myclass.column_button_press=column_button_press
+        myclass.column_header_selection=column_header_selection
 
         self.gladefile=files_dir+"/sysmontask.glade"
         self.builder=g.Builder()

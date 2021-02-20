@@ -173,7 +173,26 @@ def icon_finder(process):
     
 def column_button_press(self,treeview,event):
     if event.button==3:
-        print("right click registered")
+        # path = treeview.get_path_at_pos(event.x,event.y)
+        self.column_select_popover.popup(None, None, None, None, 0, g.get_current_event_time())
+        # print("right click registered")
+
+def column_header_selection(self,widget):
+    id=int(widget.get_name())
+    if widget.get_active():
+        self.columnList[id].set_visible(True)
+    else:
+        self.columnList[id].set_visible(False)
+
+# def show_menu(self):
+#     # i1 = g.MenuItem("Item 1")
+#     i1=g.CheckMenuItem(label='hello')
+#     self.popMenu.append(i1)
+#     i2 = g.MenuItem("Item 2")
+#     self.popMenu.append(i2)
+#     self.popMenu.show_all()
+#     self.popMenu.popup(None, None, None, None, 0, g.get_current_event_time())
+#     print("Done")
 
 def searcher(self,sprocs,root):
     childlist=sprocs.children()
@@ -214,6 +233,7 @@ def searcher(self,sprocs,root):
 
 def procInit(self):
     # self.processTree=self.builder.get_object('processtree')
+    
     self.processTree=g.TreeView()
     self.process_tab_box.add(self.processTree)
     self.process_tab_box.show_all()
@@ -257,9 +277,15 @@ def procInit(self):
     searcher(self,self.processSystemd,None)
     
     self.processTree.set_model(self.processTreeStore)
+    self.column_header_list=['pid','Name','rCPU','CPU','rMemory','Memory','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Owner','Command']
 
+    self.column_select_popover_check_buttons={}
+    self.column_select_popover=g.Menu()
+    # self.column_select_popover=g.Popover()
+    # self.vbox=g.Box(orientation=g.Orientation.VERTICAL)
+    # self.column_select_popover.add(self.vbox)
 
-    for i,col in enumerate(['pid','Name','rCPU','CPU','rMemory','Memory','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Owner','Command']):
+    for i,col in enumerate(self.column_header_list):
         renderer=g.CellRendererText()
         if col=='Command':
             renderer.props.wrap_width=-1
@@ -282,19 +308,33 @@ def procInit(self):
         column.set_sort_indicator(True)
         
         self.processTree.append_column(column)
-        self.columnList[col]=column
+        self.columnList[i]=column
+
+        popover_check_button=g.CheckMenuItem(label=col)
+        popover_check_button.set_name(str(i))
+        popover_check_button.connect('toggled',self.column_header_selection)
+        popover_check_button.set_active(True)
+        self.column_select_popover.append(popover_check_button)
+        self.column_select_popover_check_buttons[i]=popover_check_button
+
         if i!=1:   
             self.processTreeStore.set_sort_func(i,sorting_func,None)
-    try:
-        selected_row=self.processTree.get_selection()
-        selected_row.connect("changed",self.row_selected)
-    except:
-        print("error occured in selecting row")
+
+    self.column_select_popover.show_all()
+
+    selected_row=self.processTree.get_selection()
+    selected_row.connect("changed",self.row_selected)
+    # print("error occured in selecting row")
 
     self.processTree.connect('button-press-event',self.column_button_press)
+    # self.processTree.connect(popover=self.column_select_popover)
 
-    self.columnList['rDiskRead'].set_visible(False)
-    self.columnList['rDiskWrite'].set_visible(False)
+    # self.columnList['rDiskRead'].set_visible(False)
+    # self.columnList['rDiskWrite'].set_visible(False)
+    # self.columnList[6].set_visible(False)
+    # self.columnList[8].set_visible(False)
+    self.column_select_popover_check_buttons[6].set_active(False)
+    self.column_select_popover_check_buttons[8].set_active(False)
 
 def procUpdate(self):
     pids=ps.pids()
@@ -405,10 +445,10 @@ def procUpdate(self):
             mem_util=float(mem_util[:-3])
             self.processTreeStore.set(self.processTreeIterList[pid],4,"{:.1f}".format(rmem_util+mem_util)+' MiB')
 
-    self.columnList['CPU'].set_title('{0} %\nCPU'.format(self.cpuUtil))
-    self.columnList['rCPU'].set_title('{0} %\nrCPU'.format(self.cpuUtil))
-    self.columnList['rMemory'].set_title('{0} %\nrMemory'.format(self.memPercent))
-    self.columnList['Memory'].set_title('{0} %\nMemory'.format(self.memPercent))
+    self.columnList[3].set_title('{0} %\nCPU'.format(self.cpuUtil))
+    self.columnList[2].set_title('{0} %\nrCPU'.format(self.cpuUtil))
+    self.columnList[4].set_title('{0} %\nrMemory'.format(self.memPercent))
+    self.columnList[5].set_title('{0} %\nMemory'.format(self.memPercent))
     
     ## Total disk io for all disks
     diskio=ps.disk_io_counters()
@@ -416,8 +456,8 @@ def procUpdate(self):
     totalrspeed=(diskio[2]-self.diskTotalState1[0])/(diskTotalT2-self.diskTotalT1)
     totalwspeed=(diskio[3]-self.diskTotalState1[1])/(diskTotalT2-self.diskTotalT1)
 
-    self.columnList['DiskRead'].set_title('{0}\nDiskRead'.format(byte_to_human(totalrspeed)))
-    self.columnList['DiskWrite'].set_title('{0}\nDiskWrite'.format(byte_to_human(totalwspeed)))
+    self.columnList[7].set_title('{0}\nDiskRead'.format(byte_to_human(totalrspeed)))
+    self.columnList[9].set_title('{0}\nDiskWrite'.format(byte_to_human(totalwspeed)))
 
     self.diskTotalState1=diskio[2:4]
     self.diskTotalT1=diskTotalT2
