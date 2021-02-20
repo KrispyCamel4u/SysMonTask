@@ -240,7 +240,7 @@ def procInit(self):
     for pi in pids:
         procs=ps.Process(pi)
 
-        if(procs.username()=='neeraj'):
+        if(procs.username()!='root'):
             if procs.name()=='systemd':
                 self.systemdId=pi
                 break
