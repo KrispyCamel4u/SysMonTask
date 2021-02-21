@@ -27,9 +27,17 @@ $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
 $ sudo apt install sysmontask
   ....
 ```
+For the first time it might not work depending upon wheather the "psutil" is installed system-wide or not.
+It will try to install it when run for the first time so, after it is done, restart again.
+
+To isntall system-wide manually:
+```
+$ sudo pip3 install -U psutil
+ ....
+```
 Alternatively, if you don't want to add ppa(Personal Package Archives) then download the binaries from releases. And install by double clicking on it.
 
-Then start application from menu.
+Then start application from menu or by command "sysmontask"(recommended only in case of error/crashed) on terminal.
 
 Hurray, You're good to go in understanding capabilities of your system:)
 
