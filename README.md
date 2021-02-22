@@ -5,8 +5,9 @@
 <a href="https://github.com/KrispyCamel4u/SysMonTask/commit-activity">
     <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
 </a>
- <a href="https://github.com/KrispyCamel4u/SysMonTask/tags/">
-    <img src="https://img.shields.io/github/v/tag/KrispyCamel4u/SysMonTask.svg?sort=semver">
+
+<a href="https://github.com/KrispyCamel4u/SysMonTask/tags/">
+    <img src="https://img.shields.io/github/v/tag/KrispyCamel4u/SysMonTask.svg">
 </a>
 <a href="https://github.com/KrispyCamel4u/SysMonTask/master/LICENSE">
     <img src="https://img.shields.io/github/license/KrispyCamel4u/SysMonTask.svg">
@@ -26,11 +27,12 @@ $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
   ....
 $ sudo apt install sysmontask
   ....
+$ sysmontask   // optional to run via terminal but recommended for the first time 
 ```
-For the first time it might not work depending upon wheather the "psutil" is installed system-wide or not.
-It will try to install it when run for the first time so, after it is done, restart again.
+**For the first time it might not work depending upon wheather the "psutil" is installed system-wide or not/or if the version requirements are not met then
+It will try to download and install it when run for the first time so, after it is done, restart again.**
 
-To isntall system-wide manually:
+If needed install psutil system-wide manually(in case of any unexpected situtation):
 ```
 $ sudo pip3 install -U psutil
  ....
