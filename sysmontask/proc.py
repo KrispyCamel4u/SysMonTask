@@ -272,16 +272,20 @@ def procInit(self):
     diskio=ps.disk_io_counters()
     self.diskTotalState1=[diskio[2],diskio[3]]
 
+    self.systemdId=[]
+    self.processSystemd=[]
     for pi in pids:
         procs=ps.Process(pi)
 
         if(procs.username()!='root'):
             if procs.name()=='systemd':
-                self.systemdId=pi
-                break
+                self.systemdId.append(pi)
+                self.processSystemd.append(procs)
+                searcher(self,procs,None)          ## for multiple user view
+                # break
 
-    self.processSystemd=ps.Process(self.systemdId)
-    searcher(self,self.processSystemd,None)
+    # self.processSystemd=ps.Process(self.systemdId)
+    # searcher(self,self.processSystemd,None)
     
     self.processTree.set_model(self.processTreeStore)
     #                          0    1       2      3        4       5           6       7           8               9           10              11      12       13       
@@ -354,48 +358,50 @@ def procUpdate(self):
     pids=ps.pids()
     # new process appending
     for pi in pids:
-        if pi not in self.processList and pi>self.systemdId:
+        if pi not in self.processList:  # and pi>self.systemdId changed for mutliple user 
             # print('my process')
             try:
                 proc=ps.Process(pi)
                 if '/libexec/' not in "".join(proc.cmdline()) and 'daemon' not in "".join(proc.cmdline()) and 'dbus' not in "".join(proc.cmdline()) :
                     parents_processess=proc.parents()
-                    if self.processSystemd in parents_processess:
-                        for parent in parents_processess:
-                            cpu_percent=proc.cpu_percent()/ps.cpu_count()
-                            cpu_percent="{:.1f}".format(cpu_percent)+' %'
+                    for systemdproc in self.processSystemd:
+                        if systemdproc in parents_processess:
+                            for parent in parents_processess:
+                                cpu_percent=proc.cpu_percent()/ps.cpu_count()
+                                cpu_percent="{:.1f}".format(cpu_percent)+' %'
 
-                            mem_info=proc.memory_info()
-                            rss='{:.1f}'.format(mem_info[0]/mibdevider)+' MiB'
-                            shared='{:.1f}'.format(mem_info[2]/mibdevider)+' MiB'
-                            mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                            mem_util='{:.1f}'.format(mem_util)+' MiB'
+                                mem_info=proc.memory_info()
+                                rss='{:.1f}'.format(mem_info[0]/mibdevider)+' MiB'
+                                shared='{:.1f}'.format(mem_info[2]/mibdevider)+' MiB'
+                                mem_util=(mem_info[0]-mem_info[2])/mibdevider
+                                mem_util='{:.1f}'.format(mem_util)+' MiB'
 
-                            if parent.pid in self.processList:
-                                itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
-                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
-                                ," ".join(proc.cmdline()),icon_finder(proc)])
-                                self.processTreeIterList[pi]=itr
-                                self.processList[pi]=proc
-                                self.processChildList[parent.pid].append(pi)
-                                self.processChildList[pi]=[]
+                                if parent.pid in self.processList:
+                                    itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
+                                    cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
+                                    ," ".join(proc.cmdline()),icon_finder(proc)])
+                                    self.processTreeIterList[pi]=itr
+                                    self.processList[pi]=proc
+                                    self.processChildList[parent.pid].append(pi)
+                                    self.processChildList[pi]=[]
 
-                                self.procDiskprev[pi]=[0,0]     ##
-                                self.procT1[pi]=0
-                                print('appending',pi)
-                                break
-                            elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and 'dbus' not in "".join(parent.cmdline()):
-                                itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
-                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
-                                ," ".join(proc.cmdline()),icon_finder(proc)])
-                                self.processTreeIterList[pi]=itr
-                                self.processList[pi]=proc
-                                self.processChildList[pi]=[]
+                                    self.procDiskprev[pi]=[0,0]     ##
+                                    self.procT1[pi]=0
+                                    print('appending',pi)
+                                    break
+                                elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and 'dbus' not in "".join(parent.cmdline()):
+                                    itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
+                                    cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
+                                    ," ".join(proc.cmdline()),icon_finder(proc)])
+                                    self.processTreeIterList[pi]=itr
+                                    self.processList[pi]=proc
+                                    self.processChildList[pi]=[]
 
-                                self.procDiskprev[pi]=[0,0]  ##
-                                self.procT1[pi]=0
-                                print('appending',pi)
-                                break
+                                    self.procDiskprev[pi]=[0,0]  ##
+                                    self.procT1[pi]=0
+                                    print('appending',pi)
+                                    break
+                            break
             except:
                 print('some error in appending')
 

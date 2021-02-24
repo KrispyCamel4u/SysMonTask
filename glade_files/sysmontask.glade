@@ -46,7 +46,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
     <property name="authors">Neeraj Kumar(camel.neeraj)</property>
     <property name="artists">Neeraj Kumar(camel.neeraj)</property>
-    <property name="logo">usr/share/sysmontask/icons/SysMonTask.png</property>
+    <property name="logo">/usr/share/sysmontask/icons/SysMonTask.png</property>
     <property name="wrap-license">True</property>
     <property name="license-type">custom</property>
     <child internal-child="vbox">

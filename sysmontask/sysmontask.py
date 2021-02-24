@@ -2,6 +2,13 @@
 # import gi
 # gi.require_version("Gtk", "3.")
 
+try:
+    from rooter import *
+except:
+    from sysmontask.rooter import *
+
+getPrivilege()
+
 from gi.repository import Gtk as g , GLib as go
 import cairo
 from os import popen
@@ -27,15 +34,14 @@ except:
 
 try:
     # for running as main file 
-
-    files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
+    files_dir=os.path.join(os.path.dirname(os.path.abspath(__file__)), "../glade_files")
+    # files_dir="/home/neeraj/projects/task_manager/sysmontask/glade_files" ## change this location for glade files if you want to run as a file
     from mem import *
     from sidepane import *
     from disk import *
     from net import *
     from gpu import *
     from proc import *
-    from rooter import *
 except:
     # for module level through  apt install comment it if running as main file
     files_dir="/usr/share/sysmontask/glade_files"
@@ -45,7 +51,6 @@ except:
     from sysmontask.net import *
     from sysmontask.gpu import *
     from sysmontask.proc import *
-    from sysmontask.rooter import *
 
 class myclass:
     flag=0      #flag for the updator 
@@ -847,12 +852,10 @@ class myclass:
 
 
 def start():
-    getPrivilege()
     main=myclass()
     g.main()
 
     
 if __name__=="__main__":
-    getPrivilege()
     main=myclass()
     g.main()
