@@ -14,16 +14,11 @@ import cairo
 from os import popen
 from re import sub
 import os
+import psutil as ps
 
-try:
-    import psutil as ps
-    if( not ps.__version__>='5.7.3'):
-        raise Exception
-except:
-    if os.getuid()==0:
-        print('Installing psutil system wide')
-        os.system('pip3 install -U psutil')
-        exit()
+if( not ps.__version__>='5.7.3'):
+    os.system('zenity --warning --text="psutil>=5.7.3 needed(system-wide)"')
+
 
 try:
     # for running as main file 
