@@ -1,3 +1,11 @@
+## Menu 
+- File : Nothing much reserved for future use
+- View : Refresh, Update Speed, Graph Direction
+  * Refresh : For accomodatign a new hardare related change such as network change.
+  * Update Speed : speed control for performance tab.
+  * Graph Direction : Newer on Right(default) / Newer on Left
+- Help : About
+
 ## Process Tab
 - Processes are shown in Parent and Child relation with filtering algorithm to filter out the background processes that are not as usefull as the process that user creates. Process which have there origin from "/libexec" or has "deamon" or "dbus" are considered as background processes. It consists of tree like shortable structure from any column.
 - The top of column(headers) shows the overall system performance matrics.
@@ -23,6 +31,10 @@
 - Memory : the memory Utilisation of the Process which solely belongs to the process. Calculated as **Resident_Memory - Shared_Memory = Memory util of the process**.
 - DiskRead : The disk read speed at which the process is doing IO operations.
 - DiskWrite : The disk write speed at which the process is doing IO operations.
+- ***rDiskRead:** Recursive Disk Read calculated similar to rMemory and rCPU. 
+- ***rDiskWrite:** Recursive Disk Write similar to rDiskRead.
+- Resident Memory: It is the actual memory that is in the physical memory associated to the given process(not only this process also includes the shared memory with other process)
+- Shared : Shared memory with other processes.
 - Owner : User that process belongs to.
 - Command : The command corresponding to the process.
 
@@ -30,5 +42,10 @@
 - It is a process kill button. Pressing it would cause process to get terminate after confirmation.
 ![image](https://user-images.githubusercontent.com/48773008/108235398-cbd36400-716b-11eb-8b78-36a883a98a8e.png)
 ![image](https://user-images.githubusercontent.com/48773008/108235101-86169b80-716b-11eb-94f3-0fa203fd0c2a.png)
+
+## Performance Tab
+- Shows the graphs for the major computer devices.
+- Contains graph for : CPU, Memory, Disks, Network Adapters, Nvidia GPU
+
 
 

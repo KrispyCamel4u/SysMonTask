@@ -5,8 +5,9 @@
 <a href="https://github.com/KrispyCamel4u/SysMonTask/commit-activity">
     <img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg">
 </a>
- <a href="https://github.com/KrispyCamel4u/SysMonTask/tags/">
-    <img src="https://img.shields.io/github/v/tag/KrispyCamel4u/SysMonTask.svg?sort=semver">
+
+<a href="https://github.com/KrispyCamel4u/SysMonTask/tags/">
+    <img src="https://img.shields.io/github/v/tag/KrispyCamel4u/SysMonTask.svg">
 </a>
 <a href="https://github.com/KrispyCamel4u/SysMonTask/master/LICENSE">
     <img src="https://img.shields.io/github/license/KrispyCamel4u/SysMonTask.svg">
@@ -26,23 +27,41 @@ $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
   ....
 $ sudo apt install sysmontask
   ....
+$ sysmontask   // optional to run via terminal but recommended for the first time 
+```
+**For the first time it might not work depending upon wheather the "psutil" is installed system-wide or not/or if the version requirements are not met then
+It will try to download and install it when run for the first time so, after it is done, restart again.**
+
+If needed install psutil system-wide manually(in case of any unexpected situtation):
+```
+$ sudo pip3 install -U psutil
+ ....
 ```
 Alternatively, if you don't want to add ppa(Personal Package Archives) then download the binaries from releases. And install by double clicking on it.
 
-Then start application from menu.
+Then start application from menu or by command "sysmontask"(recommended only in case of error/crashed) on terminal.
 
 Hurray, You're good to go in understanding capabilities of your system:)
 
 ## What's New: [![Generic badge](https://img.shields.io/badge/What's_New-History-red.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/HISTORY.md) [![Generic badge](https://img.shields.io/badge/Read_More-Docs-blueviolet.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
 
-### v1.1.0
-- User Processess Tab
-    * Processes filtering for user for fast look-ups. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md))
-    * rCPU, rMemory (recursive-CPU,recursive-Memery) columns. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)).
-    * Support for aggregate values on coloumn headers.
-    * Icon support, Available Killer. 
-- Mounted Disk List  
-- Can start with different system themes 
+### v1.1.1-beta
+- Logical and Overall CPU Utilisation.
+- Option to change graph movement(Newer on Left/Newer on Right).
+- Icons on Menu.
+- Mac Address on Network tab.
+- Resident and Shared Memory Columns on performance tab.
+- Show/Hide process tab columns(click on column headers).
+- [Bug Fix] optimised code.
+- [Bug Fix] Refresh not working after Adding a process tab. 
+- [Bug Fix] Update speed not working after Adding a process tab.
+- [Bug Fix] Graph resizing on full screen.
+- [Bug Fix [#2](https://github.com/KrispyCamel4u/SysMonTask/issues/2)] Application crashes start after adding process tab. 
+ 
+**Previous highlight:**
+- Processes filtering for user for fast look-ups. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md))
+- rCPU, rMemory (recursive-CPU,recursive-Memery) columns. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)).
+
 
 **To set theme, Run:**
 
@@ -74,9 +93,22 @@ $ sudo sysmontask.set_default
 #### Highlights
 ![Screenshot from 2021-02-17 17-54-27](https://user-images.githubusercontent.com/48773008/108204170-79814b80-7149-11eb-8b1f-843a1efa8d42.png)
 
+![Screenshot from 2021-02-21 22-06-32](https://user-images.githubusercontent.com/48773008/108631693-1bc66980-7491-11eb-8b1e-59df9622bd32.png)
+
 ![Screenshot from 2021-01-24 11-00-18](https://user-images.githubusercontent.com/48773008/105622210-7ab6a580-5e35-11eb-9a43-8f09c0efbdb2.png)
 
 ![Screenshot from 2021-02-17 18-09-43](https://user-images.githubusercontent.com/48773008/108212228-a33f7000-7153-11eb-9d3d-2c56d411efc7.png)
+
+
+### v1.1.0
+
+- User Processess Tab
+    * Processes filtering for user for fast look-ups. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md))
+    * rCPU, rMemory (recursive-CPU,recursive-Memery) columns. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)).
+    * Support for aggregate values on coloumn headers.
+    * Icon support, Available Killer. 
+- Mounted Disk List  
+- Can start with different system themes 
 
 ### v1.0.0 
 - Performance monitoring graphs
