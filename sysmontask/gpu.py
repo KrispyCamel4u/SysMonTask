@@ -89,23 +89,37 @@ class gpuTabWidget(g.ScrolledWindow):
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
-        for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i]))
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1]))
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i]))
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i]))
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1]))
+        #     cr.stroke()
+
+        cr.set_line_width(1.5)
+        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.move_to(0,scalingfactor*(100-self.gpuutilArray[0]))
+        for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1]))
-            cr.stroke()
+        cr.stroke_preserve()
+
+        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-self.gpuutilArray[0]))
+        cr.fill()
+        cr.stroke()
 
 
         return False        
@@ -139,23 +153,38 @@ class gpuTabWidget(g.ScrolledWindow):
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
-        for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuencodingArray[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuencodingArray[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuencodingArray[i]))
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpuencodingArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuencodingArray[i+1]))
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpuencodingArray[i]))
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuencodingArray[i]))
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpuencodingArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuencodingArray[i+1]))
+        #     cr.stroke()
+
+        #efficient encoding drawing
+        cr.set_line_width(1.5)
+        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.move_to(0,scalingfactor*(100-self.gpuencodingArray[0]))
+        for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuencodingArray[i+1]))
-            cr.stroke()
+        cr.stroke_preserve()
+
+        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-self.gpuencodingArray[0]))
+        cr.fill()
+        cr.stroke()
 
 
         return False
@@ -189,24 +218,37 @@ class gpuTabWidget(g.ScrolledWindow):
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpudecodingArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpudecodingArray[i+1]))
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpudecodingArray[i]))
+
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpudecodingArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpudecodingArray[i+1]))
+        #     cr.stroke()
+
+        cr.set_line_width(1.5)
+        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.move_to(0,scalingfactor*(100-self.gpudecodingArray[0]))
         for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpudecodingArray[i]))
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpudecodingArray[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpudecodingArray[i]))
+        cr.stroke_preserve()
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpudecodingArray[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpudecodingArray[i+1]))
-            cr.stroke()
-
+        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-self.gpudecodingArray[0]))
+        cr.fill()
+        cr.stroke()
 
         return False
 
@@ -239,24 +281,37 @@ class gpuTabWidget(g.ScrolledWindow):
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i+1]))
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i]))
+
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.384,.749,1.0,1)   #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i]))
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i+1]))
+        #     cr.stroke()
+
+        cr.set_line_width(1.5)
+        cr.set_source_rgba(.384,.749,1.0,1)   #for changing the outer line color
+        cr.move_to(0,scalingfactor*(self.gputotalvram-self.gpuvramArray[0]))
         for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i]))
             cr.line_to((i+1)*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i+1]))
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i]))
+        cr.stroke_preserve()
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.384,.749,1.0,1)   #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i]))
-            cr.line_to((i+1)*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i+1]))
-            cr.stroke()
-
+        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(self.gputotalvram-self.gpuvramArray[0]))
+        cr.fill()
+        cr.stroke()
 
         return False
 
@@ -305,13 +360,23 @@ def gpuUpdate(self):
     self.gpuWidget.gpushaderspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('graphics_clock').text)
     self.gpuWidget.gpuvramspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('mem_clock').text)
 
-    self.gpuUtilArray.pop()
-    self.gpuUtilArray.insert(0,int(self.gpuutil[:-1]))
-    self.gpuVramArray.pop()
-    self.gpuVramArray.insert(0,int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
-    self.gpuEncodingArray.pop()
-    self.gpuEncodingArray.insert(0,int(gpuinfoRoot.find('gpu').find('utilization').find('encoder_util').text[:-1]))
-    self.gpuDecodingArray.pop()
-    self.gpuDecodingArray.insert(0,int(gpuinfoRoot.find('gpu').find('utilization').find('decoder_util').text[:-1]))
+    if self.update_graph_direction:
+        self.gpuUtilArray.pop(0)
+        self.gpuUtilArray.append(int(self.gpuutil[:-1]))
+        self.gpuVramArray.pop(0)
+        self.gpuVramArray.append(int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
+        self.gpuEncodingArray.pop(0)
+        self.gpuEncodingArray.append(int(gpuinfoRoot.find('gpu').find('utilization').find('encoder_util').text[:-1]))
+        self.gpuDecodingArray.pop(0)
+        self.gpuDecodingArray.append(int(gpuinfoRoot.find('gpu').find('utilization').find('decoder_util').text[:-1]))
+    else:
+        self.gpuUtilArray.pop()
+        self.gpuUtilArray.insert(0,int(self.gpuutil[:-1]))
+        self.gpuVramArray.pop()
+        self.gpuVramArray.insert(0,int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
+        self.gpuEncodingArray.pop()
+        self.gpuEncodingArray.insert(0,int(gpuinfoRoot.find('gpu').find('utilization').find('encoder_util').text[:-1]))
+        self.gpuDecodingArray.pop()
+        self.gpuDecodingArray.insert(0,int(gpuinfoRoot.find('gpu').find('utilization').find('decoder_util').text[:-1]))
 
     self.gpuWidget.givedata(self)
