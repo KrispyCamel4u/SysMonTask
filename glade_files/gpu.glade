@@ -136,6 +136,7 @@
                         <property name="margin-start">15</property>
                         <property name="margin-end">4</property>
                         <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <signal name="draw" handler="gpuutildrawarea_draw" swapped="no"/>
                       </object>
                       <packing>
@@ -208,6 +209,7 @@
                         <property name="margin-start">4</property>
                         <property name="margin-end">15</property>
                         <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <signal name="draw" handler="gpuvramdrawarea_draw" swapped="no"/>
                       </object>
                       <packing>
@@ -279,6 +281,7 @@
                         <property name="margin-start">15</property>
                         <property name="margin-end">4</property>
                         <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <signal name="draw" handler="gpuencodingdrawarea_draw" swapped="no"/>
                       </object>
                       <packing>
@@ -350,6 +353,7 @@
                         <property name="margin-start">4</property>
                         <property name="margin-end">15</property>
                         <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
                         <signal name="draw" handler="gpudecodingdrawarea_draw" swapped="no"/>
                       </object>
                       <packing>
@@ -378,12 +382,13 @@
                 <property name="margin-top">5</property>
                 <property name="border-width">5</property>
                 <child>
-                  <!-- n-columns=2 n-rows=4 -->
+                  <!-- n-columns=2 n-rows=5 -->
                   <object class="GtkGrid">
                     <property name="width-request">280</property>
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-end">30</property>
+                    <property name="margin-bottom">10</property>
                     <property name="column-spacing">15</property>
                     <child>
                       <object class="GtkLabel">
@@ -521,6 +526,19 @@
                         <property name="top-attach">3</property>
                       </packing>
                     </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="left-attach">0</property>
+                        <property name="top-attach">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
+                    </child>
                   </object>
                   <packing>
                     <property name="resize">False</property>
@@ -535,7 +553,6 @@
                     <property name="halign">start</property>
                     <property name="margin-start">30</property>
                     <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
                     <child>
                       <object class="GtkLabel">
                         <property name="visible">True</property>

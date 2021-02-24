@@ -87,7 +87,12 @@ def memoryTabUpdate(self):
     swapmemory=ps.swap_memory()
     self.memSwapLabelValue.set_text(str(round(swapmemory[1]/pow(2,30),1))+'/'+str(round(swapmemory[0]/pow(2,30),1))+' GiB')
 
-    self.memUsedArray1.pop()
-    self.memUsedArray1.insert(0,self.usedd)
+    ## for graph update direction 1 new on right 0 new on left
+    if self.update_graph_direction:
+        self.memUsedArray1.pop(0)
+        self.memUsedArray1.append(self.usedd)
+    else:
+        self.memUsedArray1.pop()
+        self.memUsedArray1.insert(0,self.usedd)
 
 
