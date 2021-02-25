@@ -1010,7 +1010,7 @@ NA</property>
                                                     <property name="margin-start">13</property>
                                                     <property name="margin-top">10</property>
                                                     <property name="hexpand">True</property>
-                                                    <property name="label" translatable="yes">Utilisastion</property>
+                                                    <property name="label" translatable="yes">Utilisation</property>
                                                   </object>
                                                   <packing>
                                                     <property name="left-attach">0</property>
