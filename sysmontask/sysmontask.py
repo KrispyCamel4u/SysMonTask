@@ -23,6 +23,7 @@ if( not ps.__version__>='5.7.3'):
 try:
     # for running as main file 
     files_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../glade_files")
+    icon_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "../icons")
     from mem import *
     from sidepane import *
     from disk import *
@@ -32,6 +33,7 @@ try:
 except:
     # for module level through  apt install comment it if running as main file
     files_dir="/usr/share/sysmontask/glade_files"
+    icon_file='/usr/share/sysmontask/icons'
     from sysmontask.mem import *
     from sysmontask.sidepane import *
     from sysmontask.disk import *
@@ -73,8 +75,8 @@ class myclass:
         self.Window=self.builder.get_object("main_window")
         self.quit=self.builder.get_object("quit")
         self.quit.connect('activate',self.on_quit_activate)
-        
-        self.Window.set_icon_from_file('/usr/share/sysmontask/icons/SysMonTask.png')
+
+        self.Window.set_icon_from_file(icon_file+'/SysMonTask.png')
 
         self.performanceStack=self.builder.get_object('performancestack')
         self.process_tab_box=self.builder.get_object('process_tab_box')
