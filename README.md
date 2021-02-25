@@ -29,14 +29,14 @@ $ sudo apt install sysmontask
   ....
 $ sysmontask   // optional to run via terminal but recommended for the first time 
 ```
-**For the first time it might not work depending upon wheather the "psutil" is installed system-wide or not/or if the version requirements are not met then
-It will try to download and install it when run for the first time so, after it is done, restart again.**
+**If you get the warning about psutil module version(require >=5.7.3) then install the newest one(system-wide) by running:**
 
-If needed install psutil system-wide manually(in case of any unexpected situtation):
 ```
 $ sudo pip3 install -U psutil
  ....
 ```
+**[for Ubuntu<=20.04, the python3-psutil comes with <=5.5.1, hence it is highly recommended to install to the newest one(system-wide)]**
+
 Alternatively, if you don't want to add ppa(Personal Package Archives) then download the binaries from releases. And install by double clicking on it.
 
 Then start application from menu or by command "sysmontask"(recommended only in case of error/crashed) on terminal.
@@ -46,6 +46,13 @@ Hurray, You're good to go in understanding capabilities of your system:)
 ## What's New: [![Generic badge](https://img.shields.io/badge/What's_New-History-red.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/HISTORY.md) [![Generic badge](https://img.shields.io/badge/Read_More-Docs-blueviolet.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
 
 ### v1.1.1-beta
+**[Update]**
+  * Added support for multiple users processes.
+  * About logo icon fixed.
+  * Back to zenity for privilege uplifting.
+  * Removed auto installing of psutil.
+  * hardcode path removed when running from source 
+---
 - Logical and Overall CPU Utilisation.
 - Option to change graph movement(Newer on Left/Newer on Right).
 - Icons on Menu.
