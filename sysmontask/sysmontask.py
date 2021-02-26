@@ -404,7 +404,7 @@ class myclass:
 
             self.logical_cpu_grid.show_all()
 
-            return True
+            # return True
 
         #print("setting speed")
         cpuSpeedstring="{:.2f}".format(self.speed[0]/1000)+' Ghz'

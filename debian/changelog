@@ -1,13 +1,5 @@
-<<<<<<< HEAD
-sysmontask (1.1.0-ubuntu20.10-xx) groovy; urgency=medium
+sysmontask (1.1.1-ubuntu20.10-beta-a) groovy; urgency=medium
 
   * Additional release.
 
- -- Neeraj Kumar <neerajjangra4u@gmail.com>  Sun, 19 Feb 2021 10:00:24 -0400
-=======
-sysmontask (1.1.13-ubuntu20.10) groovy; urgency=medium
-
-  * Additional release.
-
- -- Neeraj Kumar <neerajjangra4u@gmail.com>  Sun, 21 Feb 2021 10:00:24 -0400
->>>>>>> v1.1.1
+ -- Neeraj Kumar <neerajjangra4u@gmail.com>  Sun, 25 Feb 2021 10:00:24 -0400
