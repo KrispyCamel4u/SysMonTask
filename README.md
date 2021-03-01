@@ -24,6 +24,8 @@ Linux system monitor with the compactness and usefulness of windows task manager
 To install the binary for ubuntu and its family members **(only for: 16.04,18.04,20.04 and 20.10 and equivalent)**, run: 
 
 ***[Need help for packaging for other distros]***
+
+*Note: The process tab works well only for the systems using gnome desktop environment type as of now(support for Mate,Xfce,cinnamon will be added soon)*
 ```
 $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
   ....
