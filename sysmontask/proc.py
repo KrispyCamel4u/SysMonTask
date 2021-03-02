@@ -2,6 +2,7 @@ from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck, Gio
 import psutil as ps,cairo,time
 import re,os,signal
 from math import pow
+import sys
 
 mibdevider=pow(2,20)
 screen=Wnck.Screen.get_default()
@@ -15,6 +16,13 @@ gio_apps=Gio.AppInfo.get_all()
 #         gio_apps[exetuable.split('/')[-1]]=app.get_icon()
 #     else:
 #         gio_apps[]=app.get_icon()
+
+def reversed_process(procdi):
+    if sys.version_info > (3, 7):
+        return reversed(procdi)
+    else:
+        return reversed(list(procdi.keys()))
+
 def byte_to_human(value,persec=True):
     if value > 1024:   ###KiB
         if value > 1048576:    ##MiB
@@ -277,12 +285,12 @@ def procInit(self):
     for pi in pids:
         procs=ps.Process(pi)
 
-        if(procs.username()!='root'):
-            if procs.name()=='systemd':
-                self.systemdId.append(pi)
-                self.processSystemd.append(procs)
-                searcher(self,procs,None)          ## for multiple user view
-                # break
+        # if(procs.username()!='root'):
+        if procs.name()=='systemd':
+            self.systemdId.append(pi)
+            self.processSystemd.append(procs)
+            searcher(self,procs,None)          ## for multiple user view
+            # break
 
     # self.processSystemd=ps.Process(self.systemdId)
     # searcher(self,self.processSystemd,None)
@@ -356,14 +364,19 @@ def procInit(self):
 
 def procUpdate(self):
     pids=ps.pids()
+    
     # new process appending
     for pi in pids:
         if pi not in self.processList:  # and pi>self.systemdId changed for mutliple user 
             # print('my process')
             try:
                 proc=ps.Process(pi)
-                if '/libexec/' not in "".join(proc.cmdline()) and 'daemon' not in "".join(proc.cmdline()) and 'dbus' not in "".join(proc.cmdline()) :
+                
+                if '/libexec/' not in "".join(proc.cmdline()) \
+                        and 'daemon' not in "".join(proc.cmdline()) \
+                        and 'dbus' not in "".join(proc.cmdline()) :
                     parents_processess=proc.parents()
+                    
                     for systemdproc in self.processSystemd:
                         if systemdproc in parents_processess:
                             for parent in parents_processess:
@@ -375,7 +388,7 @@ def procUpdate(self):
                                 shared='{:.1f}'.format(mem_info[2]/mibdevider)+' MiB'
                                 mem_util=(mem_info[0]-mem_info[2])/mibdevider
                                 mem_util='{:.1f}'.format(mem_util)+' MiB'
-
+                                
                                 if parent.pid in self.processList:
                                     itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
                                     cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
@@ -389,7 +402,10 @@ def procUpdate(self):
                                     self.procT1[pi]=0
                                     print('appending',pi)
                                     break
-                                elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and 'dbus' not in "".join(parent.cmdline()):
+                                elif '/libexec/' not in "".join(parent.cmdline()) and \
+                                    'daemon' not in "".join(parent.cmdline()) and  \
+                                        'dbus' not in "".join(parent.cmdline()):
+                                    
                                     itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
                                     cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
                                     ," ".join(proc.cmdline()),icon_finder(proc)])
@@ -407,7 +423,7 @@ def procUpdate(self):
 
     # updating 
     tempdi=self.processList.copy()
-    for pidds in reversed(tempdi):
+    for pidds in reversed_process(tempdi):
         itr=self.processTreeIterList[pidds]
         try:
             if pidds not in pids:
@@ -453,7 +469,7 @@ def procUpdate(self):
 
     # print(self.processChildList)
     #recursive calculations
-    for pid in reversed(self.processChildList):
+    for pid in reversed_process(self.processChildList):
         # print(pid)
         rcpu_percent=0
         rmem_util=0
