@@ -1,6 +1,6 @@
 from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck, Gio
 import psutil as ps,cairo,time
-import re,os,signal,platform
+import re,os,signal
 from math import pow
 import sys
 
@@ -281,16 +281,36 @@ def procInit(self):
 
     self.systemdId=[]
     self.processSystemd=[]
-    for pi in pids:
-        procs=ps.Process(pi)
 
-        (dist,ver,nname) = platform.dist()
-        if(procs.username()!='root' or dist =="LinuxMint"):
-            if procs.name()=='systemd':
-                self.systemdId.append(pi)
-                self.processSystemd.append(procs)
-                searcher(self,procs,None)          ## for multiple user view
-                # break
+    # get systemd process
+    sys_procs = []
+    for proc in ps.process_iter():
+        if proc.name() == "systemd" and len(proc.children())>1:
+            sys_procs.append(proc)
+    
+    if len(sys_procs)>1:
+        # process fork under user systemd
+        for proc in sys_procs:
+            if proc.username()!="root":
+                self.systemdId.append(proc.pid)
+                self.processSystemd.append(proc)
+                searcher(self,proc,None)          ## for multiple user view
+                break
+    elif len(sys_procs)==1:
+        # process fork under root systemd
+        self.systemdId.append(sys_procs[0].pid)
+        self.processSystemd.append(sys_procs[0])
+        searcher(self,sys_procs[0],None)          ## for multiple user view
+
+    # for pi in pids:
+    #     procs=ps.Process(pi)
+
+    #     if(procs.username()!='root'):
+    #         if procs.name()=='systemd':
+    #             self.systemdId.append(pi)
+    #             self.processSystemd.append(procs)
+    #             searcher(self,procs,None)          ## for multiple user view
+    #             # break
 
     # self.processSystemd=ps.Process(self.systemdId)
     # searcher(self,self.processSystemd,None)
