@@ -1,6 +1,6 @@
 from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck, Gio
 import psutil as ps,cairo,time
-import re,os,signal
+import re,os,signal,platform
 from math import pow
 import sys
 
@@ -16,7 +16,6 @@ gio_apps=Gio.AppInfo.get_all()
 #         gio_apps[exetuable.split('/')[-1]]=app.get_icon()
 #     else:
 #         gio_apps[]=app.get_icon()
-
 def reversed_process(procdi):
     if sys.version_info > (3, 7):
         return reversed(procdi)
@@ -285,12 +284,13 @@ def procInit(self):
     for pi in pids:
         procs=ps.Process(pi)
 
-        # if(procs.username()!='root'):
-        if procs.name()=='systemd':
-            self.systemdId.append(pi)
-            self.processSystemd.append(procs)
-            searcher(self,procs,None)          ## for multiple user view
-            # break
+        (dist,ver,nname) = platform.dist()
+        if(procs.username()!='root' or dist =="LinuxMint"):
+            if procs.name()=='systemd':
+                self.systemdId.append(pi)
+                self.processSystemd.append(procs)
+                searcher(self,procs,None)          ## for multiple user view
+                # break
 
     # self.processSystemd=ps.Process(self.systemdId)
     # searcher(self,self.processSystemd,None)
