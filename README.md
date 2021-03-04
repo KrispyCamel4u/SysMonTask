@@ -18,10 +18,14 @@
 </a>
 </p>
 
-Linux system monitor with the compactness and usefulness of windows task manager to allow higher control and monitoring.
+Linux system monitor with the compactness and usefulness of Windows Task Manager to allow higher control and monitoring.
 
 ## Installation
-To install the binary for ubuntu and its family members **(only for: 16.04,18.04,20.04 and 20.10 and equivalent)**
+To install the binary for Ubuntu and its family members **(only for: 16.04, 18.04, 20.04 and 20.10 and equivalent)**, run: 
+
+***[Need help for packaging for other distros]***
+
+*Note: The process tab works well only for the systems using the Gnome desktop environment as of now (support for Mate, Xfce, and Cinnamon will be added soon)*
 ```
 $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
   ....
@@ -33,15 +37,24 @@ $ sysmontask   // optional to run via terminal but recommended for the first tim
 
 ```
 $ sudo pip3 install -U psutil
- ....
+  ....
 ```
-**[for Ubuntu<=20.04, the python3-psutil comes with <=5.5.1, hence it is highly recommended to install to the newest one(system-wide)]**
+**[for Ubuntu<=20.04, the python3-psutil comes with <=5.5.1, hence it is highly recommended to install to the newest one (system-wide)]**
 
-Alternatively, if you don't want to add ppa(Personal Package Archives) then download the binaries from releases. And install by double clicking on it.
+*Note: For Nvidia GPUs, nvidia-smi needs to be installed. Check if nvidia-smi is installed by running:*
+```
+$ nvidia-smi
+  ...
+```
+If not then install it for your system (generally it is automatically installed with Nvidia proprietary drivers).
 
-Then start application from menu or by command "sysmontask"(recommended only in case of error/crashed) on terminal.
+---
+Alternatively, if you don't want to add the PPA (Personal Package Archives) then download the binaries from releases, and install by double clicking on it.
 
-Hurray, You're good to go in understanding capabilities of your system:)
+Then start application from the menu or by the command "sysmontask" (recommended only in case of error/crashed) on terminal.
+
+Hurray, you're good to go in understanding capabilities of your system:)
+
 
 ## What's New: [![Generic badge](https://img.shields.io/badge/What's_New-History-red.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/HISTORY.md) [![Generic badge](https://img.shields.io/badge/Read_More-Docs-blueviolet.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
 
