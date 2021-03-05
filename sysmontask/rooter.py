@@ -1,20 +1,23 @@
 import errno
 import os
-import sys,re
+import sys,re,time
 
 def getPrivilege(graphical=True):
-
-    if os.getuid() == 0 :
-        print('acquired root permission')
-        return
-
-    p=os.popen('zenity --password')
-    passs=p.readline()[:-1]    
-    p.close()
-    passs=re.sub(' ','\ ',passs)
-
-    args = [sys.executable] + sys.argv
+    return 0
+    if os.path.exists("{}/.sysmontask".format(os.environ.get("HOME"))):
+        with open("{}/.sysmontask".format(os.environ.get("HOME")),'r') as ifile:
+            if ifile.read()=='1':
+                return
+    else:
+        with open("{}/.sysmontask".format(os.environ.get("HOME")),'w+') as ofile:
+            pass
+    with open("{}/.sysmontask".format(os.environ.get("HOME")),'w') as ofile:
+        ofile.write('1')
+    args = [sys.executable] +sys.argv
+    # args = ['env GTK_THEME=Yaru-light']+sys.argv
+    print('In rooter')
     # os.system ('pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY '+' '.join(args))
-    os.system('echo '+passs+ '| sudo -S ' + ' '.join(args))
+    # os.system ('echo '+passs+ '| sudo -S ' + ' '.join(args))
+    os.system("")
     exit()
-    # print(args)
+    # print(args

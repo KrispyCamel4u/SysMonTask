@@ -1,5 +1,5 @@
 import os,glob
-dir_path='/usr/lib/python3/dist-packages/sysmontask'
+dir_path=os.path.dirname(os.path.abspath(__file__))
 # dir_path='.'
 themes_available=glob.glob('/usr/share/themes/*')
 light_themes=[]
@@ -29,9 +29,11 @@ def set_theme_light():
             original_rooter=ifile.readlines()
         with open(dir_path+'/rooter.py','w') as ofile:
             for line in original_rooter:
+                if 'return 0' in line:
+                    continue
                 if 'os.system(' in line:
                     # ofile.write("    os.system('pkexec env GTK_THEME={0} DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY '+' '.join(args))\n".format(light_themes[index]))
-                    ofile.write("    os.system('echo '+passs+ '| sudo -S GTK_THEME={0} /usr/bin/env ' + ' '.join(args))\n".format(light_themes[index]))
+                    ofile.write("    os.system('GTK_THEME={0}' + ' '.join(args))\n".format(light_themes[index]))
                 else:
                     ofile.write(line)
         print('Setting of Light Theme Done:)')
@@ -47,9 +49,11 @@ def set_theme_dark():
             original_rooter=ifile.readlines()
         with open(dir_path+'/rooter.py','w') as ofile:
             for line in original_rooter:
+                if 'return 0' in line:
+                    continue
                 if 'os.system(' in line:
-                    # ofile.write("    os.system('pkexec env GTK_THEME={0} DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY '+' '.join(args))\n".format(dark_themes[index]))
-                    ofile.write("    os.system('echo '+passs+ '| sudo -S GTK_THEME={0} /usr/bin/env ' + ' '.join(args))\n".format(dark_themes[index]))
+                    # ofile.write("    os.system('pkexec env GTK_THEME={0} DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY '+' '.join(args))\n".format(light_themes[index]))
+                    ofile.write("    os.system('GTK_THEME={0}' + ' '.join(args))\n".format(dark_themes[index]))
                 else:
                     ofile.write(line)
         print('Setting of Dark Theme Done:)')

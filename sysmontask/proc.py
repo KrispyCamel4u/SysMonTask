@@ -1,6 +1,6 @@
 from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck, Gio
 import psutil as ps,cairo,time
-import re,os,signal
+import re,os,signal,sys
 from math import pow
 
 mibdevider=pow(2,20)
@@ -15,6 +15,14 @@ gio_apps=Gio.AppInfo.get_all()
 #         gio_apps[exetuable.split('/')[-1]]=app.get_icon()
 #     else:
 #         gio_apps[]=app.get_icon()
+
+####### added for python<=3.7
+def reversed_process(procdi):
+    if sys.version_info > (3, 7):
+        return reversed(procdi)
+    else:
+        return reversed(list(procdi.keys()))
+
 def byte_to_human(value,persec=True):
     if value > 1024:   ###KiB
         if value > 1048576:    ##MiB
@@ -45,6 +53,12 @@ def sorting_func(model, row1, row2, user_data):
     val1 = model.get_value(row1, sort_column)
     val2 = model.get_value(row2, sort_column)
     multiplier=1
+    # if val1=='NA' or val2=="NA":
+    #     return 1
+    if val1=='NA':
+        val1='0 0'
+    if val2=='NA':
+        val2='0 0'
     if not type(val1)==int:
         temp1=val1.split()
         val1 = float(temp1[0])
@@ -70,11 +84,11 @@ def sorting_func(model, row1, row2, user_data):
             multiplier=1073741824*1024
         val2*=multiplier
     if val1<val2:
-        return -1
+        return 1
     elif val1==val2:
         return 0
     else:
-        return 1
+        return -1
 
 def row_selected(self,selection):
     try:
@@ -85,12 +99,16 @@ def row_selected(self,selection):
 
 def kill_process(self,widget):
     # try:
-    print('keller on the way',self.selected_process_pid)
+    print('killer on the way',self.selected_process_pid)
     dialog=confirmation_popup(self.Window,self)
     response=dialog.run()
     if response==g.ResponseType.OK:
         print('killing',self.selected_process_pid)
-        os.kill(self.selected_process_pid,signal.SIGTERM)
+        try:
+            os.kill(self.selected_process_pid,signal.SIGTERM)
+        except:
+            os.system('pkexec {1}/proc-kill.sh {0}'.format(self.selected_process_pid,os.path.dirname(os.path.abspath(__file__))))
+        
     dialog.destroy()
     time.sleep(0.1)
     procUpdate(self)
@@ -275,7 +293,11 @@ def procInit(self):
     self.systemdId=[]
     self.processSystemd=[]
     for pi in pids:
-        procs=ps.Process(pi)
+        ###### for removing rare starting crashes
+        try:
+            procs=ps.Process(pi)
+        except:
+            continue
 
         if(procs.username()!='root'):
             if procs.name()=='systemd':
@@ -338,7 +360,8 @@ def procInit(self):
         self.column_select_popover.append(popover_check_button)
         self.column_select_popover_check_buttons[i]=popover_check_button
 
-        if i!=1:   
+        # if i not in [1,6,7,8,9]:   
+        if i!=1:
             self.processTreeStore.set_sort_func(i,sorting_func,None)
 
     self.column_select_popover.show_all()
@@ -407,7 +430,7 @@ def procUpdate(self):
 
     # updating 
     tempdi=self.processList.copy()
-    for pidds in reversed(tempdi):
+    for pidds in reversed_process(tempdi):
         itr=self.processTreeIterList[pidds]
         try:
             if pidds not in pids:
@@ -437,23 +460,31 @@ def procUpdate(self):
                 mem_util='{:.1f}'.format(mem_util)+' MiB'
                 # prev=float(self.processTreeStore.get_value(self.processTreeIterList[pidds],6)[:-5])
                 
-                currArray=self.processList[pidds].io_counters()[2:4]
-                procT2=time.time()
-                wspeed=(currArray[1]-self.procDiskprev[pidds][1])/(procT2-self.procT1[pidds])
-                wspeed=byte_to_human(wspeed)
-                rspeed=(currArray[0]-self.procDiskprev[pidds][0])/(procT2-self.procT1[pidds])
-                rspeed=byte_to_human(rspeed)
+                ########## added for running as non-root
+                try:
+                    currArray=self.processList[pidds].io_counters()[2:4]
+                    procT2=time.time()
+                    wspeed=(currArray[1]-self.procDiskprev[pidds][1])/(procT2-self.procT1[pidds])
+                    wspeed=byte_to_human(wspeed)
+                    rspeed=(currArray[0]-self.procDiskprev[pidds][0])/(procT2-self.procT1[pidds])
+                    rspeed=byte_to_human(rspeed)
+                except:
+                    wspeed='NA'
+                    rspeed='NA'
 
                 self.processTreeStore.set(itr,2,cpu_percent,3,cpu_percent,4,mem_util,5,mem_util,6,rspeed,7,rspeed,8,wspeed,9,wspeed,10,rss,11,shared)
 
-                self.procDiskprev[pidds]=currArray[:]
-                self.procT1[pidds]=procT2
+                try:
+                    self.procDiskprev[pidds]=currArray[:]
+                    self.procT1[pidds]=procT2
+                except:
+                    pass
         except:
             print('error in process updating')
 
     # print(self.processChildList)
     #recursive calculations
-    for pid in reversed(self.processChildList):
+    for pid in reversed_process(self.processChildList):
         # print(pid)
         rcpu_percent=0
         rmem_util=0

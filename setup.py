@@ -1,11 +1,11 @@
 from setuptools import setup, find_packages
 
 def get_data_files():
-    data_files = [('share/sysmontask/glade_files', ['glade_files/disk.glade','glade_files/diskSidepane.glade','glade_files/gpu.glade',
+    data_files = [('/usr/share/sysmontask/glade_files', ['glade_files/disk.glade','glade_files/diskSidepane.glade','glade_files/gpu.glade',
     'glade_files/gpuSidepane.glade','glade_files/net.glade','glade_files/netSidepane.glade','glade_files/sysmontask.glade']),
-    ('share/sysmontask/icons',['icons/SysMonTask.png']),
-    ('share/doc/sysmontask',['AUTHORS', 'README.md','LICENSE']),
-    ('share/applications',['SysMonTask.desktop'])
+    ('/usr/share/sysmontask/icons',['icons/SysMonTask.png']),
+    ('/usr/share/doc/sysmontask',['AUTHORS', 'README.md','LICENSE']),
+    ('/usr/share/applications',['SysMonTask.desktop'])
     ]
 
     return data_files
@@ -20,7 +20,7 @@ setup(
     license='BSD-3',
     include_package_data=True,
     data_files=get_data_files(),
-    install_requires=['psutil >=5.8','pip','PyGObject'],
+    install_requires=['psutil >=5.7.3','PyGObject','pycairo'],
     packages=find_packages(),
     entry_points=dict(
         console_scripts=[

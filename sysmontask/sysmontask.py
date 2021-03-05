@@ -1,13 +1,16 @@
 #!/usr/bin/env python3
-# import gi
-# gi.require_version("Gtk", "3.")
-
+############ container missing error in some distro #############
+import gi
+gi.require_version("Gtk", "3.0")
+gi.require_version("Wnck", "3.0")
+###############################################################
 try:
     from rooter import *
 except:
     from sysmontask.rooter import *
-
 getPrivilege()
+with open("{}/.sysmontask".format(os.environ.get("HOME")),'w') as ofile:
+    ofile.write('0')
 
 from gi.repository import Gtk as g , GLib as go
 import cairo
@@ -17,7 +20,7 @@ import os
 import psutil as ps
 
 if( not ps.__version__>='5.7.3'):
-    os.system('zenity --warning --text="psutil>=5.7.3 needed(system-wide)"')
+    print('warning[critical]: psutil>=5.7.3 needed(system-wide)')
 
 
 try:
@@ -431,7 +434,15 @@ class myclass:
         
         try:
             #cpu package temp
-            self.cpuTempLabelValue.set_text(str(int(ps.sensors_temperatures()['coretemp'][0][1])))
+            temperatures_list=ps.sensors_temperatures()
+            if 'coretemp' in temperatures_list:
+                self.cpuTempLabelValue.set_text(str(int(temperatures_list['coretemp'][0][1]))+' °C')
+            elif 'k10temp' in temperatures_list:
+                for lis in temperatures_list:
+                    if lis.label=='Tdie':
+                        self.cpuTempLabelValue.set_text(str(int(lis.current))+' °C')
+                        break
+
             # cpu fan speed
         except:
             pass
