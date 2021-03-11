@@ -9,4 +9,4 @@ X-Python3-Version: >= 3.6
 Package: sysmontask
 Architecture: all
 Description: System Monitor With UI Like Windows
-Depends: ${python3:Depends},gi-cairo,gi,gir1.2-gtk-3.0
+Depends: ${python3:Depends},python3-gi-cairo,python3-gi,gir1.2-gtk-3.0,gir1.2-wnck-3.0

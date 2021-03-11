@@ -257,6 +257,7 @@ def diskinit(self):
     # partitions
     self.diskPartitions={}
     self.diskListStores={}
+    self.diskListStoreItrs={}
     partitions=ps.disk_partitions()
 
     for i in range(0,self.numOfDisks):
@@ -277,10 +278,11 @@ def diskinit(self):
                 self.diskPartitions[i]+=[part]
         ## for treeview of disk usage
         self.diskListStores[i]=g.ListStore(str,str,str,str,str,int,bool)
-        
+        self.diskListStoreItrs[i]=[]
         for part in self.diskPartitions[i]:
             temp=ps.disk_usage(part[1])
-            self.diskListStores[i].append([part[0],part[1],part[2],byte_to_human(temp[0],persec=False),byte_to_human(temp[1],persec=False),temp[3],False])
+            itr=self.diskListStores[i].append([part[0],part[1],part[2],byte_to_human(temp[0],persec=False),byte_to_human(temp[1],persec=False),temp[3],False])
+            self.diskListStoreItrs[i].append(itr)
 
         self.diskWidgetList[i].diskUsagesTreeView.set_model(self.diskListStores[i])
 
@@ -326,6 +328,11 @@ def diskTabUpdate(self):
     self.diskstate2=[]
     for i in range(0,self.numOfDisks):
         self.diskstate2.append(disktemp[self.disklist[i]])
+        for j,part in enumerate(self.diskPartitions[i]):
+            temp=ps.disk_usage(part[1])
+            self.diskListStores[i].set(self.diskListStoreItrs[i][j],3,byte_to_human(temp[0],persec=False),4,byte_to_human(temp[1],persec=False),5,temp[3])
+            
+        
         
     self.diskDiff=[]    
     self.diskActiveString=[]

@@ -33,7 +33,7 @@ def set_theme_light():
                     continue
                 if 'os.system(' in line:
                     # ofile.write("    os.system('pkexec env GTK_THEME={0} DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY '+' '.join(args))\n".format(light_themes[index]))
-                    ofile.write("    os.system('GTK_THEME={0}' + ' '.join(args))\n".format(light_themes[index]))
+                    ofile.write("    os.system('GTK_THEME={0} sysmontask')\n".format(light_themes[index]))
                 else:
                     ofile.write(line)
         print('Setting of Light Theme Done:)')
@@ -53,7 +53,7 @@ def set_theme_dark():
                     continue
                 if 'os.system(' in line:
                     # ofile.write("    os.system('pkexec env GTK_THEME={0} DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY '+' '.join(args))\n".format(light_themes[index]))
-                    ofile.write("    os.system('GTK_THEME={0}' + ' '.join(args))\n".format(dark_themes[index]))
+                    ofile.write("    os.system('GTK_THEME={0} sysmontask')\n".format(dark_themes[index]))
                 else:
                     ofile.write(line)
         print('Setting of Dark Theme Done:)')

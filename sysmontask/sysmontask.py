@@ -32,7 +32,6 @@ try:
     from disk import *
     from net import *
     from gpu import *
-    from proc import *
 except:
     # for module level through  apt install comment it if running as main file
     files_dir="/usr/share/sysmontask/glade_files"
@@ -42,7 +41,52 @@ except:
     from sysmontask.disk import *
     from sysmontask.net import *
     from sysmontask.gpu import *
-    from sysmontask.proc import *
+
+def session_finder():
+    destkop_env=['gnome','unity','cinnamon','xfce']
+    sess=os.environ.get("DESKTOP_SESSION").lower()
+    if sess in destkop_env:
+        return destkop_env.index(sess)
+    else:
+        for i,name in enumerate(destkop_env):
+            if name in sess:
+                return i
+
+    sess=os.environ.get("XDG_SESSION_DESKTOP").lower()
+    if sess in destkop_env:
+        return destkop_env.index(sess)
+    else:
+        for i,name in enumerate(destkop_env):
+            if name in sess:
+                return i
+    sess=os.environ.get("XDG_CURRENT_DESKTOP").lower()
+    print(sess)
+    if sess in destkop_env:
+        return destkop_env.index(sess)
+    else:
+        for i,name in enumerate(destkop_env):
+            # print(sess)
+            if name in sess:
+                return i
+session_index=session_finder()
+print(session_index)
+
+gnome_shell_num=0
+for itr in ps.process_iter():
+    if itr.name()=='gnome-shell':
+        gnome_shell_num+=1
+
+if session_index==2 or gnome_shell_num>=2:
+    try:
+        from proc_cinnamon import *
+    except:
+        from sysmontask.proc_cinnamon import *
+else:
+    try:
+        from proc import *
+    except:
+        from sysmontask.proc import *
+
 
 class myclass:
     flag=0      #flag for the updator 

@@ -166,8 +166,8 @@ def icon_finder(process):
             if temp:      
                 return temp.load_icon()
 
-        app_name=re.sub('','\.desktop',app.get_id())
-        app_name=re.sub('\.','-',app_name)       
+        app_name=re.sub(r'','\.desktop',app.get_id())
+        app_name=re.sub(r'\.','-',app_name)       
         if re.search(pname,app_name,re.IGNORECASE) and gicon:
             # print('2st',pname) 
             temp=icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE)
@@ -181,10 +181,17 @@ def icon_finder(process):
                 temp=icon_theme.lookup_by_gicon(gicon,16,g.IconLookupFlags.FORCE_SIZE)
                 if temp:      
                     return temp.load_icon()
+    
+    # 1st pref using icon theme
+    r=re.compile(pname,re.IGNORECASE)
+    matchlist = list(filter(r.match, theme_icon_list))
+    if len(matchlist)!=0:
+        # print(pname,' ','convention')
+        return icon_theme.load_icon(matchlist[0], 16, 0)
 
 
     # 3rd pref using Wnck module to get the active screen
-    if screen:                          ### added for destros where x11 is not used
+    if screen:
         screen.force_update()
         for win in screen.get_windows():
             # print(win.get_name()
@@ -224,6 +231,15 @@ def column_header_selection(self,widget):
 #     self.popMenu.popup(None, None, None, None, 0, g.get_current_event_time())
 #     print("Done")
 
+def put_in_blacklist(self,proc):
+    childlist=proc.children()
+    for child in childlist:
+        if child in (self.process_cinnamon+self.process_terminal_server):
+            continue
+        self.blacklist.append(child)
+        put_in_blacklist(self,child)
+
+
 def searcher(self,sprocs,root):
     childlist=sprocs.children()
     if(sprocs.name()!='systemd'): 
@@ -234,9 +250,24 @@ def searcher(self,sprocs,root):
     else:
         try:
             for procs in childlist:
+                rchildlist=procs.children(True)
+                for cin in (self.process_cinnamon+self.process_terminal_server):
+                    # print(sprocs.name(),rchildlist)
+                    if cin in rchildlist:
+                        # print(cin.name(),procs.name())
+                        self.blacklist.append(procs)
+                        put_in_blacklist(self,procs)
+                        return
+
                 cmdline="".join(procs.cmdline())
-                if (root!=None) or ('/libexec/' not in cmdline and 'daemon' not in cmdline and 'dbus' not in cmdline \
-                    and 'gvfs' not in cmdline and 'gsd' not in cmdline and 'at-spi' not in cmdline and 'sd-pam' not in cmdline):
+                if (root!=None) or ('/libexec/' not in cmdline and 'daemon' not in cmdline and 'dbus' not in cmdline and 'kernel' \
+                    not in cmdline and 'systemd' not in cmdline and 'gvfs' not in cmdline and 'at-spi' not in cmdline \
+                 and 'acpid' not in cmdline and 'networkd' not in cmdline and 'polkit' not in cmdline and 'ModemManager' not in cmdline \
+                 and 'whoopsie' not in cmdline and 'bluetoothd' not in cmdline and 'applet' not in cmdline and 'powerd' not in cmdline \
+                 and 'cron' not in cmdline and 'cupsd' not in cmdline and 'blueman' not in cmdline \
+                 and 'agetty' not in cmdline and 'xfconfd' not in cmdline and 'ofonod' not in cmdline and \
+                 'irqbalance' not in cmdline):
+
                     # if(sprocs.name()=='systemd'):
                     #     if(len(procs.children())!=0):
                     #         print(procs.name())
@@ -304,8 +335,17 @@ def procInit(self):
     diskio=ps.disk_io_counters()
     self.diskTotalState1=[diskio[2],diskio[3]]
 
-    self.systemdId=[]
-    self.processSystemd=[]
+    # self.systemdId=[]
+    # self.processSystemd=[]
+    self.systemdId=1
+    self.processSystemd=ps.Process(1)
+    self.process_cinnamon=[]
+    self.process_cinnamonIds=[]
+    self.process_terminal_server=[]
+    self.process_terminal_serverIds=[]
+
+    self.blacklist=[]
+
     for pi in pids:
         ###### for removing rare starting crashes
         try:
@@ -313,13 +353,18 @@ def procInit(self):
         except:
             continue
 
-        if(procs.username()!='root'):
-            if procs.name()=='systemd':
-                self.systemdId.append(pi)
-                self.processSystemd.append(procs)
-                searcher(self,procs,None)          ## for multiple user view
-                # break
+        if procs.name()=='cinnamon' or (procs.name()=='gnome-shell' and procs.username()!='gdm'):
+            self.process_cinnamonIds.append(pi)
+            self.process_cinnamon.append(procs)
+            searcher(self,procs.parent(),None)          ## for multiple user view
+            continue
+        if 'terminal-server' in procs.name():
+            self.process_terminal_serverIds.append(pi)
+            self.process_terminal_server.append(procs)
+            searcher(self,procs,None)
 
+    searcher(self,self.processSystemd,None)
+    # print(self.blacklist)
     # self.processSystemd=ps.Process(self.systemdId)
     # searcher(self,self.processSystemd,None)
     
@@ -416,7 +461,7 @@ def procUpdate(self):
     pids=ps.pids()
     # new process appending
     for pi in pids:
-        if pi not in self.processList:  # and pi>self.systemdId changed for mutliple user 
+        if pi not in self.processList and pi>1:  # and pi>self.systemdId changed for mutliple user 
             # print('my process')
             try:
                 try:
@@ -424,53 +469,60 @@ def procUpdate(self):
                 except:
                     print('process error in appending')
                     continue
+                if proc in self.blacklist: #or proc in (self.process_cinnamon+self.process_terminal_server):
+                    continue
                 cmdline="".join(proc.cmdline())
-                if '/libexec/' not in cmdline and 'daemon' not in cmdline and 'dbus' not in cmdline \
-                    and 'gvfs' not in cmdline and 'gsd' not in cmdline and 'at-spi' not in cmdline and 'sd-pam' not in cmdline:
+                if '/libexec/' not in cmdline and 'daemon' not in cmdline and 'dbus' not in cmdline and 'kernel' not in cmdline and \
+                 'systemd' not in cmdline and 'gvfs' not in cmdline and 'at-spi' not in cmdline and 'acpid' not in cmdline and 'networkd' \
+                 not in cmdline and 'polkit' not in cmdline and 'ModemManager' not in cmdline \
+                 and 'whoopsie' not in cmdline and 'bluetoothd' not in cmdline and 'applet' not in cmdline and 'powerd' not in cmdline \
+                 and 'obex' not in cmdline and 'cron' not in cmdline and 'cupsd' not in cmdline and 'blueman' not in cmdline \
+                 and 'agetty' not in cmdline and 'sd-pam' not in cmdline and 'xfconfd' not in cmdline and 'ofonod' not in cmdline and \
+                 'irqbalance' not in cmdline:
                     parents_processess=proc.parents()
-                    for systemdproc in self.processSystemd:
-                        if systemdproc in parents_processess:
-                            for parent in parents_processess:
-                                try:
-                                    cpu_percent=proc.cpu_percent()/ps.cpu_count()
-                                    mem_info=proc.memory_info()
-                                except:
-                                    print('value get error in appending')
-                                    break
+                    if self.processSystemd in parents_processess:
+                        for parent in parents_processess:
+                            try:
+                                cpu_percent=proc.cpu_percent()/ps.cpu_count()
+                                mem_info=proc.memory_info()
+                            except:
+                                print('value get error in appending')
+                                break
 
-                                cpu_percent="{:.1f}".format(cpu_percent)+' %'
+                            cpu_percent="{:.1f}".format(cpu_percent)+' %'
 
-                                rss='{:.1f}'.format(mem_info[0]/mibdevider)+' MiB'
-                                shared='{:.1f}'.format(mem_info[2]/mibdevider)+' MiB'
-                                mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                                mem_util='{:.1f}'.format(mem_util)+' MiB'
+                            rss='{:.1f}'.format(mem_info[0]/mibdevider)+' MiB'
+                            shared='{:.1f}'.format(mem_info[2]/mibdevider)+' MiB'
+                            mem_util=(mem_info[0]-mem_info[2])/mibdevider
+                            mem_util='{:.1f}'.format(mem_util)+' MiB'
+                            
 
-                                if parent.pid in self.processList:
-                                    itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
-                                    cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
-                                    ," ".join(proc.cmdline()),icon_finder(proc)])
-                                    self.processTreeIterList[pi]=itr
-                                    self.processList[pi]=proc
-                                    self.processChildList[parent.pid].append(pi)
-                                    self.processChildList[pi]=[]
+                            if parent.pid in self.processList:
+                                itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
+                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
+                                ," ".join(proc.cmdline()),icon_finder(proc)])
+                                self.processTreeIterList[pi]=itr
+                                self.processList[pi]=proc
+                                self.processChildList[parent.pid].append(pi)
+                                self.processChildList[pi]=[]
 
-                                    self.procDiskprev[pi]=[0,0]     ##
-                                    self.procT1[pi]=0
-                                    print('appending',pi)
-                                    break
-                                elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and 'dbus' not in "".join(parent.cmdline()):
-                                    itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
-                                    cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
-                                    ," ".join(proc.cmdline()),icon_finder(proc)])
-                                    self.processTreeIterList[pi]=itr
-                                    self.processList[pi]=proc
-                                    self.processChildList[pi]=[]
+                                self.procDiskprev[pi]=[0,0]     ##
+                                self.procT1[pi]=0
+                                print('appending',pi)
+                                break
+                            elif '/libexec/' not in "".join(parent.cmdline()) and 'daemon' not in "".join(parent.cmdline()) and 'dbus' not in "".join(parent.cmdline()):
+                                itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
+                                cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
+                                ," ".join(proc.cmdline()),icon_finder(proc)])
+                                self.processTreeIterList[pi]=itr
+                                self.processList[pi]=proc
+                                self.processChildList[pi]=[]
 
-                                    self.procDiskprev[pi]=[0,0]  ##
-                                    self.procT1[pi]=0
-                                    print('appending',pi)
-                                    break
-                            break
+                                self.procDiskprev[pi]=[0,0]  ##
+                                self.procT1[pi]=0
+                                print('appending',pi)
+                                break
+                            
             except:
                 print('some error in appending')
 
@@ -480,7 +532,7 @@ def procUpdate(self):
         itr=self.processTreeIterList[pidds]
         try:
             if pidds not in pids:
-                # childremover(self,pidds)
+
                 process_pop(self,pidds,itr)
                             
                 print('poping',pidds)
@@ -498,6 +550,7 @@ def procUpdate(self):
                 shared='{:.1f}'.format(mem_info[2]/mibdevider)+' MiB'
                 mem_util=(mem_info[0]-mem_info[2])/mibdevider
                 mem_util='{:.1f}'.format(mem_util)+' MiB'
+                
                 # prev=float(self.processTreeStore.get_value(self.processTreeIterList[pidds],6)[:-5])
                 
                 ########## added for running as non-root
