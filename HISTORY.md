@@ -1,6 +1,6 @@
 ### v1.1.1-beta-b
 #### [Bug Fix + Enhancements]
-- [[#6](https://github.com/KrispyCamel4u/SysMonTask/issues/6)] Possibility to run as non-root
+- [[#6](https://github.com/KrispyCamel4u/SysMonTask/issues/6)] Possibility to run as non-root( removed need for package zenity)
 - [[#12](https://github.com/KrispyCamel4u/SysMonTask/issues/12)] gi.repository.Gtk' object has no attribute 'Container'
 - [[#13](https://github.com/KrispyCamel4u/SysMonTask/issues/13) [#23](https://github.com/KrispyCamel4u/SysMonTask/issues/23)] ValueError: invalid literal for int() with base 10: 'N/', Does not work en PopOs 20.10
 - [[#14](https://github.com/KrispyCamel4u/SysMonTask/pull/14)] Python <=3.7 compaitiable for process UI 
