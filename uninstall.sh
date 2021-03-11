@@ -7,4 +7,5 @@ do
 done
 sudo rm -rf /usr/applicatons/SysMonTask.desktop
 sudo rm -rf /usr/share/sysmontask
+sudo rm -rf /usr/share/doc/sysmontask
 echo "Done"
