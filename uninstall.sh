@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+
 files_dir=$(find /usr/local/ -name "sysmontask*")
 for file in $files_dir
 do
