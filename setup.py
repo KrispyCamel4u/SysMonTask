@@ -20,7 +20,7 @@ setup(
     license='BSD-3',
     include_package_data=True,
     data_files=get_data_files(),
-    install_requires=['psutil>=5.7.3','PyGObject','pycairo'],
+    install_requires=['psutil>=5.7.2','PyGObject','pycairo'],
     packages=find_packages(),
     entry_points=dict(
         console_scripts=[
