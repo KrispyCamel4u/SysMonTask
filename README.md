@@ -21,35 +21,85 @@
 Linux system monitor with the compactness and usefulness of Windows Task Manager to allow higher control and monitoring.
 
 ## Installation
-To install the binary for Ubuntu and its family members **(only for: 16.04, 18.04, 20.04 and 20.10 and equivalent)**, run: 
+### Ubuntu and its family members **(only for: 18.04, 20.04 and 20.10 and equivalent)**, run: 
 
 ***[Need help for packaging for other distros]***
 
-*Note: The process tab works well only for the systems using the Gnome desktop environment as of now (support for Mate, Xfce, and Cinnamon will be added soon)*
+*Note: The process tab works well only for the systems using the Gnome,cinnamon and xfce desktop environment as of now (support for Mate,KDE will be added soon)*
 ```
 $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
   ....
 $ sudo apt install sysmontask
   ....
-$ sysmontask   // optional to run via terminal but recommended for the first time 
-```
-**If you get the warning about psutil module version(require >=5.7.3) then install the newest one(system-wide) by running:**
-
-```
+// Install psutil if Ubuntu<=20.04, other-wise skip this step(more info given below) : 
 $ sudo pip3 install -U psutil
   ....
+$ sysmontask   // optional to run via terminal but recommended for the first time 
 ```
-**[for Ubuntu<=20.04, the python3-psutil comes with <=5.5.1, hence it is highly recommended to install to the newest one (system-wide)]**
+Alternatively, if you don't want to add the PPA (Personal Package Archives) then download the binaries from releases, and install by double clicking on it.
 
-*Note: For Nvidia GPUs, nvidia-smi needs to be installed. Check if nvidia-smi is installed by running:*
+***Note: Some information such as Memory static details(slots, Frequency) and Disk IO(disk usage per process) for the other user's processes(including root) requires root access, hence to run with root access:***
+```
+$ sudo sysmontask
+  ....
+```
+**For Ubuntu<=20.04(for others it will be installed automatically), psutil will not be install automatically with sysmontask(python3-psutil doesn't meet the version requirements), hence install with:**
+
+```
+$ pip3 install psutil          // if you're not planning to use it with root access
+  ....
+  OR
+$ sudo pip3 install -U psutil  // needed to run sysmontask with root access, hence recommended
+  ....
+```
+---
+
+### Arch based destros:
+```
+$ git clone https://aur.archlinux.org/sysmontask.git
+  ....
+$ cd sysmontask
+$ makepkg -si
+  ....
+$ sysmontask
+  ....
+```
+OR
+
+Install using pamac(gui for software add/remove), first enable the AUR(arch user repository) in preferences, then search sysmontask, install and enjoy.
+
+---
+
+### Installing from source(for other destros whose package is yet to be made)
+Install the dependencies required, mentioned in the [requirments.md](https://github.com/KrispyCamel4u/SysMonTask/blob/master/requirements.md). In case of issue related to PyGoject or pycairo OR to get the command for the specific package manager, follow the link given in requirements.md . 
+
+While installing from source, pip automatically installs some of the packages(which can be installed using pip) required others need to be installed using package manager.
+
+After installing dependencies:
+```
+$ git clone https://github.com/KrispyCamel4u/SysMonTask.git
+  ....
+$ cd SysMonTask
+$ sudo python3 setup.py install
+  ....
+$ sysmontask
+  ....
+```
+It will install it in "/usr/local/lib/python<version>/dist-packages/".
+To uninstall it run the uninstall.sh script in the SysMonTask cloned directory, with:
+```
+$ ./uninstall.sh
+  Done
+```
+
+---
+
+**Note: For Nvidia GPUs, nvidia-smi needs to be installed. Check if nvidia-smi is installed by running:**
 ```
 $ nvidia-smi
   ...
 ```
 If not then install it for your system (generally it is automatically installed with Nvidia proprietary drivers).
-
----
-Alternatively, if you don't want to add the PPA (Personal Package Archives) then download the binaries from releases, and install by double clicking on it.
 
 Then start application from the menu or by the command "sysmontask" (recommended only in case of error/crashed) on terminal.
 
@@ -58,29 +108,23 @@ Hurray, you're good to go in understanding capabilities of your system:)
 
 ## What's New: [![Generic badge](https://img.shields.io/badge/What's_New-History-red.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/HISTORY.md) [![Generic badge](https://img.shields.io/badge/Read_More-Docs-blueviolet.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
 
-### v1.1.1-beta
-**[Update]**
-  * Added support for multiple users processes.
-  * About logo icon fixed.
-  * Back to zenity for privilege uplifting.
-  * Removed auto installing of psutil.
-  * hardcode path removed when running from source 
----
-- Logical and Overall CPU Utilisation.
-- Option to change graph movement(Newer on Left/Newer on Right).
-- Icons on Menu.
-- Mac Address on Network tab.
-- Resident and Shared Memory Columns on performance tab.
-- Show/Hide process tab columns(click on column headers).
-- [Bug Fix] optimised code.
-- [Bug Fix] Refresh not working after Adding a process tab. 
-- [Bug Fix] Update speed not working after Adding a process tab.
-- [Bug Fix] Graph resizing on full screen.
-- [Bug Fix [#2](https://github.com/KrispyCamel4u/SysMonTask/issues/2)] Application crashes start after adding process tab. 
+### v1.1.1-beta-b
+#### [Bug Fix + Enhancements]
+- [[#6](https://github.com/KrispyCamel4u/SysMonTask/issues/6)] Possibility to run as non-root
+- [[#12](https://github.com/KrispyCamel4u/SysMonTask/issues/12)] gi.repository.Gtk' object has no attribute 'Container'
+- [[#13](https://github.com/KrispyCamel4u/SysMonTask/issues/13) [#23](https://github.com/KrispyCamel4u/SysMonTask/issues/23)] ValueError: invalid literal for int() with base 10: 'N/', Does not work en PopOs 20.10
+- [[#14](https://github.com/KrispyCamel4u/SysMonTask/pull/14)] Python <=3.7 compaitiable for process UI 
+- [[#15]()] Processes missing from process tab( added filtered processes support for cinnamon, xfce)
+- [[#16](https://github.com/KrispyCamel4u/SysMonTask/issues/16)] psutils version fallbac (removed psutil dependency for ubuntu<=20.04, install seperately)
+- [[#20](https://github.com/KrispyCamel4u/SysMonTask/issues/20)] Missing temperature unit in the performance tab
+- [[#22](https://github.com/KrispyCamel4u/SysMonTask/issues/22)] Temperature of AMD CPU displays as NA
+- [[#26](https://github.com/KrispyCamel4u/SysMonTask/issues/26)] Wrong arrows direction on Processes tabs(sorting column header)
+- [[#31](https://github.com/KrispyCamel4u/SysMonTask/issues/31)] Not working on Linux Lite (Ubuntu 20.04.2) (gir1.2-wnck-3.0 dependancy added)
+- Use of zenity removed
  
 **Previous highlight:**
 - Processes filtering for user for fast look-ups. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md))
-- rCPU, rMemory (recursive-CPU,recursive-Memery) columns. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)).
+- **rCPU, rMemory** (recursive-CPU,recursive-Memery) columns. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)).
 
 
 **To set theme, Run:**
@@ -120,22 +164,4 @@ $ sudo sysmontask.set_default
 ![Screenshot from 2021-02-17 18-09-43](https://user-images.githubusercontent.com/48773008/108212228-a33f7000-7153-11eb-9d3d-2c56d411efc7.png)
 
 
-### v1.1.0
-
-- User Processess Tab
-    * Processes filtering for user for fast look-ups. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md))
-    * rCPU, rMemory (recursive-CPU,recursive-Memery) columns. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)).
-    * Support for aggregate values on coloumn headers.
-    * Icon support, Available Killer. 
-- Mounted Disk List  
-- Can start with different system themes 
-
-### v1.0.0 
-- Performance monitoring graphs
-- Devices supported:
-  * CPU
-  * Memory
-  * Disks
-  * Network adapters
-  * only single Nvidia GPU
 
