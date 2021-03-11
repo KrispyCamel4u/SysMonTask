@@ -1,4 +1,5 @@
-#### #ubuntu packages
+### Dependencies 
+**If want to use APT then:**
 python3-gi-cairo
 
 python3-gi
@@ -9,8 +10,12 @@ gir1.2-wnck-3.0
 
 python3-psutil>=5.7.3    // alternative to psutil
 
-#### #python package
-PyGOject                 // gir1.2-gtk3.0 is required for pygobject to build
+**If want to use pip**
+gir1.2-gtk3.0 // (needed to for PyGOject) Install with APT
+
+gir1.2-wnck-3.0 // Install with APT (not available as pip package)
+
+PyGOject                 //  is required for pygobject to build
 
 pycairo                  // alternative to python3-gi-cairo
 
