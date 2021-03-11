@@ -12,7 +12,7 @@ def get_data_files():
 
 setup(
     name='sysmontask',
-    version='1.1.1-beta-b',
+    version='1.1.1-beta.b',
     description='System Monitor With UI Like Windows',
     url='http://github.com/krispycamel4u',
     author='Neeraj Kumar',
