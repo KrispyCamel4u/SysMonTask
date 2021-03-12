@@ -44,30 +44,37 @@ except:
 
 def session_finder():
     destkop_env=['gnome','unity','cinnamon','xfce']
-    sess=os.environ.get("DESKTOP_SESSION").lower()
-    if sess in destkop_env:
-        return destkop_env.index(sess)
-    else:
-        for i,name in enumerate(destkop_env):
-            if name in sess:
-                return i
+    sess=os.environ.get("DESKTOP_SESSION")
+    if sess:
+        sess=sess.lower()
+        if sess in destkop_env:
+            return destkop_env.index(sess)
+        else:
+            for i,name in enumerate(destkop_env):
+                if name in sess:
+                    return i
 
-    sess=os.environ.get("XDG_SESSION_DESKTOP").lower()
-    if sess in destkop_env:
-        return destkop_env.index(sess)
-    else:
-        for i,name in enumerate(destkop_env):
-            if name in sess:
-                return i
-    sess=os.environ.get("XDG_CURRENT_DESKTOP").lower()
-    print(sess)
-    if sess in destkop_env:
-        return destkop_env.index(sess)
-    else:
-        for i,name in enumerate(destkop_env):
-            # print(sess)
-            if name in sess:
-                return i
+    sess=os.environ.get("XDG_SESSION_DESKTOP")
+    if sess:
+        sess=sess.lower()
+        if sess in destkop_env:
+            return destkop_env.index(sess)
+        else:
+            for i,name in enumerate(destkop_env):
+                if name in sess:
+                    return i
+    sess=os.environ.get("XDG_CURRENT_DESKTOP")
+    if sess:
+        sess=sess.lower()
+        if sess in destkop_env:
+            return destkop_env.index(sess)
+        else:
+            for i,name in enumerate(destkop_env):
+                # print(sess)
+                if name in sess:
+                    return i
+    return 0
+
 session_index=session_finder()
 print(session_index)
 
@@ -903,3 +910,6 @@ def start():
 if __name__=="__main__":
     main=myclass()
     g.main()
+
+# def uninstall():
+#     os.system('sudo {0}/uninstall_for_pip.sh'.format(os.path.dirname(os.path.abspath(__file__))))

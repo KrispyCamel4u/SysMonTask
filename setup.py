@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+with open("README.md", "r") as fh:
+    long_description = fh.read()
+
 def get_data_files():
     data_files = [('/usr/share/sysmontask/glade_files', ['glade_files/disk.glade','glade_files/diskSidepane.glade','glade_files/gpu.glade',
     'glade_files/gpuSidepane.glade','glade_files/net.glade','glade_files/netSidepane.glade','glade_files/sysmontask.glade']),
@@ -12,12 +15,20 @@ def get_data_files():
 
 setup(
     name='sysmontask',
-    version='1.1.1-beta2',
+    version='1.1.1-beta25',
     description='System Monitor With UI Like Windows',
-    url='http://github.com/krispycamel4u',
+    url='https://github.com/KrispyCamel4u/SysMonTask',
     author='Neeraj Kumar',
     author_email='neerajjangra4u@gmail.com',
     license='BSD-3',
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    classifiers=[
+        "Programming Language :: Python :: 3",
+        "License :: OSI Approved :: BSD License",
+        "Operating System :: POSIX :: Linux",
+        'Topic :: System :: Monitoring',
+    ],
     include_package_data=True,
     data_files=get_data_files(),
     install_requires=['psutil>=5.7.2','PyGObject','pycairo'],

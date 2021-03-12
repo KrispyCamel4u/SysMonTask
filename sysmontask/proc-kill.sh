@@ -1,4 +1,4 @@
-#!/usr/bin/bash
+#!/bin/bash
 if [ $2 == 0 ]
 then
 	kill -s SIGTERM $1
