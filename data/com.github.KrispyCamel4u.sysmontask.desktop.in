@@ -7,7 +7,7 @@ TryExec=sysmontask
 Exec=sysmontask
 
 # change here for icon location 
-Icon=/usr/share/sysmontask/icons/SysMonTask.png
+Icon=SysMonTask
 Terminal=false
 Type=Application
 StartupNotify=true

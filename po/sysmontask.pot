@@ -1,0 +1,428 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2021-03-03 22:17+0600\n"
+"PO-Revision-Date: 2021-03-03 22:18+0600\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.4.2\n"
+"X-Poedit-Basepath: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: data/glade_files/disk.glade:37
+msgid "Disk  "
+msgstr ""
+
+#: data/glade_files/disk.glade:59 data/glade_files/disk.glade:213
+msgid "Active Time"
+msgstr ""
+
+#: data/glade_files/disk.glade:75 data/glade_files/disk.glade:227
+#: data/glade_files/disk.glade:273 data/glade_files/disk.glade:292
+#: data/glade_files/gpu.glade:58 data/glade_files/gpu.glade:187
+#: data/glade_files/gpu.glade:432 data/glade_files/gpu.glade:465
+#: data/glade_files/gpu.glade:499 data/glade_files/gpu.glade:518
+#: data/glade_files/gpu.glade:580 data/glade_files/gpu.glade:610
+#: data/glade_files/gpu.glade:640 data/glade_files/gpu.glade:672
+#: data/glade_files/gpu.glade:704 data/glade_files/net.glade:173
+#: data/glade_files/net.glade:205 data/glade_files/net.glade:239
+#: data/glade_files/net.glade:258 data/glade_files/net.glade:364
+#: data/glade_files/net.glade:392 data/glade_files/net.glade:473
+#: data/glade_files/netSidepane.glade:61 data/glade_files/sysmontask.glade:1041
+#: data/glade_files/sysmontask.glade:1072
+#: data/glade_files/sysmontask.glade:1105
+#: data/glade_files/sysmontask.glade:1124
+#: data/glade_files/sysmontask.glade:1177
+#: data/glade_files/sysmontask.glade:1256
+#: data/glade_files/sysmontask.glade:1284
+#: data/glade_files/sysmontask.glade:1312
+#: data/glade_files/sysmontask.glade:1341
+#: data/glade_files/sysmontask.glade:1369
+#: data/glade_files/sysmontask.glade:1399
+#: data/glade_files/sysmontask.glade:1427
+#: data/glade_files/sysmontask.glade:1525
+#: data/glade_files/sysmontask.glade:1658
+#: data/glade_files/sysmontask.glade:1689
+#: data/glade_files/sysmontask.glade:1721
+#: data/glade_files/sysmontask.glade:1740
+#: data/glade_files/sysmontask.glade:1773
+#: data/glade_files/sysmontask.glade:1858
+#: data/glade_files/sysmontask.glade:1886
+#: data/glade_files/sysmontask.glade:1914
+#: data/glade_files/sysmontask.glade:1944
+msgid "NA"
+msgstr ""
+
+#: data/glade_files/disk.glade:94 data/glade_files/gpu.glade:116
+#: data/glade_files/gpu.glade:260 data/glade_files/gpu.glade:332
+#: data/glade_files/sysmontask.glade:730 data/glade_files/sysmontask.glade:1543
+msgid "100%"
+msgstr ""
+
+#: data/glade_files/disk.glade:143
+msgid "Disk Transfer Rate"
+msgstr ""
+
+#: data/glade_files/disk.glade:159
+msgid "1000MB"
+msgstr ""
+
+#: data/glade_files/disk.glade:245
+msgid "Read Speed"
+msgstr ""
+
+#: data/glade_files/disk.glade:258
+msgid "Write Speed"
+msgstr ""
+
+#: data/glade_files/disk.glade:309 data/glade_files/disk.glade:327
+#: data/glade_files/net.glade:275 data/glade_files/net.glade:293
+msgid "|"
+msgstr ""
+
+#: data/glade_files/diskSidepane.glade:44
+msgid "Disk"
+msgstr ""
+
+#: data/glade_files/diskSidepane.glade:61 data/glade_files/gpuSidepane.glade:63
+#: data/glade_files/sysmontask.glade:484 data/glade_files/sysmontask.glade:558
+msgid "label"
+msgstr ""
+
+#: data/glade_files/gpu.glade:36 data/glade_files/gpuSidepane.glade:46
+msgid "GPU"
+msgstr ""
+
+#: data/glade_files/gpu.glade:102 data/glade_files/gpu.glade:402
+#: data/glade_files/sysmontask.glade:1013
+msgid "Utilisation"
+msgstr ""
+
+#: data/glade_files/gpu.glade:171
+msgid "Vram usage"
+msgstr ""
+
+#: data/glade_files/gpu.glade:245
+msgid "Encoding"
+msgstr ""
+
+#: data/glade_files/gpu.glade:317
+msgid "Decoding"
+msgstr ""
+
+#: data/glade_files/gpu.glade:417
+msgid "Dedicated Memory usage"
+msgstr ""
+
+#: data/glade_files/gpu.glade:451 data/glade_files/sysmontask.glade:1160
+msgid "Temperature"
+msgstr ""
+
+#: data/glade_files/gpu.glade:482
+msgid "Speed(shader)"
+msgstr ""
+
+#: data/glade_files/gpu.glade:564
+msgid "Driver version:"
+msgstr ""
+
+#: data/glade_files/gpu.glade:595
+msgid "Cuda version:"
+msgstr ""
+
+#: data/glade_files/gpu.glade:625
+msgid "Gpu Max speed:"
+msgstr ""
+
+#: data/glade_files/gpu.glade:656
+msgid "Vram spead:"
+msgstr ""
+
+#: data/glade_files/gpu.glade:688
+msgid "Vram Max spead:"
+msgstr ""
+
+#: data/glade_files/net.glade:36
+msgid "Ethernet"
+msgstr ""
+
+#: data/glade_files/net.glade:57
+msgid "Throughput"
+msgstr ""
+
+#: data/glade_files/net.glade:72 data/glade_files/sysmontask.glade:711
+msgid ""
+"\n"
+"NA"
+msgstr ""
+
+#: data/glade_files/net.glade:91
+msgid "100 MB/s"
+msgstr ""
+
+#: data/glade_files/net.glade:145
+msgid "Receive"
+msgstr ""
+
+#: data/glade_files/net.glade:159
+msgid "Total Received"
+msgstr ""
+
+#: data/glade_files/net.glade:192
+msgid "Send"
+msgstr ""
+
+#: data/glade_files/net.glade:223
+msgid "Total Sent"
+msgstr ""
+
+#: data/glade_files/net.glade:349
+msgid "IPv4 Address:"
+msgstr ""
+
+#: data/glade_files/net.glade:378
+msgid "IPv6 Address:"
+msgstr ""
+
+#: data/glade_files/net.glade:459
+msgid "Mac Address:"
+msgstr ""
+
+#: data/glade_files/netSidepane.glade:44
+msgid "Net"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:10
+msgid ""
+"BSD 3-Clause License\n"
+"\n"
+"Copyright (c) 2020, Neeraj Kumar\n"
+"All rights reserved.\n"
+"\n"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:16
+msgid "Windows Like Task Manager For Linux"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:18
+msgid ""
+"BSD 3-Clause License\n"
+"\n"
+"Copyright (c) 2020, Neeraj Kumar\n"
+"All rights reserved.\n"
+"\n"
+"Redistribution and use in source and binary forms, with or without\n"
+"modification, are permitted provided that the following conditions are met:\n"
+"\n"
+"1. Redistributions of source code must retain the above copyright notice, "
+"this\n"
+"   list of conditions and the following disclaimer.\n"
+"\n"
+"2. Redistributions in binary form must reproduce the above copyright "
+"notice,\n"
+"   this list of conditions and the following disclaimer in the "
+"documentation\n"
+"   and/or other materials provided with the distribution.\n"
+"\n"
+"3. Neither the name of the copyright holder nor the names of its\n"
+"   contributors may be used to endorse or promote products derived from\n"
+"   this software without specific prior written permission.\n"
+"\n"
+"THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS \"AS IS"
+"\"\n"
+"AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE\n"
+"IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE "
+"ARE\n"
+"DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE "
+"LIABLE\n"
+"FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL\n"
+"DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR\n"
+"SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER\n"
+"CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT "
+"LIABILITY,\n"
+"OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE "
+"USE\n"
+"OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:99
+msgid "SysMonTask"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:119
+msgid "File"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:145
+msgid "View"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:164
+msgid "Update Speed"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:178
+msgid "Paused"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:186
+msgid "Low"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:194
+msgid "Normal"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:202
+msgid "High"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:212
+msgid "Graph Direction"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:226
+msgid "Newer On Right"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:234
+msgid "Newer On Left "
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:251
+msgid "Help"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:259
+msgid "About"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:311
+msgid "User Processes"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:378
+msgid "Killer"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:403 data/glade_files/sysmontask.glade:1059
+msgid "Processes"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:467 data/glade_files/sysmontask.glade:1454
+msgid "CPU"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:541 data/glade_files/sysmontask.glade:1971
+msgid "Memory"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:675
+msgid "CPU   "
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:696
+msgid "% Utilisation"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:766
+msgid "Overall"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:975
+msgid "Logical"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1027
+msgid "Speed"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1089
+msgid "Threads"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1241
+msgid "Cores:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1270
+msgid "Logical Processor:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1298
+msgid "Virtualisation:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1326
+msgid "L1 cache:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1355
+msgid "L2 Cache:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1384
+msgid "L3 Cache:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1413
+msgid "Maximum Speed:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1489
+msgid "Memory  "
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1510
+msgid "Memory Usage"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1584
+msgid "Memory Composition"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1630
+msgid "In Use"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1644
+msgid "Available"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1676
+msgid "Buffers"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1706
+msgid "Cached"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1758
+msgid "swap"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1843
+msgid "Speed:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1872
+msgid "Slot Used:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1900
+msgid "Form Factor:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1929
+msgid "Coruppted:"
+msgstr ""
+
+#: data/glade_files/sysmontask.glade:1998
+msgid "Performance"
+msgstr ""

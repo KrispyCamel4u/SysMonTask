@@ -1,0 +1,7 @@
+data/com.github.KrispyCamel4u.sysmontask.desktop.in
+data/com.github.KrispyCamel4u.sysmontask.appdata.xml.in
+data/com.github.KrispyCamel4u.sysmontask.gschema.xml
+src/window.ui
+src/main.py
+src/window.py
+
