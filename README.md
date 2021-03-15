@@ -52,25 +52,8 @@ $ pip3 install psutil          // if you're not planning to use it with root acc
 $ sudo pip3 install -U psutil  // needed to run sysmontask with root access, hence recommended
   ....
 ```
----
 
-### Arch based destros:
-```
-$ git clone https://aur.archlinux.org/sysmontask.git
-  ....
-$ cd sysmontask
-$ makepkg -si
-  ....
-$ sysmontask
-  ....
-```
-OR
-
-Install using pamac(gui for software add/remove), first enable the AUR(arch user repository) in preferences, then search sysmontask, install and enjoy.
-
----
-
-### Installing from source(for other destros whose package is yet to be made)
+### Installing from source
 Install the dependencies required, mentioned in the [requirments.md](https://github.com/KrispyCamel4u/SysMonTask/blob/master/requirements.md). In case of issue related to PyGoject or pycairo OR to get the command for the specific package manager, follow the link given in requirements.md . 
 
 While installing from source, pip automatically installs some of the packages(which can be installed using pip) required others need to be installed using package manager.
@@ -78,21 +61,18 @@ While installing from source, pip automatically installs some of the packages(wh
 After installing dependencies:
 ```
 $ git clone https://github.com/KrispyCamel4u/SysMonTask.git
-  ....
 $ cd SysMonTask
-$ sudo python3 setup.py install
+$ meson _build --prefix=$PREFIX_DIR
+$ ninja -C _build
+```
+Installation
+```
+# Can be changed with the environment variable $DEST_DIR; defaults to prefix
+$ ninja -C _build install 
+```
   ....
 $ sysmontask
   ....
-```
-It will install it in "/usr/local/lib/python<version>/dist-packages/".
-To uninstall it run the uninstall.sh script in the SysMonTask cloned directory, with:
-```
-$ ./uninstall.sh
-  Done
-```
-
----
 
 **Note: For Nvidia GPUs, nvidia-smi needs to be installed. Check if nvidia-smi is installed by running:**
 ```
