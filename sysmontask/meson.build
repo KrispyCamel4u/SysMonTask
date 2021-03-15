@@ -18,20 +18,10 @@ localedir = get_option('prefix') / get_option('localedir')
 pythondir = py_installation.get_path('purelib')
 datadir = get_option('prefix') / get_option('datadir')
 pkgdatadir = datadir / meson.project_name()
-#bindir = join_paths(get_option('prefix'), get_option('bindir'))
 podir = meson.source_root() / 'po'
 
 conf = configuration_data()
-conf.set('PACKAGE_URL', 'https://github.com/KrispyCamel4u/SysMonTask')
-conf.set('DATA_DIR', datadir)
-conf.set('PKGDATA_DIR', pkgdatadir)
-conf.set('LOCALE_DIR', join_paths(datadir, 'locale'))
 conf.set('PYTHON_DIR', pythondir)
-conf.set('VERSION', meson.project_version())
-conf.set('LOCAL_BUILD', 'False')
-
-application_id = 'com.github.KrispyCamel4u.sysmontask'.format()
-conf.set('APP_ID', application_id)
 
 configure_file(
   input: 'sysmontask.py',
@@ -42,14 +32,7 @@ configure_file(
 )
 
 local_config = configuration_data()
-local_config.set('DATA_DIR', join_paths(meson.build_root(), 'data'))
-local_config.set('PKGDATA_DIR', join_paths(meson.build_root(), 'data'))
-local_config.set('PACKAGE_URL', 'https://github.com/KrispyCamel4u/SysMonTask')
-local_config.set('LOCALE_DIR', join_paths(datadir, 'locale'))
 local_config.set('PYTHON_DIR', meson.source_root())
-local_config.set('APP_ID', application_id)
-
-local_config.set('SCHEMAS_DIR', join_paths(meson.build_root(), 'data'))
 local_config.set('LOCAL_BUILD', 'True')
 
 
