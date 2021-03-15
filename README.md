@@ -68,6 +68,13 @@ OR
 
 Install using pamac(gui for software add/remove), first enable the AUR(arch user repository) in preferences, then search sysmontask, install and enjoy.
 
+### #Fedora:
+
+Available in official [Fedora repos](https://src.fedoraproject.org/rpms/sysmontask).
+```
+$ sudo dnf install sysmontask
+```
+
 ---
 ### #Installing using PIP(PyPi) 
 To install using pip, run:
