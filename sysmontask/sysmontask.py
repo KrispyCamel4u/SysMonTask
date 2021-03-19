@@ -1,105 +1,69 @@
 #!/usr/bin/env python3
 ############ container missing error in some distro #############
-import gi
-gi.require_version("Gtk", "3.0")
-gi.require_version("Wnck", "3.0")
+from gi import require_version
+require_version("Gtk", "3.0")
+require_version("Wnck", "3.0")
 ###############################################################
 try:
     from rooter import *
 except:
     from sysmontask.rooter import *
-getPrivilege()
-with open("{}/.sysmontask".format(os.environ.get("HOME")),'w') as ofile:
+
+theme_agent()
+
+with open("{}/.sysmontask".format(os.environ.get("HOME")),'w+') as ofile:
     ofile.write('0')
 
-from gi.repository import Gtk as g , GLib as go
+from gi.repository import Gtk as g , GLib as go,Gio,Gdk
 import cairo
 from os import popen
 from re import sub
 import os
 import psutil as ps
 
+print(ps.__version__)
 if( not ps.__version__>='5.7.3'):
     print('warning[critical]: psutil>=5.7.3 needed(system-wide)')
-
 
 try:
     # for running as main file 
     files_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../glade_files")
     icon_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "../icons")
+    from cpu import *
     from mem import *
     from sidepane import *
     from disk import *
     from net import *
     from gpu import *
+    from filter_prefs import *
+    from gproc import *
+    
 except:
     # for module level through  apt install comment it if running as main file
     files_dir="/usr/share/sysmontask/glade_files"
     icon_file='/usr/share/sysmontask/icons'
+    from sysmontask.cpu import *
     from sysmontask.mem import *
     from sysmontask.sidepane import *
     from sysmontask.disk import *
     from sysmontask.net import *
     from sysmontask.gpu import *
-
-def session_finder():
-    destkop_env=['gnome','unity','cinnamon','xfce']
-    sess=os.environ.get("DESKTOP_SESSION")
-    if sess:
-        sess=sess.lower()
-        if sess in destkop_env:
-            return destkop_env.index(sess)
-        else:
-            for i,name in enumerate(destkop_env):
-                if name in sess:
-                    return i
-
-    sess=os.environ.get("XDG_SESSION_DESKTOP")
-    if sess:
-        sess=sess.lower()
-        if sess in destkop_env:
-            return destkop_env.index(sess)
-        else:
-            for i,name in enumerate(destkop_env):
-                if name in sess:
-                    return i
-    sess=os.environ.get("XDG_CURRENT_DESKTOP")
-    if sess:
-        sess=sess.lower()
-        if sess in destkop_env:
-            return destkop_env.index(sess)
-        else:
-            for i,name in enumerate(destkop_env):
-                # print(sess)
-                if name in sess:
-                    return i
-    return 0
-
-session_index=session_finder()
-print(session_index)
-
-gnome_shell_num=0
-for itr in ps.process_iter():
-    if itr.name()=='gnome-shell':
-        gnome_shell_num+=1
-
-if session_index==2 or gnome_shell_num>=2:
-    try:
-        from proc_cinnamon import *
-    except:
-        from sysmontask.proc_cinnamon import *
-else:
-    try:
-        from proc import *
-    except:
-        from sysmontask.proc import *
+    from sysmontask.filter_prefs import *
+    from sysmontask.gproc import *
 
 
 class myclass:
     flag=0      #flag for the updator 
     resizerflag=0
     def __init__(self):
+        import time
+        stt=time.time()
+        self.settings=Gio.Settings.new('com.github.camelneeraj.sysmontask')
+
         # self.passs=passs
+        myclass.cpuInit=cpuInit
+        myclass.cpuUpdate=cpuUpdate
+
         myclass.memoryinitalisation=memorytabinit
         myclass.memoryTab=memoryTabUpdate
         #myclass.memDrawFunc1=on_memDrawArea1_draw
@@ -122,30 +86,52 @@ class myclass:
         myclass.column_button_press=column_button_press
         myclass.column_header_selection=column_header_selection
 
-        self.gladefile=files_dir+"/sysmontask.glade"
+        myclass.filter_init=filter_init
+
         self.builder=g.Builder()
-        self.builder.add_from_file(self.gladefile)
+        self.builder.add_from_file(files_dir+"/sysmontask.glade")
         self.builder.connect_signals(self)
         self.Window=self.builder.get_object("main_window")
         self.quit=self.builder.get_object("quit")
         self.quit.connect('activate',self.on_quit_activate)
 
         self.Window.set_icon_from_file(icon_file+'/SysMonTask.png')
+        # self.Window.set_title('Demo')
+        # self.Window.set_default_size(300, 300)
+        # self.Window.set_border_width(5)
 
         self.performanceStack=self.builder.get_object('performancestack')
         self.process_tab_box=self.builder.get_object('process_tab_box')
 
         self.sidepaneBox=self.builder.get_object('sidepanebox')
+        
+        self.cpuInit()
+        st=time.time()
         self.memoryinitalisation()
+        print('init',time.time()-st)
+        st=time.time()
         self.diskinitialisation()
+        print('init',time.time()-st)
+        st=time.time()
         self.netinitialisation()
+        print('init',time.time()-st)
+        st=time.time()
         self.gpuinitialisation()
+        print('init',time.time()-st)
+        st=time.time()
+        self.filter_init()
+        print('init',time.time()-st)
+        st=time.time()
         self.procinitialisation()
+        print('init',time.time()-st)
+        # p=Process(target=self.procUpdate,args=(False,))
+        # p.start()
 
         # for about dialog 
         self.aboutdialog=self.builder.get_object("aboutdialog")
         # for notebook
         self.notebook=self.builder.get_object('notebook')
+        self.notebook.set_current_page(self.settings.get_int('current-tab'))
         #self.on_notebook_switch_page(self.notebook,'',0)
 
         #drawing area for cpu
@@ -167,27 +153,6 @@ class myclass:
         self.timehandler=go.timeout_add(self.timeinterval,self.updater)
         self.Processtimehandler=go.timeout_add(2000,self.procUpdate)
 
-        ## cpu draw tab labels
-        self.cpuInfoLabel=self.builder.get_object('cpuinfolabel')
-        ## cpu utilisation label
-        self.cpuUtilLabelValue=self.builder.get_object('cpuutilisation')
-        # cpu speed
-        self.cpuSpeedLabelValue=self.builder.get_object('cpuspeed')
-        # processes
-        self.cpuProcessesLabelValue=self.builder.get_object('cpuprocesses')
-        self.cpuThreadsLabelValue=self.builder.get_object('cputhreads')
-        
-        ## other cpu info
-        self.cpuCoreLabelValue=self.builder.get_object('cpucoreslablevalue')
-        self.cpuLogicalLabelValue=self.builder.get_object('cpulogicallabelvalue')
-        self.cpuVirtualisationLabelValue=self.builder.get_object('cpuvirtualisationlabelvalue')
-        self.cpuL1LabelValue=self.builder.get_object('cpul1labelvalue')
-        self.cpuL2LabelValue=self.builder.get_object('cpul2labelvalue')
-        self.cpuL3LabelValue=self.builder.get_object('cpul3labelvalue')
-        self.cpuTempLabelValue=self.builder.get_object('cputemplabelvalue')
-        self.cpuFanSpeedLabelValue=self.builder.get_object('cpufanspeedlabelvalue')
-        self.cpuMxSpeedLabelValue=self.builder.get_object('cpumxspeedlabelvalue')
-
         self.update_dir_right=self.builder.get_object('update_right')
         self.update_dir_left=self.builder.get_object('update_left')
         self.update_dir_left.connect('toggled',self.on_set_left_update)
@@ -207,13 +172,27 @@ class myclass:
         
         self.update_speed_normal.set_active(True)
         self.one_time=0
-        
 
+        ## filter dialog 
+        self.filter_button=self.builder.get_object("filter_button")
+        self.filter_button.connect("activate",self.on_filter_dialog_activate)
+        
         self.sidepaneinitialisation()
 
         #time.sleep(2)p
         self.Window.show()
-    
+        print("total window",time.time()-stt)
+        position=self.settings.get_value('window-position')
+        self.Window.move(position[0],position[1])
+        size=self.settings.get_value('window-size')
+        self.Window.resize(size[0],size[1])
+
+        # on_filter_save_button_activate(self.filter_save_button,self)
+
+
+
+        
+
     def on_set_left_update(self,widget):
         if widget.get_active():
             self.update_dir_right.set_active(False)
@@ -270,6 +249,18 @@ class myclass:
 
     def on_main_window_destroy(self,object,data=None):
         print("print with cancel")
+        # print(self.Window.get_position())
+        self.settings.set_value('window-position',go.Variant("(ii)",self.Window.get_position()))
+        self.settings.set_value('window-size',go.Variant("(ii)",self.Window.get_size()))
+        print(object.get_position(),self.settings.get_value('window-size'))
+        self.settings.set_int('current-tab',self.notebook.get_current_page())
+        print(self.settings.get_value('process-filter'))
+        # l=[]
+        # for i,row in enumerate(self.filter_list_store):
+        #     l.append([])
+        #     l[i]+=[str(row[0]),row[1],str(row[2]),str(row[3])]
+        # self.settings.set_value('process-filter',go.Variant('aas',l))
+
         g.main_quit()
 
     def on_quit_activate(self,menuitem,data=None):
@@ -305,6 +296,13 @@ class myclass:
         self.aboutdialog.hide()
         print("aboutdialog closed")
     
+    def on_filter_dialog_activate(self,dialog,data=None):
+        self.filter_dialog.run()
+        # self.filter_dialog.show()
+        self.filter_entry.delete_text(0,-1)
+        print("hiding")
+        self.filter_dialog.hide()
+
     def resizer(self,item,data=None):
         if(myclass.resizerflag==0):
             print('hello')
@@ -357,173 +355,11 @@ class myclass:
     ## repeatedily called out fucntion
     def updater(self):
         
-        self.speed=ps.cpu_freq()
-
-        if(not myclass.flag):
-            myclass.flag=1
-            #print("in if")
-            try:
-                ## for the first time only to get the name of the cpu
-                p=popen('cat /proc/cpuinfo |grep -m1 "model name"')
-                self.cpuname=p.read().split(':')[1].split('\n')[0]
-                #print(self.cpuname)                                          # cpu name
-                self.cpuInfoLabel.set_text(self.cpuname)
-                self.cpuInfoLabel.set_valign(g.Align.CENTER)
-                p.close()
-            except:
-                print("Failed to get model information")
-
-            self.cpuCoreLabelValue.set_text(str(ps.cpu_count(logical=False)))
-            self.cpuLogicalLabelValue.set_text(str(self.cpu_logical_cores))
-            try:
-                p=popen('lscpu|grep -i -E "(vt-x)|(amd-v)"')
-                temp=p.read()
-                if temp:
-                    temptext="Enabled"
-                else:
-                    temptext="Disabled"
-                self.cpuVirtualisationLabelValue.set_text(temptext)
-                p.close()
-            except:
-                print("Failed to get Virtualisation information")
-
-            try:
-                p=popen('lscpu|grep -i -m1 "L1d cache"')
-                self.cpuL1LabelValue.set_text(sub("[\s]","",p.read().split(':')[1]))
-                p.close()
-                
-                p=popen('lscpu|grep -i -m1 "L2 cache"')
-                self.cpuL2LabelValue.set_text(sub('[\s]','',p.read().split(':')[1]))
-                p.close()
-
-                p=popen('lscpu|grep -i "L3 cache"')
-                self.cpuL3LabelValue.set_text(sub('[\s]','',p.read().split(':')[1]))
-                p.close()
-            except:
-                print("Failed to get Cache information")
-
-            self.cpuMxSpeedLabelValue.set_text('{:.2f}'.format(self.speed[2]/1000)+' GHz')
-            self.num_of_column_per_row={
-                1:1,
-                2:2,
-                3:3,
-                4:2,
-                5:3,
-                6:3,
-                7:4,
-                8:4,
-                9:3,
-                10:5,
-                11:4,
-                12:4,
-                13:5,
-                14:5,
-                15:5,
-                16:4,
-                17:5,
-                18:5,
-                19:5,
-                20:5,
-                21:6,
-                22:6,
-                23:6,
-                24:6,
-                25:7,
-                26:7,
-                27:7,
-                28:7,
-                29:8,
-                30:8,
-                31:8,
-                32:8
-            }
-
-            ## logical
-            self.cpu_logical_cores_draw_areas=[]
-            row,column=0,0
-            for cpu_index in range(self.cpu_logical_cores):
-                draw_area=g.DrawingArea()
-                draw_area.set_name(str(cpu_index))
-                self.cpu_logical_cores_draw_areas.append(draw_area)
-                # draw_area=g.Button(label="begin{0}".format(cpu_index))
-                if column < self.num_of_column_per_row[self.cpu_logical_cores]:
-                    self.logical_cpu_grid.attach(draw_area,column,row,1,1)
-                    column+=1
-                else:
-                    column=0
-                    row+=1
-                    self.logical_cpu_grid.attach(draw_area,column,row,1,1)
-                    column+=1
-                draw_area.connect('draw',self.on_cpu_logical_drawing)
-
-            self.logical_cpu_grid.show_all()
-
-            # return True
-
-        #print("setting speed")
-        cpuSpeedstring="{:.2f}".format(self.speed[0]/1000)+' Ghz'
-        self.cpuSpeedLabelValue.set_text(cpuSpeedstring)
-        #print("speed setting done")
-
-        self.cpuUtil=ps.cpu_percent() ## % of the time is is working
-        #print(self.cpuUtil)
-        
-        #print("setting utilisation")
-        cpuUtilString=str(int(self.cpuUtil))+'%'
-        self.cpuUtilLabelValue.set_text(cpuUtilString)
-        #print('setting utilisation done')
-
-        #print("setting number of processes and threads")
-        self.cpuProcessesLabelValue.set_text(str(len(ps.pids())))
-        try:
-            p=popen("ps axms|wc -l")
-            self.cpuThreadsLabelValue.set_text(sub('[\s]','',p.read()))
-            p.close()
-        except:
-            print("Failed to get Threads")
-            pass
-        
-        try:
-            #cpu package temp
-            temperatures_list=ps.sensors_temperatures()
-            if 'coretemp' in temperatures_list:
-                self.cpuTempLabelValue.set_text(str(int(temperatures_list['coretemp'][0][1]))+' °C')
-            elif 'k10temp' in temperatures_list:
-                for lis in temperatures_list:
-                    if lis.label=='Tdie':
-                        self.cpuTempLabelValue.set_text(str(int(lis.current))+' °C')
-                        break
-
-            # cpu fan speed
-        except:
-            pass
-        self.cpuSidePaneLabelValue.set_text(cpuUtilString+' '+cpuSpeedstring)
-
-        
-
         ## updating 
-        ## cpu utilisation graph
-        if self.update_graph_direction:
-            self.cpuUtilArray.pop(0)
-            self.cpuUtilArray.append(self.cpuUtil)
-        else:
-            self.cpuUtilArray.pop()
-            self.cpuUtilArray.insert(0,self.cpuUtil)
-
-        temp=ps.cpu_percent(percpu=True)
-        direction=self.update_graph_direction
-        for i in range(self.cpu_logical_cores):
-            if direction:
-                self.cpu_logical_cores_util_arrays[i].pop(0)
-                self.cpu_logical_cores_util_arrays[i].append(temp[i])
-            else:
-                self.cpu_logical_cores_util_arrays[i].pop()
-                self.cpu_logical_cores_util_arrays[i].insert(0,temp[i])
-
+        self.cpuUpdate()
         self.memoryTab()
         self.disktabUpdate()
         if len(self.netNameList)!=0:
-            # print('dismis')
             self.netTabUpdate() 
         if(self.isNvidiagpu==1):
             self.gpuTabUpdate()
@@ -905,11 +741,14 @@ class myclass:
 def start():
     main=myclass()
     g.main()
+import cProfile
 
     
 if __name__=="__main__":
-    main=myclass()
-    g.main()
+    # cProfile.run('start()')
+    start()
+    # main=myclass()
+    # g.main()
 
 # def uninstall():
 #     os.system('sudo {0}/uninstall_for_pip.sh'.format(os.path.dirname(os.path.abspath(__file__))))

@@ -2,7 +2,7 @@ import errno
 import os
 import sys,re,time
 
-def getPrivilege(graphical=True):
+def theme_agent():
     return 0
     if os.path.exists("{}/.sysmontask".format(os.environ.get("HOME"))):
         with open("{}/.sysmontask".format(os.environ.get("HOME")),'r') as ifile:

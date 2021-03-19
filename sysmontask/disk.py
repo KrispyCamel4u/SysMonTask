@@ -339,10 +339,10 @@ def diskTabUpdate(self):
     for i in range(0,self.numOfDisks):
         self.diskDiff.append([x2-x1 for x1,x2 in zip(self.diskstate1[i],self.diskstate2[i])])
         
-        self.diskActiveString.append(str(int(self.diskDiff[i][8]/10))+'%')
+        self.diskActiveString.append(f'{int(self.diskDiff[i][8]/10)}%')
         self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString[i])
-        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f}".format(self.diskDiff[i][2]/1048576)+' MiB/s')
-        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f}".format(self.diskDiff[i][3]/1048576)+' MiB/s')
+        self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f} MiB/s".format(self.diskDiff[i][2]/1048576))
+        self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f} MiB/s".format(self.diskDiff[i][3]/1048576))
 
         if self.update_graph_direction:
             self.diskActiveArray[i].pop(0)

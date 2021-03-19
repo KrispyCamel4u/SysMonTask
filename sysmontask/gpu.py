@@ -355,10 +355,10 @@ def gpuUpdate(self):
     self.vramused=gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text
     self.gpuutil=gpuinfoRoot.find('gpu').find('utilization').find('gpu_util').text
     self.gpuWidget.gpuutilisationlabelvalue.set_text(self.gpuutil)
-    self.gpuWidget.gpuvramusagelabelvalue.set_text(self.vramused[:-3]+'/'+self.totalvram)
+    self.gpuWidget.gpuvramusagelabelvalue.set_text(f'{self.vramused[:-3]}/{self.totalvram}')
     gpu_temp=gpuinfoRoot.find('gpu').find('temperature').find('gpu_temp').text
     if gpu_temp[-1]=='C':
-        gpu_temp =gpu_temp[:-1]+'°C'
+        gpu_temp =f'{gpu_temp[:-1]}°C'
     self.gpuWidget.gputemplabelvalue.set_text(gpu_temp)
     self.gpuWidget.gpushaderspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('graphics_clock').text)
     self.gpuWidget.gpuvramspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('mem_clock').text)

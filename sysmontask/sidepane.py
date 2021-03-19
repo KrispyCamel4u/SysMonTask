@@ -53,23 +53,37 @@ class diskSidepaneWidget(g.Box):
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
-        for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.diskactiveArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
+        #     cr.stroke()
+
+        cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+        cr.set_line_width(1.5)
+        cr.move_to(0,scalingfactor*(100-self.diskactiveArray[0])+2)
+        for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
-            cr.stroke()
+        cr.stroke_preserve()
+
+        cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-self.diskactiveArray[0])+2)
+        cr.fill()
+        cr.stroke()
 
 
         return False
@@ -128,40 +142,69 @@ class netSidepaneWidget(g.Box):
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.709,.164,.164,.2)  #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i+1])+2)
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i])+2)
+        #     cr.fill()
+        #     cr.stroke()
+
+        #     # for outer line read speed
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.709,.164,.164,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i+1])+2)
+        #     cr.stroke()
+
+        #     #for write
+        #     cr.set_source_rgba(1,.313,.313,.2)  #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i+1])+2)
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i])+2)
+        #     cr.fill()
+        #     cr.stroke()
+
+        #     # cr.set_dash([5.0])
+        #     cr.set_source_rgba(1,.313,.313,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i+1])+2)
+        #     cr.stroke()
+
+        #efficient receive speed drawing
+        cr.set_source_rgba(.709,.164,.164,1) #for changing the outer line color
+        cr.set_line_width(1.5)
+        cr.move_to(0,scalingfactor*(currentscalespeed-self.netRecSpeedArray[0])+2)
         for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.709,.164,.164,.2)  #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i])+2)
             cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i+1])+2)
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i])+2)
-            cr.fill()
-            cr.stroke()
+        cr.stroke_preserve()
 
-            # for outer line read speed
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.709,.164,.164,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i])+2)
-            cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i+1])+2)
-            cr.stroke()
+        cr.set_source_rgba(.709,.164,.164,.2)  #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(currentscalespeed-self.netRecSpeedArray[0])+2)
+        cr.fill()
+        cr.stroke()
 
-            #for write
-            cr.set_source_rgba(1,.313,.313,.2)  #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i])+2)
+        #efficient drawing for send
+        cr.set_source_rgba(1,.313,.313,1) #for changing the outer line color
+        cr.move_to(0,scalingfactor*(currentscalespeed-self.netSendSpeedArray[0])+2)
+        cr.set_line_width(1.5)
+        for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i+1])+2)
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i])+2)
-            cr.fill()
-            cr.stroke()
+        cr.stroke_preserve()
 
-            # cr.set_dash([5.0])
-            cr.set_source_rgba(1,.313,.313,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i])+2)
-            cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i+1])+2)
-            cr.stroke()
-
+        cr.set_source_rgba(1,.313,.313,.2)  #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(currentscalespeed-self.netSendSpeedArray[0])+2)
+        cr.fill()
+        cr.stroke()
 
         return False
 
@@ -205,23 +248,37 @@ class gpuSidepaneWidget(g.Box):
         
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
-        for i in range(0,99):
-            # not effcient way to fill the bars (drawing)
-            cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i])+2)
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1])+2)
-            cr.line_to((i+1)*stepsize,h)
-            cr.line_to(i*stepsize,h)
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i])+2)
+        # for i in range(0,99):
+        #     # not effcient way to fill the bars (drawing)
+        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1])+2)
+        #     cr.line_to((i+1)*stepsize,h)
+        #     cr.line_to(i*stepsize,h)
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i])+2)
 
-            cr.fill()
-            cr.stroke()
-            # for outer line
-            cr.set_line_width(1.5)
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
-            cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i])+2)
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1])+2)
-            cr.stroke()
+        #     cr.fill()
+        #     cr.stroke()
+        #     # for outer line
+        #     cr.set_line_width(1.5)
+        #     cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        #     cr.move_to(i*stepsize,scalingfactor*(100-self.gpuutilArray[i])+2)
+        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1])+2)
+        #     cr.stroke()
+
+        cr.set_line_width(1.5)
+        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.move_to(0,scalingfactor*(100-self.gpuutilArray[0]))
+        for i in range(0,99):
+            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1]))
+        cr.stroke_preserve()
+
+        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-self.gpuutilArray[0]))
+        cr.fill()
+        cr.stroke()
 
 
         return False
@@ -254,14 +311,14 @@ def sidepaneinit(self):
     if(self.isNvidiagpu==1):
         self.gpuSidePaneWidget=gpuSidepaneWidget()
         self.sidepaneBox.pack_start(self.gpuSidePaneWidget,True,True,0)
-        self.gpuSidePaneWidget.gpusidepanetextlabel.set_text(self.gpuName.split()[-2]+self.gpuName.split()[-1])
+        self.gpuSidePaneWidget.gpusidepanetextlabel.set_text(f'{self.gpuName.split()[-2]}{self.gpuName.split()[-1]}')
         self.gpuSidePaneWidget.givedata(self)
     
 
 
 
 def sidePaneUpdate(self):
-    self.memSidePaneLabelValue.set_text(str(self.usedd)+'/'+str(self.memTotal)+" GiB\n"+str(self.memPercent)+' %')
+    self.memSidePaneLabelValue.set_text(f'{self.usedd}/{self.memTotal} GiB\n{self.memPercent} %')
     
     ##disk sidepane
     for i in range(0,self.numOfDisks):
@@ -273,7 +330,7 @@ def sidePaneUpdate(self):
     if(len(self.netNameList)!=0):
         for i in range(0,self.numOfNets):
             try:
-                self.netSidepaneWidgetList[i].netsidepanelabelvalue.set_text('R:'+self.byterecpersecString[i]+'\nS:'+self.bytesendpersecString[i])
+                self.netSidepaneWidgetList[i].netsidepanelabelvalue.set_text(f'R:{self.byterecpersecString[i]}\nS:{self.bytesendpersecString[i]}')
 
                 self.diskSidepaneWidgetList[i].givedata(self,i)
             except:
