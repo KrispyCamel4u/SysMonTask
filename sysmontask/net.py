@@ -179,7 +179,8 @@ def netinit(self):
 
         for i in range(0,self.numOfNets):
             self.netWidgetList[i]=networkWidget()
-            self.performanceStack.add_titled(self.netWidgetList[i],'netStack'+str(i),'Network'+str(i))
+            self.performanceStack.add_titled(self.netWidgetList[i],f'page{self.stack_counter}','Network'+str(i))
+            self.stack_counter+=1
             self.netWidgetList[i].nettextlabel.set_text(self.netNameList[i])
             ##self.netWidgetList[i].netinfolabel.set_text(self.netsize[i])                       ###change for the name
             nettemp=ps.net_io_counters(pernic=True)

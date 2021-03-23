@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema path="/com/github/camelneeraj/sysmontask/" id="com.github.camelneeraj.sysmontask">
+
+    <key name="window-position" type="(ii)">
+      <default>(500, 200)</default>
+      <summary>Window position</summary>
+      <description>Most recent window position (x, y)</description>
+    </key>
+
+    <key name="window-size" type="(ii)">
+      <default>(990, 600)</default>
+      <summary>Most recent window size</summary>
+      <description>Most remain_windowcent window size (width, height)</description>
+    </key>
+
+    <key name="current-tab" type="i">
+      <range min="0" max="1"/>
+      <default>0</default>
+      <summary>Saves the currently viewed tab 0=processes, 1=performance</summary>
+    </key>
+
+    <key type="aas" name="process-filter">
+      <default>[['False','zqzqzqzq','0','False']]</default>
+      <summary>List of filtering words</summary>
+      <description>A list of Filtering words in format [['google','neeraj','cmdline'],],</description>
+    </key>
+
+  </schema>
+</schemalist>

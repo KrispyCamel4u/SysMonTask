@@ -23,6 +23,7 @@ class diskSidepaneWidget(g.Box):
     disksidepanetextlabel= GtkTemplate.Child()
     disksidepanelabelvalue = GtkTemplate.Child()
     disksidepanedrawarea=GtkTemplate.Child()
+    disk_switcher_button=GtkTemplate.Child()
 
 
     # Alternative way to specify multiple widgets
@@ -98,6 +99,8 @@ class netSidepaneWidget(g.Box):
     netsidepanetextlabel= GtkTemplate.Child()
     netsidepanelabelvalue = GtkTemplate.Child()
     netsidepanedrawarea=GtkTemplate.Child()
+    net_switcher_button=GtkTemplate.Child()
+
 
 
     # Alternative way to specify multiple widgets
@@ -218,6 +221,8 @@ class gpuSidepaneWidget(g.Box):
     gpusidepanetextlabel= GtkTemplate.Child()
     gpusidepanelabelvalue = GtkTemplate.Child()
     gpusidepanedrawarea=GtkTemplate.Child()
+    gpu_switcher_button=GtkTemplate.Child()
+
 
 
     # Alternative way to specify multiple widgets
@@ -283,22 +288,37 @@ class gpuSidepaneWidget(g.Box):
 
         return False
 
-
+def on_switcher_clicked(button,stack):
+    if not button.get_name()==stack.get_visible_child_name():
+        stack.set_visible_child_name(button.get_name())
 
 def sidepaneinit(self):
     print("initialisating sidepane")
+    button_counter=0 # button name counter
     self.cpuSidePaneLabelValue=self.builder.get_object('cpusidepanelabelvalue')
     self.cpuSidePaneDrawArea=self.builder.get_object('cpusidepanedrawarea')
+    cpu_switcher_button=self.builder.get_object("cpu_switcher_button")
+    cpu_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack)
+    cpu_switcher_button.set_name(f'page{button_counter}')
+    button_counter+=1
 
     self.memSidePaneLabelValue=self.builder.get_object('memsidepanelabelvalue')
     self.memSidePaneDrawArea=self.builder.get_object('memsidepanedrawarea')
+    mem_switcher_button=self.builder.get_object("mem_switcher_button")
+    mem_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack)
+    mem_switcher_button.set_name(f'page{button_counter}')
+    button_counter+=1
 
     self.diskSidepaneWidgetList={}
     for i in range(0,self.numOfDisks):
         self.diskSidepaneWidgetList[i]=diskSidepaneWidget()
         self.sidepaneBox.pack_start(self.diskSidepaneWidgetList[i],True,True,0)
-        self.diskSidepaneWidgetList[i].disksidepanetextlabel.set_text(self.disklist[i])
+        self.diskSidepaneWidgetList[i].disksidepanetextlabel.set_text(self.disklist[i])   
         self.diskSidepaneWidgetList[i].givedata(self,i)
+
+        self.diskSidepaneWidgetList[i].disk_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack)
+        self.diskSidepaneWidgetList[i].disk_switcher_button.set_name(f'page{button_counter}')
+        button_counter+=1
 
     if len(self.netNameList)!=0:
         self.netSidepaneWidgetList={}
@@ -307,14 +327,21 @@ def sidepaneinit(self):
             self.sidepaneBox.pack_start(self.netSidepaneWidgetList[i],True,True,0)
             self.netSidepaneWidgetList[i].netsidepanetextlabel.set_text(self.netNameList[i])
             self.netSidepaneWidgetList[i].givedata(self,i)
+
+            self.netSidepaneWidgetList[i].net_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack)
+            self.netSidepaneWidgetList[i].net_switcher_button.set_name(f'page{button_counter}')
+            button_counter+=1
     
     if(self.isNvidiagpu==1):
         self.gpuSidePaneWidget=gpuSidepaneWidget()
         self.sidepaneBox.pack_start(self.gpuSidePaneWidget,True,True,0)
         self.gpuSidePaneWidget.gpusidepanetextlabel.set_text(f'{self.gpuName.split()[-2]}{self.gpuName.split()[-1]}')
         self.gpuSidePaneWidget.givedata(self)
-    
 
+        self.gpuSidePaneWidget.connect('clicked',on_switcher_clicked,self.performanceStack)
+        self.gpuSidePaneWidget.set_name(f'page{button_counter}')
+        button_counter+=1
+    
 
 
 def sidePaneUpdate(self):

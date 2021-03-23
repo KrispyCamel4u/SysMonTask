@@ -22,8 +22,8 @@ import os
 import psutil as ps
 
 print(ps.__version__)
-if( not ps.__version__>='5.7.3'):
-    print('warning[critical]: psutil>=5.7.3 needed(system-wide)')
+if( not ps.__version__>='5.7.2'):
+    print('warning[critical]: psutil>=5.7.2 needed(system-wide)')
 
 try:
     # for running as main file 
@@ -60,13 +60,12 @@ class myclass:
         stt=time.time()
         self.settings=Gio.Settings.new('com.github.camelneeraj.sysmontask')
 
-        # self.passs=passs
         myclass.cpuInit=cpuInit
         myclass.cpuUpdate=cpuUpdate
 
         myclass.memoryinitalisation=memorytabinit
         myclass.memoryTab=memoryTabUpdate
-        #myclass.memDrawFunc1=on_memDrawArea1_draw
+
         myclass.sidepaneinitialisation=sidepaneinit
         myclass.sidepaneUpdate=sidePaneUpdate
 
@@ -96,15 +95,12 @@ class myclass:
         self.quit.connect('activate',self.on_quit_activate)
 
         self.Window.set_icon_from_file(icon_file+'/SysMonTask.png')
-        # self.Window.set_title('Demo')
-        # self.Window.set_default_size(300, 300)
-        # self.Window.set_border_width(5)
 
         self.performanceStack=self.builder.get_object('performancestack')
         self.process_tab_box=self.builder.get_object('process_tab_box')
 
         self.sidepaneBox=self.builder.get_object('sidepanebox')
-        
+        self.stack_counter=2
         self.cpuInit()
         st=time.time()
         self.memoryinitalisation()
@@ -124,8 +120,6 @@ class myclass:
         st=time.time()
         self.procinitialisation()
         print('init',time.time()-st)
-        # p=Process(target=self.procUpdate,args=(False,))
-        # p.start()
 
         # for about dialog 
         self.aboutdialog=self.builder.get_object("aboutdialog")
@@ -153,6 +147,7 @@ class myclass:
         self.timehandler=go.timeout_add(self.timeinterval,self.updater)
         self.Processtimehandler=go.timeout_add(2000,self.procUpdate)
 
+        # update direction
         self.update_dir_right=self.builder.get_object('update_right')
         self.update_dir_left=self.builder.get_object('update_left')
         self.update_dir_left.connect('toggled',self.on_set_left_update)
@@ -160,6 +155,7 @@ class myclass:
         self.update_graph_direction=1  #newer on right by default
         self.update_dir_right.set_active(True)
         
+        # update speed
         self.update_speed_low=self.builder.get_object('low')
         self.update_speed_normal=self.builder.get_object('normal')
         self.update_speed_high=self.builder.get_object('high')
@@ -176,7 +172,7 @@ class myclass:
         ## filter dialog 
         self.filter_button=self.builder.get_object("filter_button")
         self.filter_button.connect("activate",self.on_filter_dialog_activate)
-        
+
         self.sidepaneinitialisation()
 
         #time.sleep(2)p
@@ -187,11 +183,14 @@ class myclass:
         size=self.settings.get_value('window-size')
         self.Window.resize(size[0],size[1])
 
-        # on_filter_save_button_activate(self.filter_save_button,self)
 
 
 
-        
+    def on_switcher_clicked(self,widget,stack):
+        if stack.get_visible_child_name()=='page0':
+            stack.set_visible_child_name('page1')
+        else:
+            stack.set_visible_child_name('page0')
 
     def on_set_left_update(self,widget):
         if widget.get_active():
@@ -317,6 +316,8 @@ class myclass:
                 print("update speed to low")
                 go.source_remove(self.timehandler)
                 self.timehandler=go.timeout_add(1400,self.updater)
+                go.source_remove(self.Processtimehandler)
+                self.Processtimehandler=go.timeout_add(2000,self.procUpdate)
                 self.update_speed_normal.set_active(False)
                 self.update_speed_high.set_active(False)
                 self.update_speed_paused.set_active(False)
@@ -325,6 +326,8 @@ class myclass:
                 print("update speed to normal")
                 go.source_remove(self.timehandler)
                 self.timehandler=go.timeout_add(850,self.updater)
+                go.source_remove(self.Processtimehandler)
+                self.Processtimehandler=go.timeout_add(2000,self.procUpdate)
                 self.update_speed_low.set_active(False)
                 self.update_speed_high.set_active(False)
                 self.update_speed_paused.set_active(False)
@@ -333,6 +336,8 @@ class myclass:
                 print("update speed to high")
                 go.source_remove(self.timehandler)
                 self.timehandler=go.timeout_add(500,self.updater)
+                go.source_remove(self.Processtimehandler)
+                self.Processtimehandler=go.timeout_add(2000,self.procUpdate)
                 self.update_speed_normal.set_active(False)
                 self.update_speed_low.set_active(False)
                 self.update_speed_paused.set_active(False)
@@ -340,7 +345,9 @@ class myclass:
             elif(update_speed=='paused'):
                 print("update speed to paused")
                 go.source_remove(self.timehandler)
-                self.timehandler=go.timeout_add(1000000000,self.updater)
+                go.source_remove(self.Processtimehandler)
+                # self.timehandler=go.timeout_add(1000000000,self.updater)
+                self.Processtimehandler=go.timeout_add(100000000,self.procUpdate)
                 self.update_speed_normal.set_active(False)
                 self.update_speed_high.set_active(False)
                 self.update_speed_low.set_active(False)
@@ -745,10 +752,7 @@ import cProfile
 
     
 if __name__=="__main__":
-    # cProfile.run('start()')
     start()
-    # main=myclass()
-    # g.main()
 
 # def uninstall():
 #     os.system('sudo {0}/uninstall_for_pip.sh'.format(os.path.dirname(os.path.abspath(__file__))))

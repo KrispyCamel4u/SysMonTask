@@ -331,7 +331,8 @@ def gpuinit(self):
         gpuinfoRoot=fromstring(xmlout)
         print('okk')
         self.gpuWidget=gpuTabWidget()
-        self.performanceStack.add_titled(self.gpuWidget,'gpuStack','GPU')
+        self.performanceStack.add_titled(self.gpuWidget,f'page{self.stack_counter}','GPU')
+        self.stack_counter+=1
         self.gpuName=gpuinfoRoot.find('gpu').find('product_name').text
         self.gpuWidget.gpuinfolabel.set_text(self.gpuName)
         self.totalvram=gpuinfoRoot.find('gpu').find('fb_memory_usage').find('total').text
@@ -340,6 +341,7 @@ def gpuinit(self):
         self.gpuWidget.gpucudalabelvalue.set_text(gpuinfoRoot.find('cuda_version').text)
         self.gpuWidget.gpumaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('graphics_clock').text)
         self.gpuWidget.gpuvrammaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('mem_clock').text)
+
 
         self.gpuWidget.givedata(self)
     except:
