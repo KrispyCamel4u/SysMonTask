@@ -239,7 +239,7 @@ def diskinit(self):
         p.close()
         for parts in partitions:
             tempparts=parts.split()
-            if 'NAME' not in  tempparts[0]:
+            if 'NAME' not in  tempparts[0] and 'zram' not in tempparts[0]:
                 self.disklist.append(tempparts[0])
                 self.disksize.append(tempparts[3])
                 print(tempparts[0])

@@ -5,10 +5,11 @@ with open("README.md", "r") as fh:
 
 def get_data_files():
     data_files = [('/usr/share/sysmontask/glade_files', ['glade_files/disk.glade','glade_files/diskSidepane.glade','glade_files/gpu.glade',
-    'glade_files/gpuSidepane.glade','glade_files/net.glade','glade_files/netSidepane.glade','glade_files/sysmontask.glade']),
+    'glade_files/gpuSidepane.glade','glade_files/net.glade','glade_files/netSidepane.glade','glade_files/sysmontask.glade','glade_files/filter_dialog.glade']),
     ('/usr/share/sysmontask/icons',['icons/SysMonTask.png']),
     ('/usr/share/doc/sysmontask',['AUTHORS', 'README.md','LICENSE']),
-    ('/usr/share/applications',['SysMonTask.desktop'])
+    ('/usr/share/applications',['SysMonTask.desktop']),
+    ('/usr/share/glib-2.0/schemas',['com.github.camelneeraj.sysmontask.gschema.xml'])
     ]
 
     return data_files

@@ -4,8 +4,10 @@ from time import time
 import re,os,signal,sys
 from math import pow
 
-from filter_prefs import filter_process_matching_func
-from functools import lru_cache
+try:
+    from filter_prefs import filter_process_matching_func
+except:
+    from sysmontask.filter_prefs import filter_process_matching_func
 
 mibdevider=pow(2,20)
 screen=Wnck.Screen.get_default()
