@@ -1,4 +1,5 @@
 from setuptools import setup, find_packages
+import os
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -16,7 +17,7 @@ def get_data_files():
 
 setup(
     name='sysmontask',
-    version='1.1.1-beta25',
+    version='1.1.1b25',
     description='System Monitor With UI Like Windows',
     url='https://github.com/KrispyCamel4u/SysMonTask',
     author='Neeraj Kumar',
@@ -32,7 +33,7 @@ setup(
     ],
     include_package_data=True,
     data_files=get_data_files(),
-    install_requires=['psutil>=5.7.2','PyGObject','pycairo'],
+    install_requires=['psutil>=5.7.3','PyGObject','pycairo'],
     packages=find_packages(),
     entry_points=dict(
         console_scripts=[
@@ -42,3 +43,6 @@ setup(
             'sysmontask.set_dark=sysmontask.theme_setter:set_theme_dark']
     )
 )
+
+os.system("sudo glib-compile-schemas /usr/share/glib-2.0/schemas")
+print("gschema Compiled")

@@ -238,57 +238,57 @@ def column_header_selection(self,widget):
 #     self.popMenu.popup(None, None, None, None, 0, g.get_current_event_time())
 #     print("Done")
 
-def searcher0(self,sprocs,root):
-    childlist=sprocs.children()
-    if not (sprocs.name()=='systemd' and sprocs.username()=='root'): 
-        self.processChildList[sprocs.pid]=[]
+# def searcher0(self,sprocs,root):
+#     childlist=sprocs.children()
+#     if not (sprocs.name()=='systemd' and sprocs.username()=='root'): 
+#         self.processChildList[sprocs.pid]=[]
 
-    if len(childlist)==0:
-        return 
-    else:
-        try:
-            for procs in childlist:
-                # rchildlist=procs.children(True)
-                # for cin in (self.process_cinnamon+self.process_terminal_server):
-                #     # print(sprocs.name(),rchildlist)
-                #     if cin in rchildlist:
-                #         # print(cin.name(),procs.name())
-                #         self.blacklist.append(procs)
-                #         put_in_blacklist(self,procs)
-                #         return
+#     if len(childlist)==0:
+#         return 
+#     else:
+#         try:
+#             for procs in childlist:
+#                 # rchildlist=procs.children(True)
+#                 # for cin in (self.process_cinnamon+self.process_terminal_server):
+#                 #     # print(sprocs.name(),rchildlist)
+#                 #     if cin in rchildlist:
+#                 #         # print(cin.name(),procs.name())
+#                 #         self.blacklist.append(procs)
+#                 #         put_in_blacklist(self,procs)
+#                 #         return
 
 
                 
-                # print('hel')
+#                 # print('hel')
 
-                if procs.pid not in self.black_list:
-                    if not (sprocs.name()=='systemd' and sprocs.username()=='root'):
-                        # print(sprocs.name()) 
-                        # print(sprocs.pid,' ',procs.pid)
-                        self.processChildList[sprocs.pid].append(procs.pid)
+#                 if procs.pid not in self.black_list:
+#                     if not (sprocs.name()=='systemd' and sprocs.username()=='root'):
+#                         # print(sprocs.name()) 
+#                         # print(sprocs.pid,' ',procs.pid)
+#                         self.processChildList[sprocs.pid].append(procs.pid)
 
-                    cpu_percent=procs.cpu_percent()
-                    cpu_percent="{:.1f} %".format(cpu_percent)
+#                     cpu_percent=procs.cpu_percent()
+#                     cpu_percent="{:.1f} %".format(cpu_percent)
 
-                    mem_info=procs.memory_info()
-                    rss='{:.1f} MiB'.format(mem_info[0]/mibdevider) #resident memory in string
-                    shared='{:.1f} MiB'.format(mem_info[2]/mibdevider) #shared memory in string
-                    mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                    mem_util='{:.1f} MiB'.format(mem_util)
+#                     mem_info=procs.memory_info()
+#                     rss='{:.1f} MiB'.format(mem_info[0]/mibdevider) #resident memory in string
+#                     shared='{:.1f} MiB'.format(mem_info[2]/mibdevider) #shared memory in string
+#                     mem_util=(mem_info[0]-mem_info[2])/mibdevider
+#                     mem_util='{:.1f} MiB'.format(mem_util)
 
-                    itr=self.processTreeStore.append(root,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
-                    ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,procs.username()," ".join(procs.cmdline()),
-                    icon_finder(procs)])
+#                     itr=self.processTreeStore.append(root,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
+#                     ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,procs.username()," ".join(procs.cmdline()),
+#                     icon_finder(procs)])
 
-                    self.processTreeIterList[procs.pid]=itr
-                    self.processList[procs.pid]=procs
-                    self.procDiskprev[procs.pid]=[0,0]
-                    self.procT1[procs.pid]=0
-                else:
-                    itr=root
-                searcher(self,procs,itr)
-        except:
-            print('some error in searcher')
+#                     self.processTreeIterList[procs.pid]=itr
+#                     self.processList[procs.pid]=procs
+#                     self.procDiskprev[procs.pid]=[0,0]
+#                     self.procT1[procs.pid]=0
+#                 else:
+#                     itr=root
+#                 searcher(self,procs,itr)
+#         except:
+#             print('some error in searcher')
 
 def searcher(self,sysproc):
     childlist=sysproc.children()
@@ -314,59 +314,89 @@ def searcher(self,sysproc):
             self.procT1[procs.pid]=0
             
             for cprocs in procs.children():
-                self.processChildList[cprocs.pid]=[]
-                cpu_percent=cprocs.cpu_percent()
-                cpu_percent="{:.1f} %".format(cpu_percent)
+                if procs.pid not in self.black_list:
+                    self.processChildList[cprocs.pid]=[]
+                    self.processChildList[procs.pid].append(cprocs.pid)
+                    cpu_percent=cprocs.cpu_percent()
+                    cpu_percent="{:.1f} %".format(cpu_percent)
 
-                mem_info=cprocs.memory_info()
-                rss='{:.1f} MiB'.format(mem_info[0]/mibdevider) #resident memory in string
-                shared='{:.1f} MiB'.format(mem_info[2]/mibdevider) #shared memory in string
-                mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                mem_util='{:.1f} MiB'.format(mem_util)
+                    mem_info=cprocs.memory_info()
+                    rss='{:.1f} MiB'.format(mem_info[0]/mibdevider) #resident memory in string
+                    shared='{:.1f} MiB'.format(mem_info[2]/mibdevider) #shared memory in string
+                    mem_util=(mem_info[0]-mem_info[2])/mibdevider
+                    mem_util='{:.1f} MiB'.format(mem_util)
 
-                itr=self.processTreeStore.append(pitr,[cprocs.pid,cprocs.name(),cpu_percent,cpu_percent,mem_util
-                ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,cprocs.username()," ".join(cprocs.cmdline()),
-                icon_finder(cprocs)])
+                    itr=self.processTreeStore.append(pitr,[cprocs.pid,cprocs.name(),cpu_percent,cpu_percent,mem_util
+                    ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,cprocs.username()," ".join(cprocs.cmdline()),
+                    icon_finder(cprocs)])
 
-                self.processTreeIterList[cprocs.pid]=itr
-                self.processList[cprocs.pid]=cprocs
-                self.procDiskprev[cprocs.pid]=[0,0]
-                self.procT1[cprocs.pid]=0
+                    self.processTreeIterList[cprocs.pid]=itr
+                    self.processList[cprocs.pid]=cprocs
+                    self.procDiskprev[cprocs.pid]=[0,0]
+                    self.procT1[cprocs.pid]=0
             
 
 def appending(self,pids,cpu_count):
     
     # new process appending
-    st=time()
+    # st=time()
     pids=list(pids)
     pids.sort()
     for pi in pids:
         if pi not in self.processList and pi>1:  # and pi>self.systemdId changed for mutliple user 
             # print('my process')
-            # try:
             try:
-                proc=ps.Process(pi)
-            except:
-                print('process error in appending')
-                continue
-            # if proc in self.blacklist: #or proc in (self.process_cinnamon+self.process_terminal_server):
-            #     continue
-            # cmdline="".join(proc.cmdline())
-            if proc.pid in self.black_list:
-                continue
-            parents_processess=proc.parents()
-            appended=False
-            if self.processSystemd in parents_processess:
-                filter_process_matching_func(self,proc)
-                # print(pi)
-                if pi in self.black_list:
+                try:
+                    proc=ps.Process(pi)
+                except:
+                    print('process error in appending')
                     continue
-                
+                # if proc in self.blacklist: #or proc in (self.process_cinnamon+self.process_terminal_server):
+                #     continue
+                # cmdline="".join(proc.cmdline())
+                if proc.pid in self.black_list:
+                    continue
+                parents_processess=proc.parents()
+                appended=False
+                if self.processSystemd in parents_processess:
+                    filter_process_matching_func(self,proc)
+                    # print(pi)
+                    if pi in self.black_list:
+                        continue
+                    
 
-                for parent in parents_processess:
-                    # print(parent)
-                    if parent.pid in self.processList:
-                        # print(parent.pid)
+                    for parent in parents_processess:
+                        # print(parent)
+                        if parent.pid in self.processList:
+                            # print(parent.pid)
+                            try:
+                                cpu_percent=proc.cpu_percent()/cpu_count
+                                mem_info=proc.memory_info()
+                            except:
+                                print('value get error in appending')
+                                break
+
+                            cpu_percent="{:.1f} %".format(cpu_percent)
+
+                            rss='{:.1f} MiB'.format(mem_info[0]/mibdevider)
+                            shared='{:.1f} MiB'.format(mem_info[2]/mibdevider)
+                            mem_util=(mem_info[0]-mem_info[2])/mibdevider
+                            mem_util='{:.1f} MiB'.format(mem_util)
+
+                            itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
+                            cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
+                            ," ".join(proc.cmdline()),icon_finder(proc)])
+                            self.processTreeIterList[pi]=itr
+                            self.processList[pi]=proc
+                            self.processChildList[parent.pid].append(pi)
+                            self.processChildList[pi]=[]
+
+                            self.procDiskprev[pi]=[0,0]     ##
+                            self.procT1[pi]=0
+                            appended=True
+                            print('appending',pi)
+                            break
+                    if not appended:
                         try:
                             cpu_percent=proc.cpu_percent()/cpu_count
                             mem_info=proc.memory_info()
@@ -381,57 +411,29 @@ def appending(self,pids,cpu_count):
                         mem_util=(mem_info[0]-mem_info[2])/mibdevider
                         mem_util='{:.1f} MiB'.format(mem_util)
 
-                        itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
+                        itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
                         cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
                         ," ".join(proc.cmdline()),icon_finder(proc)])
                         self.processTreeIterList[pi]=itr
                         self.processList[pi]=proc
-                        self.processChildList[parent.pid].append(pi)
                         self.processChildList[pi]=[]
 
-                        self.procDiskprev[pi]=[0,0]     ##
+                        self.procDiskprev[pi]=[0,0]  ##
                         self.procT1[pi]=0
-                        appended=True
                         print('appending',pi)
-                        break
-                if not appended:
-                    try:
-                        cpu_percent=proc.cpu_percent()/cpu_count
-                        mem_info=proc.memory_info()
-                    except:
-                        print('value get error in appending')
-                        break
-
-                    cpu_percent="{:.1f} %".format(cpu_percent)
-
-                    rss='{:.1f} MiB'.format(mem_info[0]/mibdevider)
-                    shared='{:.1f} MiB'.format(mem_info[2]/mibdevider)
-                    mem_util=(mem_info[0]-mem_info[2])/mibdevider
-                    mem_util='{:.1f} MiB'.format(mem_util)
-
-                    itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
-                    cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
-                    ," ".join(proc.cmdline()),icon_finder(proc)])
-                    self.processTreeIterList[pi]=itr
-                    self.processList[pi]=proc
-                    self.processChildList[pi]=[]
-
-                    self.procDiskprev[pi]=[0,0]  ##
-                    self.procT1[pi]=0
-                    print('appending',pi)
-                    
-                # print('before child arranging')
-                for child in proc.children():
-                    if child.pid in self.processList:
-                        # print('bef rem')
-                        process_pop(self,child.pid,self.processTreeIterList[child.pid])
-                        # print('rem')
-            # except:
-            #     print('some error in appending')
-            if self.append_signal>0:
-                self.append_signal-=1
+                        
+                    # print('before child arranging')
+                    for child in proc.children():
+                        if child.pid in self.processList:
+                            # print('bef rem')
+                            process_pop(self,child.pid,self.processTreeIterList[child.pid])
+                            # print('rem')
+            except:
+                print('some error in appending')
+    if self.append_signal>0:
+        self.append_signal-=1
     
-    print("append time",time()-st)
+    # print("append time",time()-st)
 
 def procInit(self):
     # self.processTree=self.builder.get_object('processtree')
@@ -572,7 +574,7 @@ def process_pop(self,pidds,itr):
 
 
 def procUpdate(self,header=True):
-    stt=time()
+    # stt=time()
     cpu_count=ps.cpu_count()
 
     pids=set(ps.pids())
@@ -581,7 +583,7 @@ def procUpdate(self,header=True):
     if self.old_pids!=pids or self.append_signal:
         appending(self,pids,cpu_count)
 
-    st=time()
+    # st=time()
     # updating
     # print('before update') 
     tempdi=self.processList.copy()
@@ -643,7 +645,7 @@ def procUpdate(self,header=True):
         except:
             print('error in process updating')
     
-    print("updating time",time()-st)
+    # print("updating time",time()-st)
     # st=time()
     # print(self.processChildList)
     #recursive calculations
@@ -693,7 +695,7 @@ def procUpdate(self,header=True):
     self.old_pids=pids.copy()
 
     # print("header time",time()-st)
-    print("total time",time()-stt)
+    # print("total time",time()-stt)
 
     return True
 

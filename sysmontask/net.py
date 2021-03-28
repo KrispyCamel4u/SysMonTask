@@ -167,7 +167,7 @@ def netinit(self):
         if name !='lo' and temp[name][0]==True:
             self.netNameList.append(name)
             # print('working ')
-    # print(self.netNameList)
+    # print("net name list",self.netNameList)
 
     if len(self.netNameList)!=0:
         self.netWidgetList={}
@@ -261,7 +261,7 @@ def netUpdate(self):
             self.netWidgetList[i].net6addrlabelvalue.set_text(nettempaddr[self.netNameList[i]][1][1])
         except:
             print('some error in net update')
-            pass
+            
 
 
     self.netstate1=self.netstate2

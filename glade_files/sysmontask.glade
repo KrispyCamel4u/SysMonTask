@@ -97,6 +97,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
     <property name="can-focus">False</property>
     <property name="stock">gtk-preferences</property>
   </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-dialog-info</property>
+  </object>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="stock">gtk-info</property>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="width-request">985</property>
     <property name="height-request">600</property>
@@ -279,6 +289,17 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                         <signal name="activate" handler="on_about_activate" swapped="no"/>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="menu_whatsnew">
+                        <property name="label" translatable="yes">What's New</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="image">image6</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                        <signal name="activate" handler="on_menu_whatsnew" swapped="no"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -322,7 +343,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                                 <property name="halign">start</property>
                                 <property name="margin-left">8</property>
                                 <property name="margin-start">8</property>
-                                <property name="label" translatable="yes">User Processes s</property>
+                                <property name="label" translatable="yes">User Processes</property>
                                 <attributes>
                                   <attribute name="weight" value="medium"/>
                                   <attribute name="scale" value="1.1000000000000001"/>
@@ -437,7 +458,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                         <property name="can-focus">False</property>
                         <child>
                           <object class="GtkBox" id="sidepanebox">
-                            <property name="width-request">260</property>
+                            <property name="width-request">270</property>
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="halign">start</property>

@@ -100,7 +100,7 @@ def filter_row_selected(selection,self):
 
 def on_filter_delete_button_activate(button,self):
     print('delete button')
-    if self.filter_list_store[self.filter_list_store.get_path(self.selected_filter_row)][1]!='zqzqzqzq':
+    if self.filter_list_store[self.filter_list_store.get_path(self.selected_filter_row)][1]!=',root,':
         self.filter_list_store.remove(self.selected_filter_row)
 
 def put_in_black_list(self,proc,depth):
@@ -261,18 +261,6 @@ def filter_matching_func(self):
         except ps.NoSuchProcess:
             print("process error in filter matching func")
 
-def on_filter_dialog_close(widget,self):
-    print("closing")
-    self.temp_black_list=[]
-    filter_matching_func(self)
-    self.black_list=self.temp_black_list.copy()
-    l=[]
-    for i,row in enumerate(self.filter_list_store):
-        l.append([])
-        l[i]+=[str(row[0]),row[1],str(row[2]),str(row[3])]
-    self.settings.set_value('process-filter',go.Variant('aas',l))
-    widget.close()
-
 def on_filter_save_button_activate(button,self):
     print('save button')
     self.temp_black_list=[]
@@ -286,7 +274,7 @@ def on_filter_save_button_activate(button,self):
         l[i]+=[str(row[0]),row[1],str(row[2]),str(row[3])]
     self.settings.set_value('process-filter',go.Variant('aas',l))
 
-    self.append_signal=2
+    self.append_signal=3
     # print(self.black_list)
     # self.filter_dialog.hide()
     # self.filter_dialog.close()
@@ -295,7 +283,6 @@ def filter_init(self):
     self.filter_builder=g.Builder()
     self.filter_builder.add_from_file(files_dir+'/filter_dialog.glade')
     self.filter_dialog=self.filter_builder.get_object('filter_dialog')
-    self.filter_dialog.connect("close",on_filter_dialog_close,self)
     # self.filter_dialog.set_transient_for(self.Window)
 
     self.filter_entry=self.filter_builder.get_object("filter_entry")

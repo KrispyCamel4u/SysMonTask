@@ -22,8 +22,8 @@ import os
 import psutil as ps
 
 print(ps.__version__)
-if( not ps.__version__>='5.7.2'):
-    print('warning[critical]: psutil>=5.7.2 needed(system-wide)')
+if( not ps.__version__>='5.7.3'):
+    print('warning[critical]: psutil>=5.7.3 needed(system-wide)')
 
 try:
     # for running as main file 
@@ -51,6 +51,25 @@ except:
     from sysmontask.filter_prefs import *
     from sysmontask.gproc import *
 
+class whatsnew_notice_dialog(g.Dialog):
+    def __init__(self,parentWindow,parent):
+        g.Dialog.__init__(self,"What's New",parentWindow,g.DialogFlags.MODAL)
+        self.set_border_width(20)
+        content_area=self.get_content_area()
+        label=g.Label()
+        label.set_markup(
+        """
+        <b><span size='20000'> New Feature </span></b>
+            - <b><big>Filter Dialog</big></b>, can be accessed through : view->filter
+                User can define his/her own filtering words to exclude the unwanted processes.
+                Filter Dialog follow <b><big>strict semantic and formating rules</big></b> for adding a new entry.
+                For more information of rules and filter dialog, visit: 
+                <big><a href='https://github.com/KrispyCamel4u/SysMonTask'>https://github.com/KrispyCamel4u/SysMonTask </a></big>
+            - Support for all desktop environments.
+        """ 
+        )
+        content_area.add(label)
+        self.show_all()
 
 class myclass:
     flag=0      #flag for the updator 
@@ -59,7 +78,7 @@ class myclass:
         import time
         stt=time.time()
         self.settings=Gio.Settings.new('com.github.camelneeraj.sysmontask')
-
+        
         myclass.cpuInit=cpuInit
         myclass.cpuUpdate=cpuUpdate
 
@@ -100,26 +119,16 @@ class myclass:
         self.process_tab_box=self.builder.get_object('process_tab_box')
 
         self.sidepaneBox=self.builder.get_object('sidepanebox')
-        self.stack_counter=2
+
+        self.stack_counter=2  # for sidepane clicking and naming of stack pages
+
         self.cpuInit()
-        st=time.time()
         self.memoryinitalisation()
-        print('init',time.time()-st)
-        st=time.time()
         self.diskinitialisation()
-        print('init',time.time()-st)
-        st=time.time()
         self.netinitialisation()
-        print('init',time.time()-st)
-        st=time.time()
         self.gpuinitialisation()
-        print('init',time.time()-st)
-        st=time.time()
         self.filter_init()
-        print('init',time.time()-st)
-        st=time.time()
         self.procinitialisation()
-        print('init',time.time()-st)
 
         # for about dialog 
         self.aboutdialog=self.builder.get_object("aboutdialog")
@@ -183,14 +192,17 @@ class myclass:
         size=self.settings.get_value('window-size')
         self.Window.resize(size[0],size[1])
 
+        ## whatsnew dialog
+        if self.settings.get_int("one-time-whatsnew"):
+            dialog=whatsnew_notice_dialog(self.Window,self)
+            response=dialog.run()
+            dialog.destroy()
+            self.settings.set_int("one-time-whatsnew",0)
 
-
-
-    def on_switcher_clicked(self,widget,stack):
-        if stack.get_visible_child_name()=='page0':
-            stack.set_visible_child_name('page1')
-        else:
-            stack.set_visible_child_name('page0')
+    def on_menu_whatsnew(self,widget):
+        dialog=whatsnew_notice_dialog(self.Window,self)
+        response=dialog.run()
+        dialog.destroy()
 
     def on_set_left_update(self,widget):
         if widget.get_active():
@@ -251,14 +263,15 @@ class myclass:
         # print(self.Window.get_position())
         self.settings.set_value('window-position',go.Variant("(ii)",self.Window.get_position()))
         self.settings.set_value('window-size',go.Variant("(ii)",self.Window.get_size()))
-        print(object.get_position(),self.settings.get_value('window-size'))
+        # print(object.get_position(),self.settings.get_value('window-size'))
         self.settings.set_int('current-tab',self.notebook.get_current_page())
-        print(self.settings.get_value('process-filter'))
-        # l=[]
-        # for i,row in enumerate(self.filter_list_store):
-        #     l.append([])
-        #     l[i]+=[str(row[0]),row[1],str(row[2]),str(row[3])]
-        # self.settings.set_value('process-filter',go.Variant('aas',l))
+        # print(self.settings.get_value('process-filter'))
+
+        l=[]
+        for i,row in enumerate(self.filter_list_store):
+            l.append([])
+            l[i]+=[str(row[0]),row[1],str(row[2]),str(row[3])]
+        self.settings.set_value('process-filter',go.Variant('aas',l))
 
         g.main_quit()
 
@@ -370,9 +383,9 @@ class myclass:
             self.netTabUpdate() 
         if(self.isNvidiagpu==1):
             self.gpuTabUpdate()
-
         self.sidepaneUpdate()
-
+        
+        ## drawing queue
         g.Widget.queue_draw(self.cpuDrawArea)
 
         for i in range(self.cpu_logical_cores):
@@ -748,8 +761,8 @@ class myclass:
 def start():
     main=myclass()
     g.main()
-import cProfile
 
+# import cProfile
     
 if __name__=="__main__":
     start()

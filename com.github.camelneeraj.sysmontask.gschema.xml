@@ -21,9 +21,15 @@
     </key>
 
     <key type="aas" name="process-filter">
-      <default>[['False','zqzqzqzq','0','False']]</default>
+      <default>[['False',',root,','1','False']]</default>
       <summary>List of filtering words</summary>
       <description>A list of Filtering words in format [['google','neeraj','cmdline'],],</description>
+    </key>
+
+    <key name="one-time-whatsnew" type="i">
+      <default>1</default>
+      <summary>for showing whats new one time</summary>
+      <description>for showing whats new one time</description>
     </key>
 
   </schema>
