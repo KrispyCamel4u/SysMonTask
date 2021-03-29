@@ -181,19 +181,16 @@ def cpuUpdate(self):
     self.cpuSidePaneLabelValue.set_text(f'{cpuUtilString} {cpuSpeedstring}')
 
     ## cpu utilisation graph
+    temp=ps.cpu_percent(percpu=True)
     if self.update_graph_direction:
         self.cpuUtilArray.pop(0)
         self.cpuUtilArray.append(self.cpuUtil)
+        for i in range(self.cpu_logical_cores):
+            self.cpu_logical_cores_util_arrays[i].pop(0)
+            self.cpu_logical_cores_util_arrays[i].append(temp[i])
     else:
         self.cpuUtilArray.pop()
         self.cpuUtilArray.insert(0,self.cpuUtil)
-
-    temp=ps.cpu_percent(percpu=True)
-    direction=self.update_graph_direction
-    for i in range(self.cpu_logical_cores):
-        if direction:
-            self.cpu_logical_cores_util_arrays[i].pop(0)
-            self.cpu_logical_cores_util_arrays[i].append(temp[i])
-        else:
+        for i in range(self.cpu_logical_cores):
             self.cpu_logical_cores_util_arrays[i].pop()
             self.cpu_logical_cores_util_arrays[i].insert(0,temp[i])

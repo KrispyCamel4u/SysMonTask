@@ -762,10 +762,11 @@ def start():
     main=myclass()
     g.main()
 
-# import cProfile
+import cProfile
     
 if __name__=="__main__":
-    start()
+    cProfile.run("start()")
+    # start()
 
 # def uninstall():
 #     os.system('sudo {0}/uninstall_for_pip.sh'.format(os.path.dirname(os.path.abspath(__file__))))
