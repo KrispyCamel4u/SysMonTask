@@ -37,6 +37,7 @@ try:
     from gpu import *
     from filter_prefs import *
     from gproc import *
+    from log_plotter import *
     
 except:
     # for module level through  apt install comment it if running as main file
@@ -50,6 +51,7 @@ except:
     from sysmontask.gpu import *
     from sysmontask.filter_prefs import *
     from sysmontask.gproc import *
+    from sysmontask.log_plotter import *
 
 class whatsnew_notice_dialog(g.Dialog):
     def __init__(self,parentWindow,parent):
@@ -192,12 +194,31 @@ class myclass:
         size=self.settings.get_value('window-size')
         self.Window.resize(size[0],size[1])
 
+        self.log_plot=self.builder.get_object("log_plot")  # connect through glade on_log_plot_activate
+
         ## whatsnew dialog
         if self.settings.get_int("one-time-whatsnew"):
             dialog=whatsnew_notice_dialog(self.Window,self)
             response=dialog.run()
             dialog.destroy()
             self.settings.set_int("one-time-whatsnew",0)
+
+    def on_log_plot_activate(self,widget):
+        file_dialog=g.FileChooserDialog(title="Select Log File",parent=self.Window,action=g.FileChooserAction.OPEN,\
+            buttons=("Cancel", g.ResponseType.CANCEL,"Open", g.ResponseType.OK))
+
+        response=file_dialog.run()
+        if response==g.ResponseType.OK:
+            print("file choosen",file_dialog.get_filename())
+            
+            plot_log(self,file_dialog.get_filename())
+            
+            print("plot plot")
+        else:
+            print("didnt choose")
+            pass
+        file_dialog.close()
+        
 
     def on_menu_whatsnew(self,widget):
         dialog=whatsnew_notice_dialog(self.Window,self)
@@ -272,6 +293,9 @@ class myclass:
             l.append([])
             l[i]+=[str(row[0]),row[1],str(row[2]),str(row[3])]
         self.settings.set_value('process-filter',go.Variant('aas',l))
+
+        if self.log_file:
+            self.log_file.close()
 
         g.main_quit()
 
@@ -765,8 +789,8 @@ def start():
 import cProfile
     
 if __name__=="__main__":
-    cProfile.run("start()")
-    # start()
+    # cProfile.run("start()")
+    start()
 
 # def uninstall():
-#     os.system('sudo {0}/uninstall_for_pip.sh'.format(os.path.dirname(os.path.abspath(__file__))))
+#     os.system('sudo {0}/uninstall_for_pip.sh'.format(os.path.dirname(os.path.abspath(__file__)))) 

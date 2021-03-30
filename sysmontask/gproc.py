@@ -3,6 +3,7 @@ import psutil as ps,cairo
 from time import time
 import re,os,signal,sys
 from math import pow
+from csv import writer
 
 try:
     from filter_prefs import filter_process_matching_func
@@ -435,6 +436,43 @@ def appending(self,pids,cpu_count):
     
     # print("append time",time()-st)
 
+def on_record_button_toggle(widget,self):
+    wname=widget.get_name()
+    try:
+        log_path=os.path.join(os.environ.get("HOME"),"sysmontask_log")
+        if not os.path.exists(log_path):
+            os.mkdir(log_path)
+        if widget.get_active():
+            if wname=="record_start":
+                if self.selected_process_pid:
+                    self.record_start=True
+                    self.log_file=open(f'{log_path}/{self.processList[self.selected_process_pid].name()}.csv', 'w+',newline='')
+                    self.log_file_writer=writer(self.log_file)
+                    self.log_file_writer.writerow(['rCPU','CPU','rMemory','Memory','DiskRead','DiskWrite'])
+                    self.log_pid=self.selected_process_pid
+                    print("record start")
+            elif wname=="record_pause":
+                self.record_pause=True
+                if self.log_file:
+                    self.log_file.close()
+                print("record pause")
+        else:
+            if wname=="record_start":
+                self.record_start=False
+                self.log_file.close()
+                self.log_pid=0
+            elif wname=="record_pause":
+                self.record_pause=False
+                print("record_pause false")
+                if self.log_pid:
+                    
+                    self.log_file=open(f'{log_path}/{self.processList[self.log_pid].name()}.csv', 'a+',newline='')
+                    self.log_file_writer=writer(self.log_file)
+    except :
+        print("error while recording")
+        self.process_record_pause.set_active(False)
+        self.process_record_start.set_active(False)
+
 def procInit(self):
     # self.processTree=self.builder.get_object('processtree')
     
@@ -445,16 +483,22 @@ def procInit(self):
     self.process_kill_button=self.builder.get_object('processKillButton')
     self.process_kill_button.connect('clicked',self.kill_process)
 
+    ## process record
+    self.record_start,self.record_pause=False,False
+    self.log_file=None
+
+    self.process_record_start=self.builder.get_object("process_record_start")
+    self.process_record_pause=self.builder.get_object("process_record_pause")
+
+    self.process_record_start.connect("toggled",on_record_button_toggle,self)
+    self.process_record_pause.connect("toggled",on_record_button_toggle,self)
+
     #                                 0   1   2   3   4   5   6   7   8   9   10   11  12  13       14
     self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str,str,str,GdkPixbuf.Pixbuf)
 
     # self.di={}
-    self.procDiskprev={}
-    self.processList={}
-    self.processTreeIterList={}
-    self.processChildList={}
-    self.columnList={}
-    self.procT1={}
+    self.procDiskprev,self.processList,self.processTreeIterList,self.processChildList,self.columnList\
+       ,self.procT1 ={},{},{},{},{},{}
     self.old_pids=[]
 
     ### total disk io counter calculation are done in proc.py
@@ -463,6 +507,7 @@ def procInit(self):
     self.diskTotalState1=[diskio[2],diskio[3]]
 
     self.systemdId=1
+    self.selected_process_pid=0
     self.processSystemd=ps.Process(1)
 
     self.blacklist=[]
@@ -674,23 +719,33 @@ def procUpdate(self,header=True):
     
     # print("recursive time",time()-st)
     # st=time()
-    if header:
-        self.column_header_labels[3].set_text('{0} %\nCPU'.format(self.cpuUtil))
-        self.column_header_labels[2].set_text('{0} %\nrCPU'.format(self.cpuUtil))
-        self.column_header_labels[4].set_text('{0} %\nrMemory'.format(self.memPercent))
-        self.column_header_labels[5].set_text('{0} %\nMemory'.format(self.memPercent))
-        
-        ## Total disk io for all disks
-        diskio=ps.disk_io_counters()
-        diskTotalT2=time()
-        totalrspeed=(diskio[2]-self.diskTotalState1[0])/(diskTotalT2-self.diskTotalT1)
-        totalwspeed=(diskio[3]-self.diskTotalState1[1])/(diskTotalT2-self.diskTotalT1)
 
-        self.column_header_labels[7].set_text('{0}\nDiskRead'.format(byte_to_human(totalrspeed)))
-        self.column_header_labels[9].set_text('{0}\nDiskWrite'.format(byte_to_human(totalwspeed)))
+    self.column_header_labels[3].set_text('{0} %\nCPU'.format(self.cpuUtil))
+    self.column_header_labels[2].set_text('{0} %\nrCPU'.format(self.cpuUtil))
+    self.column_header_labels[4].set_text('{0} %\nrMemory'.format(self.memPercent))
+    self.column_header_labels[5].set_text('{0} %\nMemory'.format(self.memPercent))
+    
+    ## Total disk io for all disks
+    diskio=ps.disk_io_counters()
+    diskTotalT2=time()
+    totalrspeed=(diskio[2]-self.diskTotalState1[0])/(diskTotalT2-self.diskTotalT1)
+    totalwspeed=(diskio[3]-self.diskTotalState1[1])/(diskTotalT2-self.diskTotalT1)
 
-        self.diskTotalState1=diskio[2:4]
-        self.diskTotalT1=diskTotalT2
+    self.column_header_labels[7].set_text('{0}\nDiskRead'.format(byte_to_human(totalrspeed)))
+    self.column_header_labels[9].set_text('{0}\nDiskWrite'.format(byte_to_human(totalwspeed)))
+
+    self.diskTotalState1=diskio[2:4]
+    self.diskTotalT1=diskTotalT2
+
+    if self.record_start and not self.record_pause:
+        try:
+            if self.log_pid in self.processList:
+                row=self.processTreeStore[self.processTreeIterList[self.log_pid]]
+                self.log_file_writer.writerow(row[2:6]+[row[7],row[9]])
+            else:
+                self.process_record_start.set_active(False)
+        except:
+            print("Log write error")
 
     self.old_pids=pids.copy()
 
