@@ -88,6 +88,11 @@ if session_index==2 or gnome_shell_num>=2:
         from proc_cinnamon import *
     except:
         from sysmontask.proc_cinnamon import *
+elif session_index==3:
+    try:
+        from proc_xfce import *
+    except:
+        from sysmontask.proc_xfce import *
 else:
     try:
         from proc import *

@@ -21,7 +21,7 @@
 Linux system monitor with the compactness and usefulness of Windows Task Manager to allow higher control and monitoring.
 
 ## Installation
-### Ubuntu and its family members **(only for: 18.04, 20.04 and 20.10 and equivalent)**, run: 
+### #Ubuntu and its family members **(only for: 18.04, 20.04 and 20.10 and equivalent)**, run: 
 
 ***[Need help for packaging for other distros]***
 
@@ -54,7 +54,7 @@ $ sudo pip3 install -U psutil  // needed to run sysmontask with root access, hen
 ```
 ---
 
-### Arch based destros:
+### #Arch based destros:
 ```
 $ git clone https://aur.archlinux.org/sysmontask.git
   ....
@@ -68,9 +68,41 @@ OR
 
 Install using pamac(gui for software add/remove), first enable the AUR(arch user repository) in preferences, then search sysmontask, install and enjoy.
 
+### #Fedora:
+
+Available in official [Fedora repos](https://src.fedoraproject.org/rpms/sysmontask).
+```
+$ sudo dnf install sysmontask
+```
+
+---
+### #Installing using PIP(PyPi) 
+To install using pip, run:
+```
+$ pip3 install sysmontask
+  ....
+$ sysmontask
+  ....
+```
+**Note: Since pip utilises the relative path, files such as SysMonTask.desktop and data files will not be sent to the required locations. Hence when run for the first time(from terminal), passoword will be asked and files will be copied the to intended locations.*
+
+**To uninstall**:
+
+A new API(only in case of installation using pip) is provided to remove the copied files. To completely remove it, run:
+```
+$ sysmontask.uninstall
+  Done:(
+$ pip3 uninstall sysmontask
+  ....
+```
+In case of error, check with the package level dependancies(using APT/pacman/yum etc. such as python3-gi-cairo,gir1.2-wnck3.0 etc.) mentioned in [requirments.md](https://github.com/KrispyCamel4u/SysMonTask/blob/master/requirements.md).
+
+*If installed using pip, new patch/update will not be notified by the system, to receive update notication use package manager if available for your system.* 
+
+
 ---
 
-### Installing from source(for other destros whose package is yet to be made)
+### #Installing from source(for other destros whose package is yet to be made)
 Install the dependencies required, mentioned in the [requirments.md](https://github.com/KrispyCamel4u/SysMonTask/blob/master/requirements.md). In case of issue related to PyGoject or pycairo OR to get the command for the specific package manager, follow the link given in requirements.md . 
 
 While installing from source, pip automatically installs some of the packages(which can be installed using pip) required others need to be installed using package manager.
