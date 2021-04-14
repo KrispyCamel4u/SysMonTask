@@ -331,7 +331,8 @@ def gpuinit(self):
         gpuinfoRoot=fromstring(xmlout)
         print('okk')
         self.gpuWidget=gpuTabWidget()
-        self.performanceStack.add_titled(self.gpuWidget,'gpuStack','GPU')
+        self.performanceStack.add_titled(self.gpuWidget,f'page{self.stack_counter}','GPU')
+        self.stack_counter+=1
         self.gpuName=gpuinfoRoot.find('gpu').find('product_name').text
         self.gpuWidget.gpuinfolabel.set_text(self.gpuName)
         self.totalvram=gpuinfoRoot.find('gpu').find('fb_memory_usage').find('total').text
@@ -341,6 +342,7 @@ def gpuinit(self):
         self.gpuWidget.gpumaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('graphics_clock').text)
         self.gpuWidget.gpuvrammaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('mem_clock').text)
 
+
         self.gpuWidget.givedata(self)
     except:
         print('no nvidia gpu found')
@@ -348,53 +350,56 @@ def gpuinit(self):
 
     
 def gpuUpdate(self):
-    p=popen('nvidia-smi -q -x')
-    xmlout=p.read()
-    p.close()
-    gpuinfoRoot=fromstring(xmlout)
-    self.vramused=gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text
-    self.gpuutil=gpuinfoRoot.find('gpu').find('utilization').find('gpu_util').text
-    self.gpuWidget.gpuutilisationlabelvalue.set_text(self.gpuutil)
-    self.gpuWidget.gpuvramusagelabelvalue.set_text(self.vramused[:-3]+'/'+self.totalvram)
-    gpu_temp=gpuinfoRoot.find('gpu').find('temperature').find('gpu_temp').text
-    if gpu_temp[-1]=='C':
-        gpu_temp =gpu_temp[:-1]+'°C'
-    self.gpuWidget.gputemplabelvalue.set_text(gpu_temp)
-    self.gpuWidget.gpushaderspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('graphics_clock').text)
-    self.gpuWidget.gpuvramspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('mem_clock').text)
+    try:
+        p=popen('nvidia-smi -q -x')
+        xmlout=p.read()
+        p.close()
+        gpuinfoRoot=fromstring(xmlout)
+        self.vramused=gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text
+        self.gpuutil=gpuinfoRoot.find('gpu').find('utilization').find('gpu_util').text
+        self.gpuWidget.gpuutilisationlabelvalue.set_text(self.gpuutil)
+        self.gpuWidget.gpuvramusagelabelvalue.set_text(f'{self.vramused[:-3]}/{self.totalvram}')
+        gpu_temp=gpuinfoRoot.find('gpu').find('temperature').find('gpu_temp').text
+        if gpu_temp[-1]=='C':
+            gpu_temp =f'{gpu_temp[:-1]}°C'
+        self.gpuWidget.gputemplabelvalue.set_text(gpu_temp)
+        self.gpuWidget.gpushaderspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('graphics_clock').text)
+        self.gpuWidget.gpuvramspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('mem_clock').text)
 
-    ############ int conv bug solve ###################### 
-    gpu_enc=gpuinfoRoot.find('gpu').find('utilization').find('encoder_util').text
-    if gpu_enc[-1]=='%':
-        gpu_enc=int(gpu_enc[:-1])
-    else:
-        gpu_enc=0
+        ############ int conv bug solve ###################### 
+        gpu_enc=gpuinfoRoot.find('gpu').find('utilization').find('encoder_util').text
+        if gpu_enc[-1]=='%':
+            gpu_enc=int(gpu_enc[:-1])
+        else:
+            gpu_enc=0
 
-    gpu_dec=gpuinfoRoot.find('gpu').find('utilization').find('decoder_util').text
-    if gpu_dec[-1]=='%':
-        gpu_dec=int(gpu_dec[:-1])
-    else:
-        gpu_dec=0
+        gpu_dec=gpuinfoRoot.find('gpu').find('utilization').find('decoder_util').text
+        if gpu_dec[-1]=='%':
+            gpu_dec=int(gpu_dec[:-1])
+        else:
+            gpu_dec=0
 
-    if self.update_graph_direction:
-        self.gpuUtilArray.pop(0)
-        self.gpuUtilArray.append(int(self.gpuutil[:-1]))
-        self.gpuVramArray.pop(0)
-        self.gpuVramArray.append(int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
-        self.gpuEncodingArray.pop(0)
-        
-        self.gpuEncodingArray.append(gpu_enc)
-        self.gpuDecodingArray.pop(0)
-        
-        self.gpuDecodingArray.append(gpu_dec)
-    else:
-        self.gpuUtilArray.pop()
-        self.gpuUtilArray.insert(0,int(self.gpuutil[:-1]))
-        self.gpuVramArray.pop()
-        self.gpuVramArray.insert(0,int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
-        self.gpuEncodingArray.pop()
-        self.gpuEncodingArray.insert(0,gpu_enc)
-        self.gpuDecodingArray.pop()
-        self.gpuDecodingArray.insert(0,gpu_dec)
+        if self.update_graph_direction:
+            self.gpuUtilArray.pop(0)
+            self.gpuUtilArray.append(int(self.gpuutil[:-1]))
+            self.gpuVramArray.pop(0)
+            self.gpuVramArray.append(int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
+            self.gpuEncodingArray.pop(0)
+            
+            self.gpuEncodingArray.append(gpu_enc)
+            self.gpuDecodingArray.pop(0)
+            
+            self.gpuDecodingArray.append(gpu_dec)
+        else:
+            self.gpuUtilArray.pop()
+            self.gpuUtilArray.insert(0,int(self.gpuutil[:-1]))
+            self.gpuVramArray.pop()
+            self.gpuVramArray.insert(0,int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
+            self.gpuEncodingArray.pop()
+            self.gpuEncodingArray.insert(0,gpu_enc)
+            self.gpuDecodingArray.pop()
+            self.gpuDecodingArray.insert(0,gpu_dec)
 
-    self.gpuWidget.givedata(self)
+        self.gpuWidget.givedata(self)
+    except Exception as e:
+        print(f"some error in gpu updata: {e}")

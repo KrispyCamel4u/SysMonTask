@@ -5,67 +5,86 @@
   <template class="gpuSidepaneWidget" parent="GtkBox">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <property name="halign">start</property>
-    <property name="valign">start</property>
+    <property name="orientation">vertical</property>
     <child>
-      <object class="GtkDrawingArea" id="gpusidepanedrawarea">
-        <property name="width-request">110</property>
-        <property name="height-request">64</property>
+      <object class="GtkButton" id="gpu_switcher_button">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="halign">start</property>
-        <property name="valign">start</property>
-        <property name="margin-left">8</property>
-        <property name="margin-start">8</property>
-        <property name="margin-top">8</property>
-        <property name="margin-bottom">6</property>
-        <signal name="draw" handler="gpuSidepaneDrawArea_draw" swapped="no"/>
-      </object>
-      <packing>
-        <property name="expand">False</property>
-        <property name="fill">True</property>
-        <property name="position">0</property>
-      </packing>
-    </child>
-    <child>
-      <!-- n-columns=1 n-rows=2 -->
-      <object class="GtkGrid">
-        <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="halign">start</property>
-        <property name="valign">start</property>
-        <property name="margin-left">10</property>
-        <property name="margin-start">10</property>
+        <property name="can-focus">True</property>
+        <property name="receives-default">True</property>
         <child>
-          <object class="GtkLabel" id="gpusidepanetextlabel">
+          <object class="GtkBox">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="halign">start</property>
             <property name="valign">start</property>
-            <property name="margin-top">4</property>
-            <property name="label" translatable="yes">GPU</property>
-            <attributes>
-              <attribute name="weight" value="medium"/>
-              <attribute name="scale" value="1.5"/>
-            </attributes>
+            <child>
+              <object class="GtkDrawingArea" id="gpusidepanedrawarea">
+                <property name="width-request">110</property>
+                <property name="height-request">64</property>
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">start</property>
+                <property name="valign">start</property>
+                <property name="margin-left">8</property>
+                <property name="margin-start">8</property>
+                <property name="margin-top">8</property>
+                <property name="margin-bottom">6</property>
+                <signal name="draw" handler="gpuSidepaneDrawArea_draw" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <!-- n-columns=1 n-rows=2 -->
+              <object class="GtkGrid">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="halign">start</property>
+                <property name="valign">start</property>
+                <property name="margin-left">10</property>
+                <property name="margin-start">10</property>
+                <child>
+                  <object class="GtkLabel" id="gpusidepanetextlabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="valign">start</property>
+                    <property name="margin-top">4</property>
+                    <property name="label" translatable="yes">GPU</property>
+                    <attributes>
+                      <attribute name="weight" value="medium"/>
+                      <attribute name="scale" value="1.5"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="gpusidepanelabelvalue">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="valign">start</property>
+                    <property name="label" translatable="yes">label</property>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
           </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="gpusidepanelabelvalue">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="halign">start</property>
-            <property name="valign">start</property>
-            <property name="label" translatable="yes">label</property>
-          </object>
-          <packing>
-            <property name="left-attach">0</property>
-            <property name="top-attach">1</property>
-          </packing>
         </child>
       </object>
       <packing>

@@ -11,10 +11,10 @@ except:
 
 if __name__=='sysmontask.net':
     from sysmontask.sysmontask import files_dir
-    from sysmontask.proc import byte_to_human
+    from sysmontask.gproc import byte_to_human
 else:
     from sysmontask import files_dir
-    from proc import byte_to_human
+    from gproc import byte_to_human
 
 @GtkTemplate(ui=files_dir+'/net.glade')
 class networkWidget(g.ScrolledWindow):
@@ -167,7 +167,7 @@ def netinit(self):
         if name !='lo' and temp[name][0]==True:
             self.netNameList.append(name)
             # print('working ')
-    # print(self.netNameList)
+    # print("net name list",self.netNameList)
 
     if len(self.netNameList)!=0:
         self.netWidgetList={}
@@ -179,7 +179,8 @@ def netinit(self):
 
         for i in range(0,self.numOfNets):
             self.netWidgetList[i]=networkWidget()
-            self.performanceStack.add_titled(self.netWidgetList[i],'netStack'+str(i),'Network'+str(i))
+            self.performanceStack.add_titled(self.netWidgetList[i],f'page{self.stack_counter}','Network'+str(i))
+            self.stack_counter+=1
             self.netWidgetList[i].nettextlabel.set_text(self.netNameList[i])
             ##self.netWidgetList[i].netinfolabel.set_text(self.netsize[i])                       ###change for the name
             nettemp=ps.net_io_counters(pernic=True)
@@ -257,10 +258,13 @@ def netUpdate(self):
             self.netWidgetList[i].givedata(self,i)
 
             self.netWidgetList[i].net4addrlablevalue.set_text(nettempaddr[self.netNameList[i]][0][1])
-            self.netWidgetList[i].net6addrlabelvalue.set_text(nettempaddr[self.netNameList[i]][1][1])
-        except:
-            print('some error in net update')
-            pass
+            try:
+                self.netWidgetList[i].net6addrlabelvalue.set_text(nettempaddr[self.netNameList[i]][1][1])
+            except Exception:
+                pass
+        except Exception as e:
+            print(f'some error in net update: {e}')
+            
 
 
     self.netstate1=self.netstate2

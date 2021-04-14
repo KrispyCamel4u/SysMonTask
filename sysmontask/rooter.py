@@ -2,7 +2,7 @@ import errno
 import os
 import sys,re,time
 
-def getPrivilege(graphical=True):
+def theme_agent():
     return 0
     if os.path.exists("{}/.sysmontask".format(os.environ.get("HOME"))):
         with open("{}/.sysmontask".format(os.environ.get("HOME")),'r') as ifile:
@@ -13,7 +13,7 @@ def getPrivilege(graphical=True):
             pass
     with open("{}/.sysmontask".format(os.environ.get("HOME")),'w') as ofile:
         ofile.write('1')
-    args = [sys.executable] +sys.argv
+    # args = [sys.executable] +sys.argv
     # args = ['env GTK_THEME=Yaru-light']+sys.argv
     print('In rooter')
     # os.system ('pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY '+' '.join(args))
