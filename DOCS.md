@@ -1,10 +1,65 @@
 ## Menu 
-- File : Nothing much reserved for future use
+- File : Nothing much, reserved for future use
 - View : Refresh, Update Speed, Graph Direction
   * Refresh : For accomodating a new hardware related change such as network change.
   * Update Speed : Speed control for performance tab.
   * Graph Direction : Newer on Right(default) / Newer on Left
-- Help : About
+  * **Filter**: To Filter out the unwanted processes.
+- Help : About, What's New
+
+## Filter Dialog (View->Filter)
+Filter filters out the unwanted system/user processes by using custom filtering words which can be defined in FILTER dialog.
+
+Column description:
+- Status: Shows the On/Off status of the filter word of the row.
+- Filter String: Word/String to be used for filtering. String is matched in Name, Owner and command column.
+- Depth: Since the process are shown in Parent Child fashion, depth depicts the level of this hierarchy.
+   * -1: All child with parent(first matched with Filter String) process are filtered out.
+   * 0: Effectively no filtering is done for the matched process.
+   * 1: Only the process with a match is filtered all it's child are not effected.
+   * 2: With the matched process all immediate child are also filtered out.
+   * and so on.
+- Regex: Whether the Matching is done using regular expressions(the Filter String will be treated as regular expression) or not.
+
+*Certain syntex and sementic rules need to be followed to use Filter:*
+
+![Screenshot from 2021-04-14 22-42-58](https://user-images.githubusercontent.com/48773008/114751481-d298e480-9d72-11eb-8fc2-13b370b557f2.png)
+
+#### Syntex and Sementics for New Entry:
+**Type I:**
+```
+<String> : <Depth>     OR      <String>
+```
+Where String will be matched in process **Name, Owner and Command**. A match in any of the field will considered as a Filter match and that process will be filtered out with its child defined by the depth. The ***Depth*** field is **optional** and default value is ***-1***. Matching mechanism if regex is **OFF**
+would ***"String1 in String2"*** and if regex is **ON** regex match would be performed.
+
+*Multiple Entries Can be added at one time by using ";" between entries.
+``` root:-1 ; libexec ;gpg:4```*
+
+---
+
+**Type II:**
+*Use of segregating two ",(commas)" are must.*
+```
+<Name>,<Owner>,<Command> :<Depth>   OR   <Name>,,  OR ,<Owner>,<Command>:<Depth>  OR  ,,<Command>   OR   <Name>,<Owner>,   
+OR any Combination with same pattern. 
+```
+Where the String at **Name, Owner and Command** fields will be matched against respective columns in the process table. A successful Filter match will only occur
+if each is String field is matched successfully in their respective process column fields. When any of String field is empty that will be not be considered for matching and others are tried with their respective columns.
+The ***Depth*** field is **optional** and default value is ***-1***. Matching mechanism if regex is **OFF**
+would ***"String1 in String2"*** and if regex is **ON** regex match would be performed.
+
+*Duplicate Entries are ignored*
+
+#### Add, Save and Delete
+- A Enter and click on "Add" button will put the filled entry to the list.
+- To make the change appear in the Process Tab immediately after adding entries then Save them with ***Save*** Button. Otherwise the changes will only appear on the next time of spawing the sysmontask.
+- Entries can be deleted by "delete" button but **the entry ",root,:-1" can not be deleted.**
+
+#### Keywords For Various Desktop Environments:
+
+
+---
 
 ## Process Tab
 - Processes are shown in Parent and Child relation with filtering algorithm to filter out the background processes that are not as useful as the process that the user creates. Processes which have their origin from "/libexec" or has "deamon" or "dbus" are considered as background processes. Each row consists of tree like structure that can be sorted from any column.
