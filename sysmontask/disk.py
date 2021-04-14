@@ -14,10 +14,10 @@ except:
 
 if __name__=='sysmontask.disk':
     from sysmontask.sysmontask import files_dir
-    from sysmontask.proc import sorting_func,byte_to_human
+    from sysmontask.gproc import sorting_func,byte_to_human
 else:
     from sysmontask import files_dir
-    from proc import sorting_func,byte_to_human
+    from gproc import sorting_func,byte_to_human
 
 @GtkTemplate(ui=files_dir+'/disk.glade')
 class diskTabWidget(g.ScrolledWindow):

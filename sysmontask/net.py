@@ -11,10 +11,10 @@ except:
 
 if __name__=='sysmontask.net':
     from sysmontask.sysmontask import files_dir
-    from sysmontask.proc import byte_to_human
+    from sysmontask.gproc import byte_to_human
 else:
     from sysmontask import files_dir
-    from proc import byte_to_human
+    from gproc import byte_to_human
 
 @GtkTemplate(ui=files_dir+'/net.glade')
 class networkWidget(g.ScrolledWindow):
