@@ -22,8 +22,8 @@ import os
 import psutil as ps
 
 print(ps.__version__)
-if( not ps.__version__>='5.7.3'):
-    print('warning[critical]: psutil>=5.7.3 needed(system-wide)')
+if( not ps.__version__>='5.7.2'):
+    print('warning[critical]: psutil>=5.7.2 needed(system-wide)')
 
 try:
     # for running as main file 
@@ -37,7 +37,7 @@ try:
     from gpu import *
     from filter_prefs import *
     from gproc import *
-    from log_plotter import *
+    # from log_plotter import *
     
 except:
     # for module level through  apt install comment it if running as main file
@@ -51,7 +51,7 @@ except:
     from sysmontask.gpu import *
     from sysmontask.filter_prefs import *
     from sysmontask.gproc import *
-    from sysmontask.log_plotter import *
+    # from sysmontask.log_plotter import *
 
 class whatsnew_notice_dialog(g.Dialog):
     def __init__(self,parentWindow,parent):
@@ -61,13 +61,16 @@ class whatsnew_notice_dialog(g.Dialog):
         label=g.Label()
         label.set_markup(
         """
-        <b><span size='20000'> New Feature </span></b>
-            - <b><big>Filter Dialog</big></b>, can be accessed through : view->filter
-                User can define his/her own filtering words to exclude the unwanted processes.
-                Filter Dialog follow <b><big>strict semantic and formating rules</big></b> for adding a new entry.
-                For more information of rules and filter dialog, visit: 
-                <big><a href='https://github.com/KrispyCamel4u/SysMonTask'>https://github.com/KrispyCamel4u/SysMonTask </a></big>
-            - Support for all desktop environments.
+        <b><span size='20000'>New Feature </span></b>
+          * <b><big>Filter Dialog</big></b>
+              Can be accessed through : view->filter
+              User can define his/her own filtering words to exclude the unwanted processes.
+              Filter Dialog follow <b><big>strict semantic and formating rules</big></b> for adding a new entry.
+              For more information of rules and filter dialog, visit: 
+              <big><a href='https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md'>https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md</a></big>
+          * <b><big>Process Log Record</big></b>(at lower right corner in process tab)
+          * <b><big>Log plotter</big></b>(Tools->Log_plot)
+          * Bug fixes, optimisation and support for all desktop enviornments.
         """ 
         )
         content_area.add(label)
@@ -184,6 +187,7 @@ class myclass:
         self.filter_button=self.builder.get_object("filter_button")
         self.filter_button.connect("activate",self.on_filter_dialog_activate)
 
+        self.current_stack='page0'
         self.sidepaneinitialisation()
 
         #time.sleep(2)p
@@ -209,16 +213,17 @@ class myclass:
 
         response=file_dialog.run()
         if response==g.ResponseType.OK:
-            print("file choosen",file_dialog.get_filename())
+            filename=file_dialog.get_filename()
+            print("file choosen",filename)
+            file_dialog.destroy()
+            os.system(f"python3 {os.path.join(os.path.abspath(os.path.dirname(__file__)),'log_plotter.py')} {filename} &")
+            # plot_log(filename)
             
-            plot_log(self,file_dialog.get_filename())
-            
-            print("plot plot")
+            # print("plot plot")
         else:
             print("didnt choose")
-            pass
-        file_dialog.close()
-        
+            file_dialog.destroy()
+                 
 
     def on_menu_whatsnew(self,widget):
         dialog=whatsnew_notice_dialog(self.Window,self)
@@ -301,10 +306,12 @@ class myclass:
 
     def on_quit_activate(self,menuitem,data=None):
         print("quit from menu",g.Buildable.get_name(menuitem))
-        g.main_quit()
+        self.on_main_window_destroy(menuitem)
 
     def on_refresh_activate(self,menuitem,data=None):
         print("refreshing")
+        print(self.current_stack)
+        self.stack_counter=2
         if(self.isNvidiagpu==1):
             g.Widget.destroy(self.gpuWidget)
             g.Widget.destroy(self.gpuSidePaneWidget)
@@ -323,6 +330,8 @@ class myclass:
         self.netinitialisation()
         self.gpuinitialisation()
         self.sidepaneinitialisation()
+        print(self.current_stack)
+        self.performanceStack.set_visible_child_name(self.current_stack)
     
     # method to show the about dialog
     def on_about_activate(self,menuitem,data=None):

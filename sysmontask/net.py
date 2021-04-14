@@ -258,9 +258,12 @@ def netUpdate(self):
             self.netWidgetList[i].givedata(self,i)
 
             self.netWidgetList[i].net4addrlablevalue.set_text(nettempaddr[self.netNameList[i]][0][1])
-            self.netWidgetList[i].net6addrlabelvalue.set_text(nettempaddr[self.netNameList[i]][1][1])
-        except:
-            print('some error in net update')
+            try:
+                self.netWidgetList[i].net6addrlabelvalue.set_text(nettempaddr[self.netNameList[i]][1][1])
+            except Exception:
+                pass
+        except Exception as e:
+            print(f'some error in net update: {e}')
             
 
 

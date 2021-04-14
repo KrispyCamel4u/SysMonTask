@@ -13,7 +13,7 @@ def theme_agent():
             pass
     with open("{}/.sysmontask".format(os.environ.get("HOME")),'w') as ofile:
         ofile.write('1')
-    args = [sys.executable] +sys.argv
+    # args = [sys.executable] +sys.argv
     # args = ['env GTK_THEME=Yaru-light']+sys.argv
     print('In rooter')
     # os.system ('pkexec env DISPLAY=$DISPLAY XAUTHORITY=$XAUTHORITY '+' '.join(args))

@@ -1,6 +1,6 @@
 from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck, Gio
 import psutil as ps,cairo
-from time import time
+from time import time,sleep
 import re,os,signal,sys
 from math import pow
 from csv import writer
@@ -55,8 +55,9 @@ def byte_to_human(value,persec=True):
         suffix+='/s'
     return "{:.1f} ".format(value/scalefactor)+suffix
 
-def sorting_func(model, row1, row2, user_data):
-    sort_column, _ = model.get_sort_column_id()
+def sorting_func(model, row1, row2, sort_id):
+    # sort_column, _ = model.get_sort_column_id()
+    sort_column=sort_id
     val1 = model.get_value(row1, sort_column)
     val2 = model.get_value(row2, sort_column)
     multiplier=1
@@ -102,6 +103,7 @@ def row_selected(self,selection):
         model,row=selection.get_selected()
         self.selected_process_pid=model[row][0]
     except:
+        self.selected_process_pid=0
         print('error in row selections')
 
 previous_killed_process_id=0
@@ -109,28 +111,31 @@ def kill_process(self,widget):
     # self.processTreeStore.remove(self.processTreeIterList[1690])
     # itr=self.processTreeStore.iter_children(self.processTreeIterList[1679])
     global previous_killed_process_id
-    print('killer on the way',self.selected_process_pid)
-    dialog=confirmation_popup(self.Window,self)
-    response=dialog.run()
-    if response==g.ResponseType.OK:
-        print('killing',self.selected_process_pid)
-        try:
-            if previous_killed_process_id==self.selected_process_pid:
-                os.kill(self.selected_process_pid,signal.SIGKILL)
-            else:
-                os.kill(self.selected_process_pid,signal.SIGTERM)
-            # os.kill(self.selected_process_pid,signal.SIGKILL)
-        except:
-            if previous_killed_process_id==self.selected_process_pid:
-                os.system('pkexec {1}/proc-kill.sh {0} 1'.format(self.selected_process_pid,os.path.dirname(os.path.abspath(__file__))))
-            else:
-                os.system('pkexec {1}/proc-kill.sh {0} 0'.format(self.selected_process_pid,os.path.dirname(os.path.abspath(__file__))))
-            # os.system('pkexec {1}/proc-kill.sh {0}'.format(self.selected_process_pid,os.path.dirname(os.path.abspath(__file__))))
-        previous_killed_process_id=self.selected_process_pid
-        
-    dialog.destroy()
-    time.sleep(0.1)
-    procUpdate(self)
+    if self.selected_process_pid:
+        print('killer on the way',self.selected_process_pid)
+        dialog=confirmation_popup(self.Window,self)
+        response=dialog.run()
+        if response==g.ResponseType.OK:
+            print('killing',self.selected_process_pid)
+            try:
+                if previous_killed_process_id==self.selected_process_pid:
+                    os.kill(self.selected_process_pid,signal.SIGKILL)
+                else:
+                    os.kill(self.selected_process_pid,signal.SIGTERM)
+                # os.kill(self.selected_process_pid,signal.SIGKILL)
+            except:
+                if previous_killed_process_id==self.selected_process_pid:
+                    os.system('pkexec {1}/proc-kill.sh {0} 1'.format(self.selected_process_pid,os.path.dirname(os.path.abspath(__file__))))
+                else:
+                    os.system('pkexec {1}/proc-kill.sh {0} 0'.format(self.selected_process_pid,os.path.dirname(os.path.abspath(__file__))))
+                # os.system('pkexec {1}/proc-kill.sh {0}'.format(self.selected_process_pid,os.path.dirname(os.path.abspath(__file__))))
+            previous_killed_process_id=self.selected_process_pid
+            
+            dialog.destroy()
+            sleep(0.1)
+            procUpdate(self)
+        else:
+            dialog.destroy()
 
     # dialog=g.Dialog('Confirmation',self.Window,g.DialogFlags.MODAL,(g.STOCK_CANCEL,g.ResponseType.CANCEL,
     #    g.STOCK_OK,g.ResponseType.OK))
@@ -229,6 +234,74 @@ def column_header_selection(self,widget):
     else:
         self.columnList[id].set_visible(False)
 
+def on_start_interactive_search(widget):
+    print('interactive search')
+
+def interactive_search(model, column, key, iter,tree):
+    tree.expand_row(model.get_path(iter),False)
+    # self.processTree.expand_all()
+    if key in model[iter][1] or key in model[iter][13]:
+        print("found",key)
+        return False
+    model[iter][15]=False
+    prev=model.iter_previous(iter)
+    if prev:
+        tree.collapse_row(model.get_path(prev))
+    return True
+
+def refresh_tree_filter(widget,self):
+    "Apply filtering to results"
+    search_query = widget.get_text().lower()
+    if search_query == "":
+        self.processTreeStore.foreach(reset_row, True,self)
+        # if self.EXPAND_BY_DEFAULT:
+        # self.processTree.expand_all()
+        # else:
+        # self.processTree.collapse_all()
+    else:
+        self.matched_iters=[]
+        self.processTreeStore.foreach(reset_row, False,self)
+        self.processTreeStore.foreach(show_matches, search_query,self)
+        self.processTree.expand_all()
+        
+
+    self.filter_model.refilter()
+
+def reset_row(model, path, iter, make_visible,self):
+    "Reset some row attributes independent of row hierarchy"
+    model.set_value(iter, self.COL_VISIBLE, make_visible)
+
+def make_path_visible(model, iter,self):
+    "Make a row and its ancestors visible"
+    while iter:
+        self.processTreeStore.set_value(iter, self.COL_VISIBLE, True)
+        # self.processTree.expand_row(self.processTreeStore.get_path(iter),False)
+        iter = model.iter_parent(iter)
+
+def make_subtree_visible(model, iter,self):
+    "Make descendants of a row visible"
+    # self.processTree.collapse_row(model.get_path(iter))
+    for i in range(model.iter_n_children(iter)):
+        subtree = model.iter_nth_child(iter, i)
+        if model.get_value(subtree, self.COL_VISIBLE):
+            # Subtree already visible
+            continue
+        model.set_value(subtree, self.COL_VISIBLE, True)
+        # print("sdfsa")
+        make_subtree_visible(model, subtree,self)
+
+def show_matches(model, path, iter, search_query,self):
+    text_name = model.get_value(iter, self.COL_NAME).lower()
+    text_command=model.get_value(iter, self.COL_COMMAND).lower()
+    if search_query in text_name or search_query in text_command:
+        # Propagate visibility change up
+        make_path_visible(model, iter,self)
+        # Propagate visibility change down
+        # self.processTree.expand_all()
+        make_subtree_visible(model, iter,self)
+        self.matched_iters.append(iter)
+        return
+
 # def show_menu(self):
 #     # i1 = g.MenuItem("Item 1")
 #     i1=g.CheckMenuItem(label='hello')
@@ -239,97 +312,65 @@ def column_header_selection(self,widget):
 #     self.popMenu.popup(None, None, None, None, 0, g.get_current_event_time())
 #     print("Done")
 
-# def searcher0(self,sprocs,root):
-#     childlist=sprocs.children()
-#     if not (sprocs.name()=='systemd' and sprocs.username()=='root'): 
-#         self.processChildList[sprocs.pid]=[]
-
-#     if len(childlist)==0:
-#         return 
-#     else:
-#         try:
-#             for procs in childlist:
-#                 # rchildlist=procs.children(True)
-#                 # for cin in (self.process_cinnamon+self.process_terminal_server):
-#                 #     # print(sprocs.name(),rchildlist)
-#                 #     if cin in rchildlist:
-#                 #         # print(cin.name(),procs.name())
-#                 #         self.blacklist.append(procs)
-#                 #         put_in_blacklist(self,procs)
-#                 #         return
-
-
-                
-#                 # print('hel')
-
-#                 if procs.pid not in self.black_list:
-#                     if not (sprocs.name()=='systemd' and sprocs.username()=='root'):
-#                         # print(sprocs.name()) 
-#                         # print(sprocs.pid,' ',procs.pid)
-#                         self.processChildList[sprocs.pid].append(procs.pid)
-
-#                     cpu_percent=procs.cpu_percent()
-#                     cpu_percent="{:.1f} %".format(cpu_percent)
-
-#                     mem_info=procs.memory_info()
-#                     rss='{:.1f} MiB'.format(mem_info[0]/mibdevider) #resident memory in string
-#                     shared='{:.1f} MiB'.format(mem_info[2]/mibdevider) #shared memory in string
-#                     mem_util=(mem_info[0]-mem_info[2])/mibdevider
-#                     mem_util='{:.1f} MiB'.format(mem_util)
-
-#                     itr=self.processTreeStore.append(root,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
-#                     ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,procs.username()," ".join(procs.cmdline()),
-#                     icon_finder(procs)])
-
-#                     self.processTreeIterList[procs.pid]=itr
-#                     self.processList[procs.pid]=procs
-#                     self.procDiskprev[procs.pid]=[0,0]
-#                     self.procT1[procs.pid]=0
-#                 else:
-#                     itr=root
-#                 searcher(self,procs,itr)
-#         except:
-#             print('some error in searcher')
-
 def searcher(self,sysproc):
     childlist=sysproc.children()
     for procs in childlist:
         if procs.pid not in self.black_list:
             self.processChildList[procs.pid]=[]
-            cpu_percent=procs.cpu_percent()
+            try:
+                cpu_percent=procs.cpu_percent()
+                mem_info=procs.memory_info()
+            except Exception as e:
+                print(f"process error in searcher: {e}")
+                continue
+
             cpu_percent="{:.1f} %".format(cpu_percent)
 
-            mem_info=procs.memory_info()
+            
             rss='{:.1f} MiB'.format(mem_info[0]/mibdevider) #resident memory in string
             shared='{:.1f} MiB'.format(mem_info[2]/mibdevider) #shared memory in string
             mem_util=(mem_info[0]-mem_info[2])/mibdevider
             mem_util='{:.1f} MiB'.format(mem_util)
-
-            pitr=self.processTreeStore.append(None,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
-            ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,procs.username()," ".join(procs.cmdline()),
-            icon_finder(procs)])
+            try:
+                pitr=self.processTreeStore.append(None,[procs.pid,procs.name(),cpu_percent,cpu_percent,mem_util
+                ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,procs.username()," ".join(procs.cmdline()),
+                icon_finder(procs),True])
+            except Exception as e:
+                print(f"process appending error in searcher: {e}")
+                continue
 
             self.processTreeIterList[procs.pid]=pitr
             self.processList[procs.pid]=procs
             self.procDiskprev[procs.pid]=[0,0]
             self.procT1[procs.pid]=0
-            
+            # self.processTree.expand_row(self.processTreeStore.get_path(pitr),False)
+
             for cprocs in procs.children():
-                if procs.pid not in self.black_list:
-                    self.processChildList[cprocs.pid]=[]
-                    self.processChildList[procs.pid].append(cprocs.pid)
-                    cpu_percent=cprocs.cpu_percent()
+                if cprocs.pid not in self.black_list:
+                    try:
+                        cpu_percent=cprocs.cpu_percent()
+                        mem_info=cprocs.memory_info()
+                    except Exception as e:
+                        print(f"process error in child searcher: {e}")
+                        continue
+
                     cpu_percent="{:.1f} %".format(cpu_percent)
 
-                    mem_info=cprocs.memory_info()
+                    
                     rss='{:.1f} MiB'.format(mem_info[0]/mibdevider) #resident memory in string
                     shared='{:.1f} MiB'.format(mem_info[2]/mibdevider) #shared memory in string
                     mem_util=(mem_info[0]-mem_info[2])/mibdevider
                     mem_util='{:.1f} MiB'.format(mem_util)
+                    try:
+                        itr=self.processTreeStore.append(pitr,[cprocs.pid,cprocs.name(),cpu_percent,cpu_percent,mem_util
+                        ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,cprocs.username()," ".join(cprocs.cmdline()),
+                        icon_finder(cprocs),True])
+                    except Exception as e:
+                        print(f"process appending error in child searcher: {e}")
+                        continue
 
-                    itr=self.processTreeStore.append(pitr,[cprocs.pid,cprocs.name(),cpu_percent,cpu_percent,mem_util
-                    ,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,cprocs.username()," ".join(cprocs.cmdline()),
-                    icon_finder(cprocs)])
+                    self.processChildList[cprocs.pid]=[]
+                    self.processChildList[procs.pid].append(cprocs.pid)
 
                     self.processTreeIterList[cprocs.pid]=itr
                     self.processList[cprocs.pid]=cprocs
@@ -349,8 +390,8 @@ def appending(self,pids,cpu_count):
             try:
                 try:
                     proc=ps.Process(pi)
-                except:
-                    print('process error in appending')
+                except Exception as e:
+                    print(f'process error in appending: {e}')
                     continue
                 # if proc in self.blacklist: #or proc in (self.process_cinnamon+self.process_terminal_server):
                 #     continue
@@ -373,8 +414,8 @@ def appending(self,pids,cpu_count):
                             try:
                                 cpu_percent=proc.cpu_percent()/cpu_count
                                 mem_info=proc.memory_info()
-                            except:
-                                print('value get error in appending')
+                            except Exception as e:
+                                print(f'value get error in appending: {e}')
                                 break
 
                             cpu_percent="{:.1f} %".format(cpu_percent)
@@ -386,7 +427,7 @@ def appending(self,pids,cpu_count):
 
                             itr=self.processTreeStore.append(self.processTreeIterList[parent.pid],[proc.pid,proc.name(),
                             cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
-                            ," ".join(proc.cmdline()),icon_finder(proc)])
+                            ," ".join(proc.cmdline()),icon_finder(proc),True])
                             self.processTreeIterList[pi]=itr
                             self.processList[pi]=proc
                             self.processChildList[parent.pid].append(pi)
@@ -401,8 +442,8 @@ def appending(self,pids,cpu_count):
                         try:
                             cpu_percent=proc.cpu_percent()/cpu_count
                             mem_info=proc.memory_info()
-                        except:
-                            print('value get error in appending')
+                        except Exception as e:
+                            print(f'value get error in appending: {e}')
                             break
 
                         cpu_percent="{:.1f} %".format(cpu_percent)
@@ -414,7 +455,7 @@ def appending(self,pids,cpu_count):
 
                         itr=self.processTreeStore.append(None,[proc.pid,proc.name(),
                         cpu_percent,cpu_percent,mem_util,mem_util,'0 KB/s','0 KB/s','0 KB/s','0 KB/s',rss,shared,proc.username()
-                        ," ".join(proc.cmdline()),icon_finder(proc)])
+                        ," ".join(proc.cmdline()),icon_finder(proc),True])
                         self.processTreeIterList[pi]=itr
                         self.processList[pi]=proc
                         self.processChildList[pi]=[]
@@ -429,8 +470,8 @@ def appending(self,pids,cpu_count):
                             # print('bef rem')
                             process_pop(self,child.pid,self.processTreeIterList[child.pid])
                             # print('rem')
-            except:
-                print('some error in appending')
+            except Exception as e:
+                print(f'some error in appending: {e}')
     if self.append_signal>0:
         self.append_signal-=1
     
@@ -476,12 +517,22 @@ def on_record_button_toggle(widget,self):
 def procInit(self):
     # self.processTree=self.builder.get_object('processtree')
     
+    self.COL_NAME,self.COL_COMMAND,self.COL_VISIBLE=1,13,15
+
     self.processTree=g.TreeView()
     self.process_tab_box.add(self.processTree)
     self.process_tab_box.show_all()
     self.processTree_background=self.builder.get_object('processtreeBackground')
     self.process_kill_button=self.builder.get_object('processKillButton')
     self.process_kill_button.connect('clicked',self.kill_process)
+
+    # self.processTree.connect("start-interactive-search",on_start_interactive_search)
+    # self.processTree.set_search_equal_func(interactive_search,self.processTree)
+    search_entry=self.builder.get_object("process_search_entry")
+    search_entry.connect("changed",refresh_tree_filter,self)
+
+    self.processTree.set_search_entry(search_entry)
+    self.processTree.set_enable_tree_lines(True)
 
     ## process record
     self.record_start,self.record_pause=False,False
@@ -494,7 +545,16 @@ def procInit(self):
     self.process_record_pause.connect("toggled",on_record_button_toggle,self)
 
     #                                 0   1   2   3   4   5   6   7   8   9   10   11  12  13       14
-    self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str,str,str,GdkPixbuf.Pixbuf)
+    self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str,str,str,GdkPixbuf.Pixbuf,bool)
+    self.filter_model=self.processTreeStore.filter_new()
+    self.filter_model.set_visible_column(15)
+    self.filter_sort_model=g.TreeModelSort(self.filter_model)
+    
+    #treestore->sort_model->filter_model
+    # self.filter_sort_model=g.TreeModelSort(self.processTreeStore)
+    # self.filter_model=self.filter_sort_model.filter_new()
+    # self.filter_model.set_visible_column(15)
+    
 
     # self.di={}
     self.procDiskprev,self.processList,self.processTreeIterList,self.processChildList,self.columnList\
@@ -512,11 +572,10 @@ def procInit(self):
 
     self.blacklist=[]
 
-    # searcher(self,self.processSystemd,None)
     searcher(self,self.processSystemd)
-    # appending(self,ps.pids(),ps.cpu_count())
     
-    self.processTree.set_model(self.processTreeStore)
+    # self.processTree.set_model(self.processTreeStore)
+    self.processTree.set_model(self.filter_sort_model)
     #                          0    1       2      3        4       5           6       7           8               9           10              11      12       13       
     self.column_header_list=['pid','Name','rCPU','CPU','rMemory','Memory','rDiskRead','DiskRead','rDiskWrite','DiskWrite','Resident\nMemory','Shared','Owner','Command']
 
@@ -526,8 +585,9 @@ def procInit(self):
 
     for i,col in enumerate(self.column_header_list):
         renderer=g.CellRendererText()
-        if col=='Command':
-            renderer.props.wrap_width=-1
+        # renderer.props.wrap_width=500
+        # if col=='Command':
+        #     renderer.props.wrap_width=1
         if col=='Name':
             icon_renderer=g.CellRendererPixbuf()
             column=g.TreeViewColumn(col)
@@ -568,8 +628,10 @@ def procInit(self):
         self.column_select_popover_check_buttons[i]=popover_check_button
 
         # if i not in [1,6,7,8,9]:   
-        if not (i==1 or i==12) :
-            self.processTreeStore.set_sort_func(i,sorting_func,None)
+        if not (i==1 or i==12 or i==13) :
+            # self.filter_sort_model.set_sort_column_id(i,1)
+            self.filter_sort_model.set_sort_func(i,sorting_func,i)
+            # self.filter_model.set_sort_func(i,sorting_func,None)
 
     self.column_select_popover.show_all()
 
@@ -607,18 +669,7 @@ def process_pop(self,pidds,itr):
             self.processChildList[key].remove(pidds)
             # self.processTreeIterList.pop(pidds)
 
-# def move_child_rows(treestore, from_parent, to_parent):
-#     n_columns = treestore.get_n_columns()
-#     iter = treestore.iter_children(from_parent)
-#     while iter:
-#       values = treestore.get(iter, *range(n_columns))
-#       treestore.remove(iter)
-#       treestore.append(to_parent, values)
-#       iter = treestore.iter_children(from_parent)
-#     return
-
-
-def procUpdate(self,header=True):
+def procUpdate(self,header=True):   
     # stt=time()
     cpu_count=ps.cpu_count()
 
@@ -651,7 +702,7 @@ def procUpdate(self,header=True):
                 try:
                     cpu_percent=self.processList[pidds].cpu_percent()/cpu_count
                     mem_info=self.processList[pidds].memory_info()
-                except:
+                except Exception:
                     process_pop(self,pidds,itr)
                     continue
                 # print("time2",time()-ut)
@@ -687,8 +738,8 @@ def procUpdate(self,header=True):
                 except:
                     pass
                 # print("time4",time()-ut)
-        except:
-            print('error in process updating')
+        except Exception as e:
+            print(f'error in process updating: {e}')
     
     # print("updating time",time()-st)
     # st=time()
@@ -714,8 +765,8 @@ def procUpdate(self,header=True):
                 mem_util=self.processTreeStore.get_value(self.processTreeIterList[pid],5)
                 mem_util=float(mem_util[:-3])
                 self.processTreeStore.set(self.processTreeIterList[pid],4,"{:.1f} MiB".format(rmem_util+mem_util))
-        except:
-            print("problem in recursive calculations")
+        except Exception as e:
+            print(f"problem in recursive calculations: {e}")
     
     # print("recursive time",time()-st)
     # st=time()
@@ -744,8 +795,8 @@ def procUpdate(self,header=True):
                 self.log_file_writer.writerow(row[2:6]+[row[7],row[9]])
             else:
                 self.process_record_start.set_active(False)
-        except:
-            print("Log write error")
+        except Exception as e: 
+            print(f"Log write error: {e}")
 
     self.old_pids=pids.copy()
 

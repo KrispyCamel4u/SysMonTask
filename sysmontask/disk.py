@@ -243,8 +243,8 @@ def diskinit(self):
                 self.disklist.append(tempparts[0])
                 self.disksize.append(tempparts[3])
                 print(tempparts[0])
-    except:
-        print("Failed to get Disks")
+    except Exception as e:
+        print(f"Failed to get Disks: {e}")
         pass
 
     self.diskWidgetList={}
@@ -328,33 +328,35 @@ def diskTabUpdate(self):
     timediskDiff=self.diskt2-self.diskt1
     self.diskstate2=[]
     for i in range(0,self.numOfDisks):
-        self.diskstate2.append(disktemp[self.disklist[i]])
-        for j,part in enumerate(self.diskPartitions[i]):
-            temp=ps.disk_usage(part[1])
-            self.diskListStores[i].set(self.diskListStoreItrs[i][j],3,byte_to_human(temp[0],persec=False),4,byte_to_human(temp[1],persec=False),5,temp[3])
-            
+        try:
+            self.diskstate2.append(disktemp[self.disklist[i]])
+            for j,part in enumerate(self.diskPartitions[i]):
+                temp=ps.disk_usage(part[1])
+                self.diskListStores[i].set(self.diskListStoreItrs[i][j],3,byte_to_human(temp[0],persec=False),4,byte_to_human(temp[1],persec=False),5,temp[3])
+        except Exception as e:
+            print(f"error in diskliststore: {e}")
         
         
-    self.diskDiff=[]    
-    self.diskActiveString=[]
+    self.diskDiff,self.diskActiveString=[],[]   
     for i in range(0,self.numOfDisks):
         try:
             self.diskDiff.append([x2-x1 for x1,x2 in zip(self.diskstate1[i],self.diskstate2[i])])
             
-            self.diskActiveString.append(f'{int(self.diskDiff[i][8]/10)}%')
+            self.diskActiveString.append(f'{int(self.diskDiff[i][8]/(10*timediskDiff))}%')
+
             self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString[i])
-            self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f} MiB/s".format(self.diskDiff[i][2]/1048576))
-            self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f} MiB/s".format(self.diskDiff[i][3]/1048576))
+            self.diskWidgetList[i].diskreadlabelvalue.set_text("{:.1f} MiB/s".format(self.diskDiff[i][2]/(timediskDiff*1048576)))
+            self.diskWidgetList[i].diskwritelabelvalue.set_text("{:.1f} MiB/s".format(self.diskDiff[i][3]/(timediskDiff*1048576)))
 
             if self.update_graph_direction:
                 self.diskActiveArray[i].pop(0)
                 self.diskActiveArray[i].append((self.diskDiff[i][8])/(10*timediskDiff))##
 
                 self.diskReadArray[i].pop(0)
-                self.diskReadArray[i].append(self.diskDiff[i][2]/((timediskDiff)*1048576))
+                self.diskReadArray[i].append(self.diskDiff[i][2]/(timediskDiff*1048576))
 
                 self.diskWriteArray[i].pop(0)
-                self.diskWriteArray[i].append(self.diskDiff[i][3]/((timediskDiff)*1048576))
+                self.diskWriteArray[i].append(self.diskDiff[i][3]/(timediskDiff*1048576))
             else: 
                 self.diskActiveArray[i].pop()
                 self.diskActiveArray[i].insert(0,(self.diskDiff[i][8])/(10*timediskDiff))##
@@ -366,8 +368,8 @@ def diskTabUpdate(self):
                 self.diskWriteArray[i].insert(0,self.diskDiff[i][3]/((timediskDiff)*1048576))
 
                 self.diskWidgetList[i].givedata(self,i)
-        except:
-            print('error in  disk update')
+        except Exception as e:
+            print(f'error in  disk update: {e}')
 
 
     self.diskstate1=self.diskstate2

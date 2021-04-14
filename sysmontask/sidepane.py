@@ -288,24 +288,26 @@ class gpuSidepaneWidget(g.Box):
 
         return False
 
-def on_switcher_clicked(button,stack):
+def on_switcher_clicked(button,stack,curr_stack):
     if not button.get_name()==stack.get_visible_child_name():
         stack.set_visible_child_name(button.get_name())
+        curr_stack=button.get_name()
 
 def sidepaneinit(self):
     print("initialisating sidepane")
     button_counter=0 # button name counter
+    
     self.cpuSidePaneLabelValue=self.builder.get_object('cpusidepanelabelvalue')
     self.cpuSidePaneDrawArea=self.builder.get_object('cpusidepanedrawarea')
     cpu_switcher_button=self.builder.get_object("cpu_switcher_button")
-    cpu_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack)
+    cpu_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
     cpu_switcher_button.set_name(f'page{button_counter}')
     button_counter+=1
 
     self.memSidePaneLabelValue=self.builder.get_object('memsidepanelabelvalue')
     self.memSidePaneDrawArea=self.builder.get_object('memsidepanedrawarea')
     mem_switcher_button=self.builder.get_object("mem_switcher_button")
-    mem_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack)
+    mem_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
     mem_switcher_button.set_name(f'page{button_counter}')
     button_counter+=1
 
@@ -316,7 +318,7 @@ def sidepaneinit(self):
         self.diskSidepaneWidgetList[i].disksidepanetextlabel.set_text(self.disklist[i])   
         self.diskSidepaneWidgetList[i].givedata(self,i)
 
-        self.diskSidepaneWidgetList[i].disk_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack)
+        self.diskSidepaneWidgetList[i].disk_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
         self.diskSidepaneWidgetList[i].disk_switcher_button.set_name(f'page{button_counter}')
         button_counter+=1
 
@@ -328,7 +330,7 @@ def sidepaneinit(self):
             self.netSidepaneWidgetList[i].netsidepanetextlabel.set_text(self.netNameList[i])
             self.netSidepaneWidgetList[i].givedata(self,i)
 
-            self.netSidepaneWidgetList[i].net_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack)
+            self.netSidepaneWidgetList[i].net_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
             self.netSidepaneWidgetList[i].net_switcher_button.set_name(f'page{button_counter}')
             button_counter+=1
     
@@ -338,7 +340,7 @@ def sidepaneinit(self):
         self.gpuSidePaneWidget.gpusidepanetextlabel.set_text(f'{self.gpuName.split()[-2]}{self.gpuName.split()[-1]}')
         self.gpuSidePaneWidget.givedata(self)
 
-        self.gpuSidePaneWidget.connect('clicked',on_switcher_clicked,self.performanceStack)
+        self.gpuSidePaneWidget.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
         self.gpuSidePaneWidget.set_name(f'page{button_counter}')
         button_counter+=1
     
@@ -349,9 +351,12 @@ def sidePaneUpdate(self):
     
     ##disk sidepane
     for i in range(0,self.numOfDisks):
-        self.diskSidepaneWidgetList[i].disksidepanelabelvalue.set_text(self.diskActiveString[i])
+        try:
+            self.diskSidepaneWidgetList[i].disksidepanelabelvalue.set_text(self.diskActiveString[i])
 
-        self.diskSidepaneWidgetList[i].givedata(self,i)
+            self.diskSidepaneWidgetList[i].givedata(self,i)
+        except Exception as e:
+            print(f"some error in disksidepane update {e}")
 
     # net sidepane
     if(len(self.netNameList)!=0):
@@ -360,9 +365,12 @@ def sidePaneUpdate(self):
                 self.netSidepaneWidgetList[i].netsidepanelabelvalue.set_text(f'R:{self.byterecpersecString[i]}\nS:{self.bytesendpersecString[i]}')
 
                 self.diskSidepaneWidgetList[i].givedata(self,i)
-            except:
-                pass
+            except Exception as e:
+                print(f"some error in netsidepane update {e}")
     
     if(self.isNvidiagpu==1):
-        self.gpuSidePaneWidget.gpusidepanelabelvalue.set_text(self.gpuutil)
-        self.gpuSidePaneWidget.givedata(self)
+        try:
+            self.gpuSidePaneWidget.gpusidepanelabelvalue.set_text(self.gpuutil)
+            self.gpuSidePaneWidget.givedata(self)
+        except Exception as e:
+            print(f"some error in gpusidepane update {e}")
