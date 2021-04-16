@@ -67,7 +67,7 @@ class whatsnew_notice_dialog(g.Dialog):
               User can define his/her own filtering words to exclude the unwanted processes.
               Filter Dialog follow <b><big>strict semantic and formating rules</big></b> for adding a new entry.
               For more information of rules and filter dialog, visit: 
-              <big><a href='https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md'>https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md</a></big>
+              <big><a href='https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#filter-dialog-view-filter'>https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md</a></big>
           * <b><big>Process Log Record</big></b>(at lower right corner in process tab)
           * <b><big>Log plotter</big></b>(Tools->Log_plot)
           * Bug fixes, optimisation and support for all desktop enviornments.
