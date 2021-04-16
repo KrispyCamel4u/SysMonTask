@@ -81,12 +81,9 @@ While installing from source, pip automatically installs some of the packages(wh
 After installing dependencies:
 ```
 $ git clone https://github.com/KrispyCamel4u/SysMonTask.git
-  ....
 $ cd SysMonTask
 $ sudo python3 setup.py install
-  ....
 $ sysmontask
-  ....
 ```
 It will install it in "/usr/local/lib/python<version>/dist-packages/".
 To uninstall it run the uninstall.sh script in the SysMonTask cloned directory, with:
@@ -100,7 +97,6 @@ $ ./uninstall.sh
 **Note: For Nvidia GPUs, nvidia-smi needs to be installed. Check if nvidia-smi is installed by running:**
 ```
 $ nvidia-smi
-  ...
 ```
 If not then install it for your system (generally it is automatically installed with Nvidia proprietary drivers).
 
@@ -124,6 +120,8 @@ Hurray, you're good to go in understanding capabilities of your system:)
  
  To filter out process which contains a peculiar word in its Name, Owner and Command, add the word in Filter as given below:
  ```<word>:1```
+ 
+ ***NOTE:** Using without Filter will show all the processes. Since python is not a Fast executing language, the CPU utilisation will be more than 1% in steady state. Using Filter to remove all root process reduces the burden a improved performance can be seen. Hence for **low end systems** use FILTER.*
  
 </details>
 
