@@ -522,6 +522,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
+                            <property name="tooltip-text" translatable="yes">Pause Recording</property>
                             <property name="margin-start">2</property>
                             <property name="margin-end">2</property>
                             <property name="margin-top">5</property>
@@ -547,6 +548,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">True</property>
+                            <property name="tooltip-text" translatable="yes">Start Recording</property>
                             <property name="margin-start">2</property>
                             <property name="margin-end">10</property>
                             <property name="margin-top">5</property>

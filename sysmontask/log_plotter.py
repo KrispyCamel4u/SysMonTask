@@ -31,6 +31,9 @@ def fun(filename):
             for line in ifile.readlines():
                 line=line.split(',')
                 for i,k in enumerate(line):
+                    if "NA" in k:
+                        data[i].append(0)
+                        continue
                     k=k.split()
                     if "%" in k[1]:
                         data[i].append(float(k[0]))

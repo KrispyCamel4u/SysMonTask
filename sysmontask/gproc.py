@@ -1,6 +1,6 @@
 from gi.repository import Gtk as g , GLib as go,GdkPixbuf,Wnck, Gio
 import psutil as ps,cairo
-from time import time,sleep
+from time import time,sleep,ctime
 import re,os,signal,sys
 from math import pow
 from csv import writer
@@ -377,7 +377,6 @@ def searcher(self,sysproc):
                     self.procDiskprev[cprocs.pid]=[0,0]
                     self.procT1[cprocs.pid]=0
             
-
 def appending(self,pids,cpu_count):
     
     # new process appending
@@ -465,7 +464,7 @@ def appending(self,pids,cpu_count):
                         print('appending',pi)
                         
                     # print('before child arranging')
-                    for child in proc.children():
+                    for child in proc.children(True):
                         if child.pid in self.processList:
                             # print('bef rem')
                             process_pop(self,child.pid,self.processTreeIterList[child.pid])
@@ -487,28 +486,34 @@ def on_record_button_toggle(widget,self):
             if wname=="record_start":
                 if self.selected_process_pid:
                     self.record_start=True
-                    self.log_file=open(f'{log_path}/{self.processList[self.selected_process_pid].name()}.csv', 'w+',newline='')
+                    self.log_file_name=f'{self.processList[self.selected_process_pid].name()}_{ctime().replace(" ","_")}.csv'
+                    self.log_file=open(f'{log_path}/{self.log_file_name}', 'w+',newline='')
                     self.log_file_writer=writer(self.log_file)
                     self.log_file_writer.writerow(['rCPU','CPU','rMemory','Memory','DiskRead','DiskWrite'])
                     self.log_pid=self.selected_process_pid
+                    widget.set_tooltip_text(f"Recording: {self.log_pid},{self.processList[self.log_pid].name()}")
                     print("record start")
             elif wname=="record_pause":
                 self.record_pause=True
                 if self.log_file:
                     self.log_file.close()
+
+                widget.set_tooltip_text("Paused")
                 print("record pause")
         else:
             if wname=="record_start":
                 self.record_start=False
                 self.log_file.close()
                 self.log_pid=0
+                widget.set_tooltip_text("Start Recording")
             elif wname=="record_pause":
                 self.record_pause=False
                 print("record_pause false")
                 if self.log_pid:
                     
-                    self.log_file=open(f'{log_path}/{self.processList[self.log_pid].name()}.csv', 'a+',newline='')
+                    self.log_file=open(f'{log_path}/{self.log_file_name}', 'a+',newline='')
                     self.log_file_writer=writer(self.log_file)
+                widget.set_tooltip_text("Pause Recording")
     except :
         print("error while recording")
         self.process_record_pause.set_active(False)

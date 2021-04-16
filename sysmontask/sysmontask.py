@@ -210,6 +210,7 @@ class myclass:
     def on_log_plot_activate(self,widget):
         file_dialog=g.FileChooserDialog(title="Select Log File",parent=self.Window,action=g.FileChooserAction.OPEN,\
             buttons=("Cancel", g.ResponseType.CANCEL,"Open", g.ResponseType.OK))
+        file_dialog.set_current_folder(os.path.join(os.environ.get("HOME"),"sysmontask_log"))
 
         response=file_dialog.run()
         if response==g.ResponseType.OK:
