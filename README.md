@@ -20,20 +20,20 @@
 
 Linux system monitor with the compactness and usefulness of Windows Task Manager to allow higher control and monitoring.
 
+### Important Notice
+*What's New Feature [Get A Glance Of The Following Features](https://github.com/KrispyCamel4u/SysMonTask#whats-new--)*
+- ***Filter Dialog [Must Read](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#filter-dialog-view-filter)*** 
+- ***Process Log Record and Log_Plot [Must Read](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#process-log-recordplot)***
+
 ## Installation
+***[need help in making package for Suse, Redhat]***
+
 ### #Ubuntu and Its Family**(only for: 18.04, 20.04, 20.10 and equivalent)**, run: 
-
-***[Need help for packaging for other distros]***
-
-*Note: The process tab works well only for the systems using the Gnome,cinnamon and xfce desktop environment as of now (support for Mate,KDE will be added soon)*
 ```
 $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
-  ....
 $ sudo apt install sysmontask
-  ....
 // Install psutil if Ubuntu<=20.04, other-wise skip this step(more info given below) : 
 $ sudo pip3 install -U psutil
-  ....
 $ sysmontask   // optional to run via terminal but recommended for the first time 
 ```
 Alternatively, if you don't want to add the PPA (Personal Package Archives) then download the binaries from releases, and install by double clicking on it.
@@ -41,16 +41,13 @@ Alternatively, if you don't want to add the PPA (Personal Package Archives) then
 ***Note: Some information such as Memory static details(slots, Frequency) and Disk IO(disk usage per process) for the other user's processes(including root) requires root access, hence to run with root access:***
 ```
 $ sudo sysmontask
-  ....
 ```
 **For Ubuntu<=20.04(for others it will be installed automatically), psutil will not be install automatically with sysmontask(python3-psutil doesn't meet the version requirements), hence install with:**
 
 ```
 $ pip3 install psutil          // if you're not planning to use it with root access
-  ....
   OR
 $ sudo pip3 install -U psutil  // needed to run sysmontask with root access, hence recommended
-  ....
 ```
 ---
 
@@ -62,12 +59,9 @@ $ yay -S sysmontask
 Or, Manually:
 ```
 $ git clone https://aur.archlinux.org/sysmontask.git
-  ....
 $ cd sysmontask
 $ makepkg -si
-  ....
 $ sysmontask
-  ....
 ```
 Or,
 Install using pamac(gui for software add/remove), first enable the AUR(arch user repository) in preferences, then search sysmontask, install and enjoy.
@@ -119,8 +113,36 @@ Hurray, you're good to go in understanding capabilities of your system:)
 
 ### V1.3.7
 #### [Enhancements]
-- Filter Dialog [Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
-- Process Log Record and Log Plot [Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
+<details>
+ <summary>Filter Dialog (Customisable Process Filtering Utility)</summary> 
+ 
+ Highly Customisable fearure to preicisely pin-point the unwanted process to filter them out. Can be accesed from **View->Filter**
+ **Strict Syntex and semantic** need to be followed to use it, ***Hence [Must Read](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#filter-dialog-view-filter) the Docs to use it*** 
+ ![Screenshot from 2021-04-14 22-42-58](https://user-images.githubusercontent.com/48773008/114751481-d298e480-9d72-11eb-8fc2-13b370b557f2.png)
+ 
+ A simple TYPE:I use given below:
+ 
+ To filter out process which contains a peculiar word in its Name, Owner and Command, add the word in Filter as given below:
+ ```<word>:1```
+ 
+</details>
+
+<details>
+    <summary>Process Log Record and Log Plot</summary>
+
+Process performance metrics can be recorded as Logs in **$HOME/sysmontask_log** directory using Record button on selected process and can be visualised using Log_Plot. [Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#process-log-recordplot)
+
+**Record**
+
+![Screenshot from 2021-04-14 22-42-58](https://user-images.githubusercontent.com/48773008/114751481-d298e480-9d72-11eb-8fc2-13b370b557f2.png)
+
+**Log_Plot** utility uses matplotlib(python3-matplotlib) and it is not installed automatically. To use it install matplotlib via pip3 or pacakge manager.
+
+![Screenshot from 2021-04-16 11-42-51](https://user-images.githubusercontent.com/48773008/114979668-ea728480-9ea8-11eb-8655-e8730a32418e.png)
+
+
+</details>
+
 #### [Bug Fix]
 - [[#15](https://github.com/KrispyCamel4u/SysMonTask/issues/15)] Processes missing from process tab [or all desktop environments, fixed]
 - [[#22](https://github.com/KrispyCamel4u/SysMonTask/issues/22)] Temperature of AMD CPU displays as NA [fixed]
