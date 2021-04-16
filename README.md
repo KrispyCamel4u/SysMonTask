@@ -21,7 +21,7 @@
 Linux system monitor with the compactness and usefulness of Windows Task Manager to allow higher control and monitoring.
 
 ## Installation
-### #Ubuntu and its family members **(only for: 18.04, 20.04 and 20.10 and equivalent)**, run: 
+### #Ubuntu and Its Family**(only for: 18.04, 20.04, 20.10 and equivalent)**, run: 
 
 ***[Need help for packaging for other distros]***
 
@@ -54,7 +54,12 @@ $ sudo pip3 install -U psutil  // needed to run sysmontask with root access, hen
 ```
 ---
 
-### #Arch based destros:
+### #Arch Based:
+Using any AUR helper tools like Yay:
+```
+$ yay -S sysmontask
+```
+Or, Manually:
 ```
 $ git clone https://aur.archlinux.org/sysmontask.git
   ....
@@ -64,8 +69,7 @@ $ makepkg -si
 $ sysmontask
   ....
 ```
-OR
-
+Or,
 Install using pamac(gui for software add/remove), first enable the AUR(arch user repository) in preferences, then search sysmontask, install and enjoy.
 
 ### #Fedora:
@@ -74,35 +78,8 @@ Available in official [Fedora repos](https://src.fedoraproject.org/rpms/sysmonta
 ```
 $ sudo dnf install sysmontask
 ```
-
 ---
-### #Installing using PIP(PyPi) 
-To install using pip, run:
-```
-$ pip3 install sysmontask
-  ....
-$ sysmontask
-  ....
-```
-**Note: Since pip utilises the relative path, files such as SysMonTask.desktop and data files will not be sent to the required locations. Hence when run for the first time(from terminal), passoword will be asked and files will be copied the to intended locations.*
-
-**To uninstall**:
-
-A new API(only in case of installation using pip) is provided to remove the copied files. To completely remove it, run:
-```
-$ sysmontask.uninstall
-  Done:(
-$ pip3 uninstall sysmontask
-  ....
-```
-In case of error, check with the package level dependancies(using APT/pacman/yum etc. such as python3-gi-cairo,gir1.2-wnck3.0 etc.) mentioned in [requirments.md](https://github.com/KrispyCamel4u/SysMonTask/blob/master/requirements.md).
-
-*If installed using pip, new patch/update will not be notified by the system, to receive update notication use package manager if available for your system.* 
-
-
----
-
-### #Installing from source(for other destros whose package is yet to be made)
+### #Installing From Source
 Install the dependencies required, mentioned in the [requirments.md](https://github.com/KrispyCamel4u/SysMonTask/blob/master/requirements.md). In case of issue related to PyGoject or pycairo OR to get the command for the specific package manager, follow the link given in requirements.md . 
 
 While installing from source, pip automatically installs some of the packages(which can be installed using pip) required others need to be installed using package manager.
@@ -140,26 +117,25 @@ Hurray, you're good to go in understanding capabilities of your system:)
 
 ## What's New: [![Generic badge](https://img.shields.io/badge/What's_New-History-red.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/HISTORY.md) [![Generic badge](https://img.shields.io/badge/Read_More-Docs-blueviolet.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
 
-### v1.1.1-beta-b
-#### [Bug Fix + Enhancements]
-- [[#6](https://github.com/KrispyCamel4u/SysMonTask/issues/6)] Possibility to run as non-root
-- [[#12](https://github.com/KrispyCamel4u/SysMonTask/issues/12)] gi.repository.Gtk' object has no attribute 'Container'
-- [[#13](https://github.com/KrispyCamel4u/SysMonTask/issues/13) [#23](https://github.com/KrispyCamel4u/SysMonTask/issues/23)] ValueError: invalid literal for int() with base 10: 'N/', Does not work en PopOs 20.10
-- [[#14](https://github.com/KrispyCamel4u/SysMonTask/pull/14)] Python <=3.7 compaitiable for process UI 
-- [[#15]()] Processes missing from process tab( added filtered processes support for cinnamon, xfce)
-- [[#16](https://github.com/KrispyCamel4u/SysMonTask/issues/16)] psutils version fallbac (removed psutil dependency for ubuntu<=20.04, install seperately)
-- [[#20](https://github.com/KrispyCamel4u/SysMonTask/issues/20)] Missing temperature unit in the performance tab
-- [[#22](https://github.com/KrispyCamel4u/SysMonTask/issues/22)] Temperature of AMD CPU displays as NA
-- [[#26](https://github.com/KrispyCamel4u/SysMonTask/issues/26)] Wrong arrows direction on Processes tabs(sorting column header)
-- [[#31](https://github.com/KrispyCamel4u/SysMonTask/issues/31)] Not working on Linux Lite (Ubuntu 20.04.2) (gir1.2-wnck-3.0 dependancy added)
-- Use of zenity removed
+### V1.3.7
+#### [Enhancements]
+- Filter Dialog [Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
+- Process Log Record and Log Plot [Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
+#### [Bug Fix]
+- [[#15](https://github.com/KrispyCamel4u/SysMonTask/issues/15)] Processes missing from process tab [or all desktop environments, fixed]
+- [[#22](https://github.com/KrispyCamel4u/SysMonTask/issues/22)] Temperature of AMD CPU displays as NA [fixed]
+- [[#27](https://github.com/KrispyCamel4u/SysMonTask/issues/27)] How to search or filter for processes
+- [[#28](https://github.com/KrispyCamel4u/SysMonTask/issues/28)] [[#45](https://github.com/KrispyCamel4u/SysMonTask/issues/45)] [[#46](https://github.com/KrispyCamel4u/SysMonTask/issues/46)] Doesnt Seem To Work With Gruvbox-dark-gtk, Not Working on Arch Linux, Sudo Error! (AttributeError: 'NoneType' object has no attribute 'lower')
+- [[#34](https://github.com/KrispyCamel4u/SysMonTask/issues/36)] Invalid version (double separator '-'): 1.1.1-beta-b: python3dist(sysmontask) = 1.1.1-beta-b (Follow Semantic Versioning)
+- [[#36](https://github.com/KrispyCamel4u/SysMonTask/issues/36)] Please exclude zram slots from disks
+- [[#38](https://github.com/KrispyCamel4u/SysMonTask/issues/38)] Can't click on the tabs in the performance tabs.
  
-**Previous highlight:**
+#### Previous highlight:
 - Processes filtering for user for fast look-ups. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md))
 - **rCPU, rMemory** (recursive-CPU,recursive-Memery) columns. ([Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)).
 
 
-**To set theme, Run:**
+## Theme Settings
 
 By Default sysmontask will use the system-wide setting for themes. If you use any of dark theme(dark mode), that dark theme(dark mode) will be applied to sysmontask. If you use any of light theme(default/light mode), that light theme(default/light mode) will be used by sysmontask. 
 
@@ -186,7 +162,7 @@ $ sudo sysmontask.set_default
   Setting done:)
 ```
 
-#### Highlights
+## Highlights
 ![Screenshot from 2021-02-17 17-54-27](https://user-images.githubusercontent.com/48773008/108204170-79814b80-7149-11eb-8b1f-843a1efa8d42.png)
 
 ![Screenshot from 2021-02-21 22-06-32](https://user-images.githubusercontent.com/48773008/108631693-1bc66980-7491-11eb-8b1e-59df9622bd32.png)
