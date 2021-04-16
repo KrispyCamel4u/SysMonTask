@@ -5,7 +5,7 @@
   * Update Speed : Speed control for performance tab.
   * Graph Direction : Newer on Right(default) / Newer on Left
   * **Filter**: To Filter out the unwanted processes.
-- Tools: Log Plot(To visualise the data collected using Record)
+- **Tools: Log Plot**(To visualise the data collected using Record)
 - Help : About, What's New
 
 ## Filter Dialog (View->Filter)
@@ -26,7 +26,7 @@ Column description:
 
 ![Screenshot from 2021-04-14 22-42-58](https://user-images.githubusercontent.com/48773008/114751481-d298e480-9d72-11eb-8fc2-13b370b557f2.png)
 
-#### Syntex and Sementics for New Entry:
+### Syntex and Sementics for New Entry:
 *spaces at the start/end of the word will be ignored.
 *Duplicate Entries are ignored*
 
@@ -56,12 +56,12 @@ would ***"String1 in String2"*** and if regex is **ON** regex match would be per
 *Multiple Entries Can be added at one time by using ";" between entries.
 ``` root,root,root:-1 ; libexec ;,,gpg:4```*
 
-#### Add, Save and Delete
+### Add, Save and Delete
 - A Enter and click on "Add" button will put the filled entry to the list.
 - To make the change appear in the Process Tab immediately after adding entries then Save them with ***Save*** Button. Otherwise the changes will only appear on the next time of spawing the sysmontask.
 - Entries can be deleted by "delete" button but **the entry ",root,:1" can not be deleted.**
  
-#### Keywords For Various Desktop Environments:
+### Keywords For Various Desktop Environments:
 ```
 **Ubuntu:**
   * GNOME: "root:1" ; ",,libexec:1" ; "[id]bus:-1 " ; "(gpg)|(gjs),," ; "pipewire,," ; "daemon" ; "systemd-"
@@ -71,7 +71,7 @@ would ***"String1 in String2"*** and if regex is **ON** regex match would be per
   * CINNAMON: "root:1" ; ",,libexec:1" ; "systemd:2" ; "lightdm,,:4" ; "daemon"
   * XFCE: "root:1" ; ",,libexec:1" ; "panel\-[2-9]" ; "lightdm,,:4" ; "daemon"
 ```
-#### Hierarchy Management
+### Hierarchy Management
 In case of filtering out the processes, the parent and the hierarchy get changes a bit. To understand, let's assume a tree A->B->C, where A is the root parent(can be a another tree), B is another child(can a sub tree having one or more process as child) and C leaf cluster(one or more process/subtree). Now using Filter if the subtree B get filtered out but its child which is C is not affected then after filtering out A will become the new parent of C ,i.e. A->C . In case you want to add the filtered subtree B back by disabling Filter, the hierarchy will restrore back, i.e., A->B->C.
 
 ---
