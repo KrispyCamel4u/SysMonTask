@@ -74,6 +74,8 @@ would ***"String1 in String2"*** and if regex is **ON** regex match would be per
 ### Hierarchy Management
 In case of filtering out the processes, the parent and the hierarchy get changes a bit. To understand, let's assume a tree A->B->C, where A is the root parent(can be a another tree), B is another child(can a sub tree having one or more process as child) and C leaf cluster(one or more process/subtree). Now using Filter if the subtree B get filtered out but its child which is C is not affected then after filtering out A will become the new parent of C ,i.e. A->C . In case you want to add the filtered subtree B back by disabling Filter, the hierarchy will restrore back, i.e., A->B->C.
 
+***NOTE:** Using without Filter will show all the processes. Since python is not a Fast executing language, the CPU utilisation will be more than 1% in steady state. Using Filter to remove all root process reduces the burden a improved performance can be seen. Hence for **low end systems** use FILTER.*
+
 ---
 
 ## Process LOG Record/Plot
