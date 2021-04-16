@@ -1,3 +1,8 @@
+### v1.3.9
+#### [Bug Fix]
+- [[#22](https://github.com/KrispyCamel4u/SysMonTask/issues/22)] Temperature of AMD CPU displays as NA ["zenpower" name added]
+- [[#47](https://github.com/KrispyCamel4u/SysMonTask/issues/47)] unknown signal name: clicked (GPU error)
+
 ### V1.3.7
 #### [Enhancements]
 - Filter Dialog [Read More](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)

@@ -340,8 +340,9 @@ def sidepaneinit(self):
         self.gpuSidePaneWidget.gpusidepanetextlabel.set_text(f'{self.gpuName.split()[-2]}{self.gpuName.split()[-1]}')
         self.gpuSidePaneWidget.givedata(self)
 
-        self.gpuSidePaneWidget.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
-        self.gpuSidePaneWidget.set_name(f'page{button_counter}')
+        ## unknown signal bug fixed
+        self.gpuSidePaneWidget.gpu_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
+        self.gpuSidePaneWidget.gpu_switcher_button.set_name(f'page{button_counter}')
         button_counter+=1
     
 

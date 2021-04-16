@@ -107,7 +107,12 @@ Hurray, you're good to go in understanding capabilities of your system:)
 
 ## What's New: [![Generic badge](https://img.shields.io/badge/What's_New-History-red.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/HISTORY.md) [![Generic badge](https://img.shields.io/badge/Read_More-Docs-blueviolet.svg)](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md)
 
-### V1.3.7
+### v1.3.9
+#### [Bug Fix]
+- [[#22](https://github.com/KrispyCamel4u/SysMonTask/issues/22)] Temperature of AMD CPU displays as NA ["zenpower" name added]
+- [[#47](https://github.com/KrispyCamel4u/SysMonTask/issues/47)] unknown signal name: clicked (GPU error)
+
+### v1.3.7
 #### [Enhancements]
 <details>
  <summary>Filter Dialog (Customisable Process Filtering Utility)</summary> 

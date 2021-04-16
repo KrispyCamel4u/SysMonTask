@@ -169,8 +169,15 @@ def cpuUpdate(self):
         temperatures_list=ps.sensors_temperatures()
         if 'coretemp' in temperatures_list:
             self.cpuTempLabelValue.set_text('{0} °C'.format(int(temperatures_list['coretemp'][0][1])))
+        
+        ## amd cpu package temp
         elif 'k10temp' in temperatures_list:
             for lis in temperatures_list['k10temp']:
+                if lis.label=='Tdie':
+                    self.cpuTempLabelValue.set_text('{0} °C'.format(int(lis.current)))
+                    break
+        elif 'zenpower' in temperatures_list:
+            for lis in temperatures_list['zenpower']:
                 if lis.label=='Tdie':
                     self.cpuTempLabelValue.set_text('{0} °C'.format(int(lis.current)))
                     break
