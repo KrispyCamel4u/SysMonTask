@@ -21,12 +21,12 @@
 Linux system monitor with the compactness and usefulness of Windows Task Manager to allow higher control and monitoring.
 
 ### Important Notice
-*What's New Feature [Get A Glance Of The Following Features](https://github.com/KrispyCamel4u/SysMonTask#whats-new--)*
+*[Get A Glance Of The New Features](https://github.com/KrispyCamel4u/SysMonTask#whats-new--)*
 - ***Filter Dialog [Must Read](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#filter-dialog-view-filter)*** 
 - ***Process Log Record and Log_Plot [Must Read](https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#process-log-recordplot)***
 
 ## Installation
-***[need help in making package for Suse, Redhat]***
+***[need help in making a package for Suse, Redhat]***
 
 ### #Ubuntu and Its Family**(only for: 18.04, 20.04, 20.10 and equivalent)**, run: 
 ```
@@ -36,15 +36,16 @@ $ sudo apt install sysmontask
 $ sudo pip3 install -U psutil
 $ sysmontask   // optional to run via terminal but recommended for the first time 
 ```
-Alternatively, if you don't want to add the PPA (Personal Package Archives) then download the binaries from releases, and install by double clicking on it.
+Alternatively, if you don't want to add the PPA (Personal Package Archives) then download the binaries from releases, and install by double-clicking on it.
 
 ***Note: Some information such as Memory static details(slots, Frequency) and Disk IO(disk usage per process) for the other user's processes(including root) requires root access, hence to run with root access:***
 ```
 $ sudo sysmontask
 ```
-**For Ubuntu<=20.04(for others it will be installed automatically), psutil will not be install automatically with sysmontask(python3-psutil doesn't meet the version requirements), hence install with:**
+**For Ubuntu<=20.04(for others it will be installed automatically), psutil will not be installed automatically with sysmontask(python3-psutil doesn't meet the version requirements), hence install with:**
 
 ```
+$ sudo apt install python3-pip  // skip if you already have pip3 installed 
 $ pip3 install psutil          // if you're not planning to use it with root access
   OR
 $ sudo pip3 install -U psutil  // needed to run sysmontask with root access, hence recommended
