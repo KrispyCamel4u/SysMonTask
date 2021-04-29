@@ -2119,7 +2119,7 @@ NA</property>
                                                 <property name="valign">start</property>
                                                 <property name="margin-start">10</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Coruppted:</property>
+                                                <property name="label" translatable="yes">Corrupted:</property>
                                                 <property name="justify">center</property>
                                               </object>
                                               <packing>
