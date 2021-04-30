@@ -58,13 +58,13 @@ class networkWidget(g.ScrolledWindow):
         w=self.netdrawarea.get_allocated_width()
         h=self.netdrawarea.get_allocated_height()
 
-        speedstep=250*1024          #500KB/s
+        speedstep=250*1024          #250KB/s
         maximumcurrentspeed=max(max(self.netRecSpeedArray),max(self.netSendSpeedArray))
         currentscalespeed=self.netmxScalingFactor*speedstep
         while(currentscalespeed<maximumcurrentspeed):
             self.netmxScalingFactor+=1
             currentscalespeed=self.netmxScalingFactor*speedstep
-        while(currentscalespeed>maximumcurrentspeed and self.netmxScalingFactor>1):
+        while(currentscalespeed-speedstep>maximumcurrentspeed and self.netmxScalingFactor>1):
             self.netmxScalingFactor-=1
             currentscalespeed=self.netmxScalingFactor*speedstep
         

@@ -61,7 +61,7 @@ class whatsnew_notice_dialog(g.Dialog):
         label=g.Label()
         label.set_markup(
         """
-        <b><span size='20000'>New Feature #v1.3.7 </span></b>
+        <b><span size='20000'>New Feature #v1.3.9 </span></b>
           * <b><big>Filter Dialog</big></b>
               Can be accessed through : view->filter
               User can define his/her own filtering words to exclude the unwanted processes.
