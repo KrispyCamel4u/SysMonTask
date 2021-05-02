@@ -169,7 +169,6 @@ def cpuUpdate(self):
         temperatures_list=ps.sensors_temperatures()
         if 'coretemp' in temperatures_list:
             self.cpuTempLabelValue.set_text('{0} °C'.format(int(temperatures_list['coretemp'][0][1])))
-        
         ## amd cpu package temp
         elif 'k10temp' in temperatures_list:
             for lis in temperatures_list['k10temp']:
@@ -181,6 +180,13 @@ def cpuUpdate(self):
                 if lis.label=='Tdie':
                     self.cpuTempLabelValue.set_text('{0} °C'.format(int(lis.current)))
                     break
+        else:
+            try:
+                fan_list = ps.sensors_fans()
+                cpu_temp = cpuTempByFanMatching(temperatures_list, fan_list)
+                self.cpuTempLabelValue.set_text('{0} °C'.format(int(cpu_temp.current)))
+            except:
+                pass
 
         # cpu fan speed
     except:
@@ -201,3 +207,26 @@ def cpuUpdate(self):
         for i in range(self.cpu_logical_cores):
             self.cpu_logical_cores_util_arrays[i].pop()
             self.cpu_logical_cores_util_arrays[i].insert(0,temp[i])
+
+
+def cpuTempByFanMatching(sensors_temp, sensors_fan):
+    temp_keys = list(sensors_temp.keys())
+    fan_keys = list(sensors_fan.keys())
+
+    # Detect first fan key which matches temperature key
+    try:
+       sensor_name = helperMatchFirstKey(temp_keys, fan_keys)
+    except NameError:
+       raise NameError("Cannot identify cpu sensor")
+
+    # Return first temperature
+    temps = sensors_temp[sensor_name]
+    return temps[0]
+
+
+def helperMatchFirstKey(temp_keys, fan_keys):
+    for fan_name in fan_keys:
+        for temp_name in temp_keys:
+            if fan_name == temp_name:
+                return temp_name
+    raise NameError("No matching fan and temperature name found!")
