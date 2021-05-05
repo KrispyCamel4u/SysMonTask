@@ -46,7 +46,7 @@ class gpuTabWidget(g.ScrolledWindow):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
-        """Construct the GPU widget"""
+        """Construct the GPU widget."""
         super(g.ScrolledWindow, self).__init__()
 
         # This must occur *after* you initialize your base

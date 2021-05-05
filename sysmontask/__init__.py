@@ -1,1 +1,1 @@
-"""For making a python package"""
+"""For making a python package."""

@@ -30,7 +30,7 @@ class diskSidepaneWidget(g.Box):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
-        """Construct Disk Sidepane widget"""
+        """Construct Disk Sidepane widget."""
         super(g.Box, self).__init__()
 
         # This must occur *after* you initialize your base
@@ -108,7 +108,7 @@ class netSidepaneWidget(g.Box):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
-        """Construct Net Sidepane widget"""
+        """Construct Net Sidepane widget."""
         super(g.Box, self).__init__()
 
         # This must occur *after* you initialize your base
@@ -231,7 +231,7 @@ class gpuSidepaneWidget(g.Box):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
-        """Construct GPU Sidepane widget"""
+        """Construct GPU Sidepane widget."""
         super(g.Box, self).__init__()
 
         # This must occur *after* you initialize your base

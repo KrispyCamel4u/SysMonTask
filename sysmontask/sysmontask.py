@@ -23,7 +23,7 @@ if( not ps.__version__>='5.7.2'):
     print('warning[critical]: psutil>=5.7.2 needed(system-wide)')
 
 try:
-    # for running as main file 
+    # for running as main file
     files_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../glade_files")
     icon_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "../icons")
     from cpu import *
@@ -35,8 +35,8 @@ try:
     from filter_prefs import *
     from gproc import *
     # from log_plotter import *
-    
-except:
+
+except ImportError:
     # for module level through  apt install comment it if running as main file
     files_dir="/usr/share/sysmontask/glade_files"
     icon_file='/usr/share/sysmontask/icons'
@@ -51,9 +51,10 @@ except:
     # from sysmontask.log_plotter import *
 
 class whatsnew_notice_dialog(g.Dialog):
-    """ Class for What's New Dialog"""
+
+    """ Class for What's New Dialog."""
     def __init__(self,parentWindow,parent):
-        """Initialize the Dialog"""
+        """Initialize the Dialog."""
         g.Dialog.__init__(self,"What's New",parentWindow,g.DialogFlags.MODAL)
         self.set_border_width(20)
         content_area=self.get_content_area()
@@ -65,12 +66,12 @@ class whatsnew_notice_dialog(g.Dialog):
               Can be accessed through : view->filter
               User can define his/her own filtering words to exclude the unwanted processes.
               Filter Dialog follow <b><big>strict semantic and formating rules</big></b> for adding a new entry.
-              For more information of rules and filter dialog, visit: 
+              For more information of rules and filter dialog, visit:
               <big><a href='https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#filter-dialog-view-filter'>https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md</a></big>
           * <b><big>Process Log Record</big></b>(at lower right corner in process tab)
           * <b><big>Log plotter</big></b>(Tools->Log_plot)
           * Bug fixes, optimisation and support for all desktop enviornments.
-        """ 
+        """
         )
         content_area.add(label)
         self.show_all()
@@ -79,10 +80,11 @@ class myclass:
     flag=0      #flag for the updator
     resizerflag=0
     def __init__(self):
+        """Main Initialization of everything."""
         import time
         stt=time.time()
         self.settings=Gio.Settings.new('com.github.camelneeraj.sysmontask')
-        
+
         myclass.cpuInit=cpuInit
         myclass.cpuUpdate=cpuUpdate
 
@@ -134,7 +136,7 @@ class myclass:
         self.filter_init()
         self.procinitialisation()
 
-        # for about dialog 
+        # for about dialog
         self.aboutdialog=self.builder.get_object("aboutdialog")
         # for notebook
         self.notebook=self.builder.get_object('notebook')
@@ -156,7 +158,7 @@ class myclass:
 
         self.timeinterval=850     #time interval in mili
 
-        # timer binding 
+        # timer binding
         self.timehandler=go.timeout_add(self.timeinterval,self.updater)
         self.Processtimehandler=go.timeout_add(2000,self.procUpdate)
 
@@ -167,7 +169,7 @@ class myclass:
         self.update_dir_right.connect('toggled',self.on_set_right_update)
         self.update_graph_direction=1  #newer on right by default
         self.update_dir_right.set_active(True)
-        
+
         # update speed
         self.update_speed_low=self.builder.get_object('low')
         self.update_speed_normal=self.builder.get_object('normal')
@@ -178,11 +180,11 @@ class myclass:
         self.update_speed_normal.connect('toggled',self.on_update_speed_change)
         self.update_speed_high.connect('toggled',self.on_update_speed_change)
         self.update_speed_paused.connect('toggled',self.on_update_speed_change)
-        
+
         self.update_speed_normal.set_active(True)
         self.one_time=0
 
-        ## filter dialog 
+        ## filter dialog
         self.filter_button=self.builder.get_object("filter_button")
         self.filter_button.connect("activate",self.on_filter_dialog_activate)
 
@@ -218,16 +220,16 @@ class myclass:
             file_dialog.destroy()
             os.system(f"python3 {os.path.join(os.path.abspath(os.path.dirname(__file__)),'log_plotter.py')} {filename} &")
             # plot_log(filename)
-            
+
             # print("plot plot")
         else:
             print("didnt choose")
             file_dialog.destroy()
-                 
+
 
     def on_menu_whatsnew(self,widget):
         dialog=whatsnew_notice_dialog(self.Window,self)
-        response=dialog.run()
+        dialog.run()
         dialog.destroy()
 
     def on_set_left_update(self,widget):
@@ -276,12 +278,12 @@ class myclass:
             for i in range(self.numOfNets):
                 self.netSendArray[i].reverse()
                 self.netReceiveArray[i].reverse()
-            
+
             self.gpuUtilArray.reverse()
             self.gpuVramArray.reverse()
             self.gpuEncodingArray.reverse()
             self.gpuDecodingArray.reverse()
-            
+
         print('update Dir right',widget.get_active())
 
     def on_main_window_destroy(self,widget,data=None):
@@ -323,7 +325,7 @@ class myclass:
             g.Widget.destroy(self.netSidepaneWidgetList[i])
         g.Widget.destroy(self.processTree)
         self.processTreeStore.clear()
-        
+
         # g.main_quit()
         self.procinitialisation()
         self.diskinitialisation()
@@ -332,7 +334,7 @@ class myclass:
         self.sidepaneinitialisation()
         print(self.current_stack)
         self.performanceStack.set_visible_child_name(self.current_stack)
-    
+
     # method to show the about dialog
     def on_about_activate(self,menuitem,data=None):
         print("aboutdialog opening")
@@ -340,7 +342,7 @@ class myclass:
         self.response=self.aboutdialog.run()
         self.aboutdialog.hide()
         print("aboutdialog closed")
-    
+
     def on_filter_dialog_activate(self,dialog,data=None):
         self.filter_dialog.run()
         # self.filter_dialog.show()
@@ -407,17 +409,17 @@ class myclass:
 
     ## repeatedily called out fucntion
     def updater(self):
-        
-        ## updating 
+
+        ## updating
         self.cpuUpdate()
         self.memoryTab()
         self.disktabUpdate()
         if len(self.netNameList)!=0:
-            self.netTabUpdate() 
+            self.netTabUpdate()
         if(self.isNvidiagpu==1):
             self.gpuTabUpdate()
         self.sidepaneUpdate()
-        
+
         ## drawing queue
         g.Widget.queue_draw(self.cpuDrawArea)
 
@@ -440,7 +442,7 @@ class myclass:
             g.Widget.queue_draw(self.gpuWidget.gpudecodingdrawarea)
 
 
-        ##  sidepane  
+        ##  sidepane
         g.Widget.queue_draw(self.cpuSidePaneDrawArea)
         g.Widget.queue_draw(self.memSidePaneDrawArea)
         for i in range(0,self.numOfDisks):
@@ -459,7 +461,7 @@ class myclass:
         cpu_logical_util_array=self.cpu_logical_cores_util_arrays[logical_cpu_id]
         w=draw_area_widget.get_allocated_width()
         h=draw_area_widget.get_allocated_height()
-        
+
         scalingfactor=h/100.0
         #creating outer rectangle
         cr.set_source_rgba(0,.454,.878,1)
@@ -479,7 +481,7 @@ class myclass:
             cr.line_to(i*horzontalGap,h)
             cr.stroke()
         cr.stroke()
-        
+
         stepsize=w/99.0
 
         # for i in range(0,99):
@@ -540,7 +542,7 @@ class myclass:
             cr.move_to(i*horzontalGap,0)
             cr.line_to(i*horzontalGap,h)
         cr.stroke()
-        
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -620,10 +622,10 @@ class myclass:
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
-        
+
 
         return False
-    
+
     ## method for drawing
     def on_cpuDrawArea_draw(self,dr,cr):
         #print("idsaf")
@@ -649,7 +651,7 @@ class myclass:
             cr.move_to(i*horzontalGap,0)
             cr.line_to(i*horzontalGap,h)
         cr.stroke()
-        
+
         stepsize=w/99.0
 
         # for i in range(0,99):
@@ -683,11 +685,11 @@ class myclass:
         cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
         cr.fill()
         cr.stroke()
-        
+
         return False
-        
+
         #side pane cpu draw
-    
+
     def on_cpuSidePaneDrawArea_draw(self,dr,cr):
         #print("cpu sidepane draw")
         cr.set_line_width(2)
@@ -700,8 +702,8 @@ class myclass:
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
-        
-        
+
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -751,7 +753,7 @@ class myclass:
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
-        
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -796,7 +798,7 @@ def start():
     g.main()
 
 # import cProfile
-    
+
 if __name__=="__main__":
     # cProfile.run("start()")
     start()

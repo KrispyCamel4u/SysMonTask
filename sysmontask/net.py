@@ -39,7 +39,7 @@ class networkWidget(g.ScrolledWindow):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
-        """Initilising the Net widget"""
+        """Initilising the Net widget."""
         super(g.ScrolledWindow, self).__init__()
 
         # This must occur *after* you initialize your base

@@ -41,7 +41,7 @@ class diskTabWidget(g.ScrolledWindow):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
-        """Constructing the Disk Widget"""
+        """Constructing the Disk Widget."""
         super(g.ScrolledWindow, self).__init__()
 
         # This must occur *after* you initialize your base
