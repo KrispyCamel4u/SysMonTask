@@ -1,8 +1,6 @@
-from gi.repository import Gtk as g , GLib as go,Gio,Gdk
-import cairo
+from gi.repository import Gtk as g
 from os import popen
 from re import sub
-import os
 import psutil as ps
 
 def cpuInit(self):
@@ -29,7 +27,7 @@ def cpuInit(self):
     # processes
     self.cpuProcessesLabelValue=self.builder.get_object('cpuprocesses')
     self.cpuThreadsLabelValue=self.builder.get_object('cputhreads')
-    
+
     ## other cpu info
     self.cpuCoreLabelValue=self.builder.get_object('cpucoreslablevalue')
     self.cpuLogicalLabelValue=self.builder.get_object('cpulogicallabelvalue')
@@ -70,7 +68,7 @@ def cpuInit(self):
         p=popen('lscpu|grep -i -m1 "L1d cache"')
         self.cpuL1LabelValue.set_text(sub("[\s]","",p.read().split(':')[1]))
         p.close()
-        
+
         p=popen('lscpu|grep -i -m1 "L2 cache"')
         self.cpuL2LabelValue.set_text(sub('[\s]','',p.read().split(':')[1]))
         p.close()
@@ -80,7 +78,7 @@ def cpuInit(self):
         p.close()
     except:
         print("Failed to get Cache information")
-    
+
     self.speed=ps.cpu_freq()
     self.cpuMxSpeedLabelValue.set_text('{:.2f} GHz'.format(self.speed[2]/1000))
     self.num_of_column_per_row={
@@ -148,7 +146,7 @@ def cpuUpdate(self):
     #print("speed setting done")
 
     self.cpuUtil=ps.cpu_percent() ## % of the time is is working
-    
+
     #print("setting utilisation")
     cpuUtilString="{0}%".format(int(self.cpuUtil))
     self.cpuUtilLabelValue.set_text(cpuUtilString)
@@ -162,14 +160,13 @@ def cpuUpdate(self):
         p.close()
     except:
         print("Failed to get Threads")
-        pass
-    
+
     try:
         #cpu package temp
         temperatures_list=ps.sensors_temperatures()
         if 'coretemp' in temperatures_list:
             self.cpuTempLabelValue.set_text('{0} °C'.format(int(temperatures_list['coretemp'][0][1])))
-        
+
         ## amd cpu package temp
         elif 'k10temp' in temperatures_list:
             for lis in temperatures_list['k10temp']:

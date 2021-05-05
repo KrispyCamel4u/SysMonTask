@@ -11,14 +11,14 @@ for theme in themes_available:
     else:
         light_themes.append(theme_name)
 
-def set_theme_default():    
+def set_theme_default():
     try:
         os.system('cp {0}/rooter_default.py {0}/rooter.py'.format(dir_path))
         print('Setting to default: Done:)')
     except:
         print("Failed to set Theme:( \nRun with sudo(root privileges) is required.")
 
-    
+
 def set_theme_light():
     try:
         for index,theme in enumerate(light_themes):

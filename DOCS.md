@@ -45,8 +45,8 @@ would ***"String1 in String2"*** and if regex is **ON** regex match would be per
 **Type II:**
 *Use of segregating two ",(commas)" are must.*
 ```
-<Name>,<Owner>,<Command> :<Depth>   OR   <Name>,,  OR ,<Owner>,<Command>:<Depth>  OR  ,,<Command>   OR   <Name>,<Owner>,   
-OR any Combination with same pattern. 
+<Name>,<Owner>,<Command> :<Depth>   OR   <Name>,,  OR ,<Owner>,<Command>:<Depth>  OR  ,,<Command>   OR   <Name>,<Owner>,
+OR any Combination with same pattern.
 ```
 Where the String at **Name, Owner and Command** fields will be matched against respective columns in the process table. A successful Filter match will only occur
 if each is String field is matched successfully in their respective process column fields. When any of String field is empty that will be not be considered for matching and others are tried with their respective columns.
@@ -60,7 +60,7 @@ would ***"String1 in String2"*** and if regex is **ON** regex match would be per
 - A Enter and click on "Add" button will put the filled entry to the list.
 - To make the change appear in the Process Tab immediately after adding entries then Save them with ***Save*** Button. Otherwise the changes will only appear on the next time of spawing the sysmontask.
 - Entries can be deleted by "delete" button but **the entry ",root,:1" can not be deleted.**
- 
+
 ### Keywords For Various Desktop Environments:
 ```
 **Ubuntu:**
@@ -84,12 +84,12 @@ The Process metrics such as CPU,rCPU and Memory etc. can be recorded and also it
 ![Screenshot from 2021-04-15 22-21-02](https://user-images.githubusercontent.com/48773008/114908224-849ae400-9e39-11eb-984f-dc39d86dccb5.png)
 
 ### Record
-Using the red toggle button at the bottom right corner, recording can be started for the **selected process**. CPU, Memory and Disk details will be stored in **<process_name_\<date and time\>.csv** file at **$HOME/sysmontask_log** directory. 
+Using the red toggle button at the bottom right corner, recording can be started for the **selected process**. CPU, Memory and Disk details will be stored in **<process_name_\<date and time\>.csv** file at **$HOME/sysmontask_log** directory.
 
 Recording can be paused using the pause button near the Record button.
 
 ### Log Plot (data visulisation)
-It can be accessed from **Menu->Tools->Log Plot**. A Browse File window will spawned using which the file in **$HOME/sysmontask_log** can be selected after which the Graphical Window will pop up to show data. 
+It can be accessed from **Menu->Tools->Log Plot**. A Browse File window will spawned using which the file in **$HOME/sysmontask_log** can be selected after which the Graphical Window will pop up to show data.
 
 ***Note**: For visualising the data, matplotlib(python3-matplotlib) is used. Since the matplotlib download size is more, to reduce the overall standalone sysmontask size, it has not been including as dependancy and will not get install automatically. In case you want to use LOG_PLOT, install with pip3 or package manager:*
 ```
@@ -109,24 +109,24 @@ For a on going recording, to use the Log_Plot, first pause to flush the contents
 #### Each column
 - Pid : Unique Process Id for the process
 - Name  : Name of the process
-- ***rCPU :** The overall CPU utilisation of the parent + CPU utilisation of all of its children and children of child being a recursive value, for the leaf process the CPU and rCPU would be same. 
+- ***rCPU :** The overall CPU utilisation of the parent + CPU utilisation of all of its children and children of child being a recursive value, for the leaf process the CPU and rCPU would be same.
 
   Example: Process FireFox
-  
+
   The rCPU for the FireFox will be the sum of all the CPU utilisations of all its children (web contents) and their rCPU and CPU column are same as they don't have children.
-  
+
   FireFox_rCPU = FireFox_CPU + All_child_CPU : 1.4 + 0.6 + 0.1 + 0.1 + 0.4 + 0.1 + 0.6 +0.1 = 3.4
-  
+
   ![image](https://user-images.githubusercontent.com/48773008/108231171-7f862500-7167-11eb-8616-01d662342d14.png)
-  
+
 - CPU : CPU utilisation for that process
 - ***rMemory :** Recursive Memory utilisation calculated similarily as rCPU. This gives a better idea as to how much a process is using the memory.
 
-  In the above example the "FireFox" uses 547.4 MiB as only one process while as a whole with child it uses 3039 MiB which is the real truth. 
+  In the above example the "FireFox" uses 547.4 MiB as only one process while as a whole with child it uses 3039 MiB which is the real truth.
 - Memory : The Memory Utilisation of the process which solely belongs to the process. Calculated as **Resident_Memory - Shared_Memory = Memory util of the process**.
 - DiskRead : The disk read speed at which the process is doing IO operations.
 - DiskWrite : The disk write speed at which the process is doing IO operations.
-- ***rDiskRead:** Recursive Disk Read calculated similar to rMemory and rCPU. 
+- ***rDiskRead:** Recursive Disk Read calculated similar to rMemory and rCPU.
 - ***rDiskWrite:** Recursive Disk Write similar to rDiskRead.
 - Resident Memory: It is the actual memory that is in the physical memory associated to the given process (not only this process also includes the shared memory with other processes).
 - Shared : Shared memory with other processes.

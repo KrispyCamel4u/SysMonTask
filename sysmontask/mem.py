@@ -2,11 +2,9 @@
 # import gi
 # gi.require_version("Gtk", "3.24")
 
-from gi.repository import Gtk as g 
-import re,psutil as ps,cairo
+import re,psutil as ps
 from os import popen
 from math import pow
-
 
 
 def memorytabinit(self):
@@ -48,12 +46,11 @@ def memorytabinit(self):
                 memusedslots+=1
             except:
                 pass
-            
+
         self.memSpeedLabelValue.set_text(f'{memspeed} MHz')
         self.memSlotLabelValue.set_text(f'{memusedslots} of {len(dmidecodetemp)}')
     except:
         print("Failed to get Memory speed")
-        pass
 
     try:
         # p=popen('echo '+self.passs+'| sudo -S dmidecode -t memory|grep -E -m1 -i "form factor"')
@@ -62,7 +59,6 @@ def memorytabinit(self):
         p.close()
     except:
         print("Failed to get Memory Form Factor")
-        pass
 
     try:
         p=popen('cat /proc/meminfo | grep -E -i "corrupted"')
@@ -71,15 +67,14 @@ def memorytabinit(self):
         self.memCourruptedLabelValue.set_text(re.sub('\s','',tempcourrupted))
     except:
         print("Failed to get Corrupted Memory")
-        pass
 
 def memoryTabUpdate(self):
     gibdivider=pow(2,30)
     memory=ps.virtual_memory()
-    self.usedd=round((memory[0]-memory[1])/gibdivider,1)      
+    self.usedd=round((memory[0]-memory[1])/gibdivider,1)
     self.memAvailable=round(memory[1]/gibdivider,1)
     self.memFree=round(memory[4]/gibdivider,1)
-    
+
     self.memPercent=memory[2]
 
     self.memInUseLabelValue.set_text(f'{self.usedd} GiB')

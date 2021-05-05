@@ -1,11 +1,10 @@
 from gi.repository import Gtk as g
-import psutil as ps,cairo
+import psutil as ps
 from time import time
-from os import popen
 
 try:
     from gi_composites import GtkTemplate
-except:
+except ImportError:
     from sysmontask.gi_composites import GtkTemplate
 
 
@@ -22,7 +21,7 @@ class networkWidget(g.ScrolledWindow):
     # Required else you would need to specify the full module
     # name in mywidget.ui (__main__+MyWidget)
     __gtype_name__ = 'networkWidget'
-    
+
     nettextlabel= GtkTemplate.Child()
     netinfolabel= GtkTemplate.Child()
     netdrawarea=GtkTemplate.Child()
@@ -34,14 +33,15 @@ class networkWidget(g.ScrolledWindow):
     net4addrlablevalue= GtkTemplate.Child()
     net6addrlabelvalue= GtkTemplate.Child()
     net_mac_addr_label_value= GtkTemplate.Child()
-    
+
 
     # Alternative way to specify multiple widgets
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
+        """Initilising the Net widget"""
         super(g.ScrolledWindow, self).__init__()
-        
+
         # This must occur *after* you initialize your base
         self.init_template()
         self.netmxScalingFactor=1   #for the scaling of maximum value on the graph
@@ -67,7 +67,7 @@ class networkWidget(g.ScrolledWindow):
         while(currentscalespeed-speedstep>maximumcurrentspeed and self.netmxScalingFactor>1):
             self.netmxScalingFactor-=1
             currentscalespeed=self.netmxScalingFactor*speedstep
-        
+
         self.netspeedscalelabelvalue.set_text(byte_to_human(currentscalespeed))
 
         scalingfactor=h/currentscalespeed
@@ -89,7 +89,7 @@ class networkWidget(g.ScrolledWindow):
             cr.line_to(i*horzontalGap,h)
             cr.stroke()
         cr.stroke()
-        
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -189,7 +189,7 @@ def netinit(self):
                 if adpts==self.netNameList[i]:
                     self.netstate1.append(nettemp[adpts])
 
-            # mac addr 
+            # mac addr
             nettemp=ps.net_if_addrs()
             for entry in nettemp[self.netNameList[i]]:
                 if entry.family==17:   #17 for AF_PACKET
@@ -203,7 +203,7 @@ def netinit(self):
     else:
         print("Net:No active network adapter found")
         self.numOfNets=0
-    
+
 
 def netUpdate(self):
     nettemp=ps.net_io_counters(pernic=True)
@@ -224,7 +224,7 @@ def netUpdate(self):
         try:
             self.netDiff.append([x2-x1 for x1,x2 in zip(self.netstate1[i],self.netstate2[i])])
             bytesendpersec=(self.netDiff[i][0]/timenetDiff)           ##default in KB
-            byterecpersec=(self.netDiff[i][1]/timenetDiff) 
+            byterecpersec=(self.netDiff[i][1]/timenetDiff)
             totalbyterec=nettemp[self.netNameList[i]][1]           ##default in KB
             totalbytesent=nettemp[self.netNameList[i]][0]
 
@@ -264,7 +264,7 @@ def netUpdate(self):
                 pass
         except Exception as e:
             print(f'some error in net update: {e}')
-            
+
 
 
     self.netstate1=self.netstate2

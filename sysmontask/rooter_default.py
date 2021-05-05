@@ -1,6 +1,5 @@
-import errno
 import os
-import sys,re,time
+# import sys
 
 def theme_agent():
     return 0
@@ -20,4 +19,4 @@ def theme_agent():
     # os.system ('echo '+passs+ '| sudo -S ' + ' '.join(args))
     os.system("")
     exit()
-    # print(args
+    # print(args)

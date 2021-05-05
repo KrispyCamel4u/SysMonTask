@@ -3,13 +3,13 @@
 # gi.require_version("Gtk", "3.24")
 
 from gi.repository import Gtk as g
-import psutil as ps,cairo
+import psutil as ps
 from time import time
 from os import popen
 
 try:
     from gi_composites import GtkTemplate
-except:
+except ImportError:
     from sysmontask.gi_composites import GtkTemplate
 
 if __name__=='sysmontask.disk':
@@ -25,7 +25,7 @@ class diskTabWidget(g.ScrolledWindow):
     # Required else you would need to specify the full module
     # name in mywidget.ui (__main__+MyWidget)
     __gtype_name__ = 'diskTabWidget'
-    
+
     disktextlabel= GtkTemplate.Child()
     diskinfolabel = GtkTemplate.Child()
     diskdrawarea1=GtkTemplate.Child()
@@ -41,8 +41,9 @@ class diskTabWidget(g.ScrolledWindow):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
+        """Constructing the Disk Widget"""
         super(g.ScrolledWindow, self).__init__()
-        
+
         # This must occur *after* you initialize your base
         self.init_template()
         self.diskmxfactor=1             #for the scaling of maximum value on the graph
@@ -51,7 +52,7 @@ class diskTabWidget(g.ScrolledWindow):
         self.diskactiveArray=secondself.diskActiveArray[index]
         self.diskreadArray=secondself.diskReadArray[index]
         self.diskwriteArray=secondself.diskWriteArray[index]
-        
+
 
     @GtkTemplate.Callback
     def on_diskDrawArea2_draw(self,dr,cr):
@@ -72,7 +73,7 @@ class diskTabWidget(g.ScrolledWindow):
             while(currentscalespeed>maximumcurrentspeed+speedstep and self.diskmxfactor>1):
                 self.diskmxfactor-=1
                 currentscalespeed=self.diskmxfactor*speedstep
-        
+
         self.diskcurrenspeedlabelvalue.set_text(str(currentscalespeed)+'MB')
 
         scalingfactor=h/currentscalespeed
@@ -94,7 +95,7 @@ class diskTabWidget(g.ScrolledWindow):
             cr.line_to(i*horzontalGap,h)
             cr.stroke()
         cr.stroke()
-        
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -130,7 +131,7 @@ class diskTabWidget(g.ScrolledWindow):
         #     cr.move_to(i*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i])+2)
         #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i+1])+2)
         #     cr.stroke()
-        
+
         #efficient read speed drawing
         cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
         cr.set_line_width(1.5)
@@ -190,7 +191,7 @@ class diskTabWidget(g.ScrolledWindow):
             cr.line_to(i*horzontalGap,h)
             cr.stroke()
         cr.stroke()
-        
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -226,7 +227,7 @@ class diskTabWidget(g.ScrolledWindow):
         cr.stroke()
 
 
-        return False        
+        return False
 
 
 def diskinit(self):
@@ -245,7 +246,6 @@ def diskinit(self):
                 print(tempparts[0])
     except Exception as e:
         print(f"Failed to get Disks: {e}")
-        pass
 
     self.diskWidgetList={}
     self.diskstate1=[]
@@ -272,7 +272,7 @@ def diskinit(self):
             if drives==self.disklist[i]:
                self.diskstate1.append(disktemp[drives])
 
-        # partition info        
+        # partition info
         self.diskPartitions[i]=[]
         for part in partitions:
             if self.disklist[i] in part[0]:
@@ -299,7 +299,7 @@ def diskinit(self):
                 column.pack_start(progRenderer,False)
                 column.add_attribute(progRenderer,"value",5)
                 # column=g.TreeViewColumn(col,progRenderer,value=5,inverted=6)
-                
+
             else:
                 column=g.TreeViewColumn(col,renderer,text=k)
 
@@ -310,7 +310,7 @@ def diskinit(self):
             column.set_alignment(0)
             column.set_sort_indicator(True)
             self.diskWidgetList[i].diskUsagesTreeView.append_column(column)
-               
+
             # self.processTreeStore.set_sort_func(i,sorting_func,None)
         self.diskListStores[i].set_sort_func(3,sorting_func,None)
 
@@ -319,7 +319,7 @@ def diskinit(self):
         self.diskWriteArray.append([0]*100)
 
         self.diskWidgetList[i].givedata(self,i)
-           
+
 
 
 def diskTabUpdate(self):
@@ -335,13 +335,13 @@ def diskTabUpdate(self):
                 self.diskListStores[i].set(self.diskListStoreItrs[i][j],3,byte_to_human(temp[0],persec=False),4,byte_to_human(temp[1],persec=False),5,temp[3])
         except Exception as e:
             print(f"error in diskliststore: {e}")
-        
-        
-    self.diskDiff,self.diskActiveString=[],[]   
+
+
+    self.diskDiff,self.diskActiveString=[],[]
     for i in range(0,self.numOfDisks):
         try:
             self.diskDiff.append([x2-x1 for x1,x2 in zip(self.diskstate1[i],self.diskstate2[i])])
-            
+
             self.diskActiveString.append(f'{int(self.diskDiff[i][8]/(10*timediskDiff))}%')
 
             self.diskWidgetList[i].diskactivelabelvalue.set_text(self.diskActiveString[i])
@@ -357,7 +357,7 @@ def diskTabUpdate(self):
 
                 self.diskWriteArray[i].pop(0)
                 self.diskWriteArray[i].append(self.diskDiff[i][3]/(timediskDiff*1048576))
-            else: 
+            else:
                 self.diskActiveArray[i].pop()
                 self.diskActiveArray[i].insert(0,(self.diskDiff[i][8])/(10*timediskDiff))##
 
@@ -375,11 +375,11 @@ def diskTabUpdate(self):
     self.diskstate1=self.diskstate2
     #print(self.diskt2-self.diskt1)
     self.diskt1=self.diskt2
-    
 
 
 
 
-    
-    
+
+
+
 

@@ -1,10 +1,10 @@
 # import gi
 # gi.require_version("Gtk", "3.24")
 
-from gi.repository import Gtk as g,cairo
+from gi.repository import Gtk as g
 try:
     from gi_composites import GtkTemplate
-except:
+except ImportError:
     from sysmontask.gi_composites import GtkTemplate
 
 
@@ -19,7 +19,7 @@ class diskSidepaneWidget(g.Box):
     # Required else you would need to specify the full module
     # name in mywidget.ui (__main__+MyWidget)
     __gtype_name__ = 'diskSidepaneWidget'
-    
+
     disksidepanetextlabel= GtkTemplate.Child()
     disksidepanelabelvalue = GtkTemplate.Child()
     disksidepanedrawarea=GtkTemplate.Child()
@@ -30,14 +30,15 @@ class diskSidepaneWidget(g.Box):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
+        """Construct Disk Sidepane widget"""
         super(g.Box, self).__init__()
-        
+
         # This must occur *after* you initialize your base
         self.init_template()
-    
+
     def givedata(self,secondself,index):
         self.diskactiveArray=secondself.diskActiveArray[index]
-    
+
     @GtkTemplate.Callback
     def on_diskSidepaneDrawArea_draw(self,dr,cr):
         cr.set_line_width(2)
@@ -50,8 +51,8 @@ class diskSidepaneWidget(g.Box):
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
-        
-        
+
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -95,7 +96,7 @@ class netSidepaneWidget(g.Box):
     # Required else you would need to specify the full module
     # name in mywidget.ui (__main__+MyWidget)
     __gtype_name__ = 'netSidepaneWidget'
-    
+
     netsidepanetextlabel= GtkTemplate.Child()
     netsidepanelabelvalue = GtkTemplate.Child()
     netsidepanedrawarea=GtkTemplate.Child()
@@ -107,8 +108,9 @@ class netSidepaneWidget(g.Box):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
+        """Construct Net Sidepane widget"""
         super(g.Box, self).__init__()
-        
+
         # This must occur *after* you initialize your base
         self.init_template()
         self.netmxScalingFactor=1
@@ -133,7 +135,7 @@ class netSidepaneWidget(g.Box):
         while(currentscalespeed>maximumcurrentspeed and self.netmxScalingFactor>1):
             self.netmxScalingFactor-=1
             currentscalespeed=self.netmxScalingFactor*speedstep
-        
+
 
         scalingfactor=h/currentscalespeed
         #creating outer rectangle
@@ -141,8 +143,8 @@ class netSidepaneWidget(g.Box):
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
-        
-        
+
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -217,7 +219,7 @@ class gpuSidepaneWidget(g.Box):
     # Required else you would need to specify the full module
     # name in mywidget.ui (__main__+MyWidget)
     __gtype_name__ = 'gpuSidepaneWidget'
-    
+
     gpusidepanetextlabel= GtkTemplate.Child()
     gpusidepanelabelvalue = GtkTemplate.Child()
     gpusidepanedrawarea=GtkTemplate.Child()
@@ -229,14 +231,15 @@ class gpuSidepaneWidget(g.Box):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
+        """Construct GPU Sidepane widget"""
         super(g.Box, self).__init__()
-        
+
         # This must occur *after* you initialize your base
         self.init_template()
-    
+
     def givedata(self,secondself):
         self.gpuutilArray=secondself.gpuUtilArray
-    
+
     @GtkTemplate.Callback
     def gpuSidepaneDrawArea_draw(self,dr,cr):
         cr.set_line_width(2)
@@ -249,8 +252,8 @@ class gpuSidepaneWidget(g.Box):
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
-        
-        
+
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -296,7 +299,7 @@ def on_switcher_clicked(button,stack,curr_stack):
 def sidepaneinit(self):
     print("initialisating sidepane")
     button_counter=0 # button name counter
-    
+
     self.cpuSidePaneLabelValue=self.builder.get_object('cpusidepanelabelvalue')
     self.cpuSidePaneDrawArea=self.builder.get_object('cpusidepanedrawarea')
     cpu_switcher_button=self.builder.get_object("cpu_switcher_button")
@@ -315,7 +318,7 @@ def sidepaneinit(self):
     for i in range(0,self.numOfDisks):
         self.diskSidepaneWidgetList[i]=diskSidepaneWidget()
         self.sidepaneBox.pack_start(self.diskSidepaneWidgetList[i],True,True,0)
-        self.diskSidepaneWidgetList[i].disksidepanetextlabel.set_text(self.disklist[i])   
+        self.diskSidepaneWidgetList[i].disksidepanetextlabel.set_text(self.disklist[i])
         self.diskSidepaneWidgetList[i].givedata(self,i)
 
         self.diskSidepaneWidgetList[i].disk_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
@@ -333,7 +336,7 @@ def sidepaneinit(self):
             self.netSidepaneWidgetList[i].net_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
             self.netSidepaneWidgetList[i].net_switcher_button.set_name(f'page{button_counter}')
             button_counter+=1
-    
+
     if(self.isNvidiagpu==1):
         self.gpuSidePaneWidget=gpuSidepaneWidget()
         self.sidepaneBox.pack_start(self.gpuSidePaneWidget,True,True,0)
@@ -344,12 +347,12 @@ def sidepaneinit(self):
         self.gpuSidePaneWidget.gpu_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
         self.gpuSidePaneWidget.gpu_switcher_button.set_name(f'page{button_counter}')
         button_counter+=1
-    
+
 
 
 def sidePaneUpdate(self):
     self.memSidePaneLabelValue.set_text(f'{self.usedd}/{self.memTotal} GiB\n{self.memPercent} %')
-    
+
     ##disk sidepane
     for i in range(0,self.numOfDisks):
         try:
@@ -368,7 +371,7 @@ def sidePaneUpdate(self):
                 self.diskSidepaneWidgetList[i].givedata(self,i)
             except Exception as e:
                 print(f"some error in netsidepane update {e}")
-    
+
     if(self.isNvidiagpu==1):
         try:
             self.gpuSidePaneWidget.gpusidepanelabelvalue.set_text(self.gpuutil)

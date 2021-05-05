@@ -5,20 +5,17 @@ require_version("Gtk", "3.0")
 require_version("Wnck", "3.0")
 ###############################################################
 try:
-    from rooter import *
-except:
-    from sysmontask.rooter import *
+    from rooter import theme_agent
+except ImportError:
+    from sysmontask.rooter import theme_agent
 
 theme_agent()
+import os
 
 with open("{}/.sysmontask".format(os.environ.get("HOME")),'w+') as ofile:
     ofile.write('0')
 
-from gi.repository import Gtk as g , GLib as go,Gio,Gdk
-import cairo
-from os import popen
-from re import sub
-import os
+from gi.repository import Gtk as g , GLib as go,Gio
 import psutil as ps
 
 print(ps.__version__)
@@ -54,7 +51,9 @@ except:
     # from sysmontask.log_plotter import *
 
 class whatsnew_notice_dialog(g.Dialog):
+    """ Class for What's New Dialog"""
     def __init__(self,parentWindow,parent):
+        """Initialize the Dialog"""
         g.Dialog.__init__(self,"What's New",parentWindow,g.DialogFlags.MODAL)
         self.set_border_width(20)
         content_area=self.get_content_area()
@@ -77,7 +76,7 @@ class whatsnew_notice_dialog(g.Dialog):
         self.show_all()
 
 class myclass:
-    flag=0      #flag for the updator 
+    flag=0      #flag for the updator
     resizerflag=0
     def __init__(self):
         import time
@@ -203,7 +202,7 @@ class myclass:
         ## whatsnew dialog
         if self.settings.get_int("one-time-whatsnew"):
             dialog=whatsnew_notice_dialog(self.Window,self)
-            response=dialog.run()
+            dialog.run()
             dialog.destroy()
             self.settings.set_int("one-time-whatsnew",0)
 
@@ -285,7 +284,7 @@ class myclass:
             
         print('update Dir right',widget.get_active())
 
-    def on_main_window_destroy(self,object,data=None):
+    def on_main_window_destroy(self,widget,data=None):
         print("print with cancel")
         # print(self.Window.get_position())
         self.settings.set_value('window-position',go.Variant("(ii)",self.Window.get_position()))
@@ -796,7 +795,7 @@ def start():
     main=myclass()
     g.main()
 
-import cProfile
+# import cProfile
     
 if __name__=="__main__":
     # cProfile.run("start()")

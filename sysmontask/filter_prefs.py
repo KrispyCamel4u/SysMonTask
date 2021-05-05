@@ -23,7 +23,7 @@ def on_activate_filter_entry(entry,self):
         textt=textt.strip()
         if textt[-1]==';':
             textt=textt[:-1]
-        text=textt.split(';') 
+        text=textt.split(';')
         print(text)
 
         for line in text:
@@ -44,7 +44,7 @@ def on_activate_filter_entry(entry,self):
                     elif line in row[1] and depth<row[2]:
                         self.filter_list_store[i]=False
                 self.filter_list_store.append([True,line,depth,False])
-            elif line.count(',')==2:  
+            elif line.count(',')==2:
                 if ':' in line:
                     line,depth=line.split(':')
                     if not depth:
@@ -72,7 +72,7 @@ def on_activate_filter_entry(entry,self):
                         matched+=1
                     if matched==3:
                         return
-                
+
                 for i in ttline:
                     print(i)
                     ent+=i.strip()+','
@@ -87,7 +87,8 @@ def on_filter_add_button_activate(button,self):
 def filter_row_selected(selection,self):
     # print(selection.get_tree_iter())
     # try:
-    model,row=selection.get_selected()
+    # model,row=selection.get_selected()
+    _,row=selection.get_selected()
     # print('hell')
     # print(model,row)
     self.selected_filter_row=row
@@ -147,15 +148,15 @@ def filter_process_matching_func(self,proc):
                                 if i==0:
                                     if txt in proc.name():
                                         match+=1
-                                    
+
                                 elif i==1:
                                     if txt in proc.username():
-                                        match+=1  
-                                    
+                                        match+=1
+
                                 elif i==2:
                                     if txt in " ".join(proc.cmdline()):
                                         match+=1
-                                    
+
                         if need_match==match:
                             put_process_in_black_list(self,proc,row[2])
 
@@ -169,19 +170,19 @@ def filter_process_matching_func(self,proc):
                                 if i==0:
                                     if re.search(txt,proc.name()):
                                         match+=1
-                                    
+
                                 elif i==1:
                                     if re.search(txt,proc.username()):
-                                        match+=1  
-                                    
+                                        match+=1
+
                                 elif i==2:
                                     if re.search(txt," ".join(proc.cmdline())):
                                         match+=1
-                                    
+
                         if need_match==match:
                             put_process_in_black_list(self,proc,row[2])
     except ps.NoSuchProcess:
-        print("process error in filter matching func")  
+        print("process error in filter matching func")
 
 def filter_list_sorting_func(model, row1, row2,self):
     sort_column, _ = model.get_sort_column_id()
@@ -225,15 +226,15 @@ def filter_matching_func(self):
                                     if i==0:
                                         if txt in proc.name():
                                             match+=1
-                                        
+
                                     elif i==1:
                                         if txt in proc.username():
-                                            match+=1  
-                                        
+                                            match+=1
+
                                     elif i==2:
                                         if txt in " ".join(proc.cmdline()):
                                             match+=1
-                                        
+
                             if need_match==match:
                                 put_in_black_list(self,proc,row[2])
 
@@ -247,15 +248,15 @@ def filter_matching_func(self):
                                     if i==0:
                                         if re.search(txt,proc.name()):
                                             match+=1
-                                        
+
                                     elif i==1:
                                         if re.search(txt,proc.username()):
-                                            match+=1  
-                                        
+                                            match+=1
+
                                     elif i==2:
                                         if re.search(txt," ".join(proc.cmdline())):
                                             match+=1
-                                        
+
                             if need_match==match:
                                 put_in_black_list(self,proc,row[2])
         except ps.NoSuchProcess:
@@ -293,7 +294,7 @@ def filter_init(self):
 
     self.filter_delete_button=self.filter_builder.get_object("filter_delete_button")
     self.filter_delete_button.connect('clicked',on_filter_delete_button_activate,self)
-    
+
     self.filter_save_button=self.filter_builder.get_object("filter_save_button")
     self.filter_save_button.connect('clicked',on_filter_save_button_activate,self)
 
@@ -304,7 +305,7 @@ def filter_init(self):
     self.black_list=[]
     self.temp_black_list=[]
     self.append_signal=0
-    
+
     # self.filter_list_store.append([False,'zqzqzqzq',0,False])
     self.saved_filter=[]
     for row in self.settings.get_value('process-filter'):
@@ -338,12 +339,12 @@ def filter_init(self):
         column.set_resizable(True)
         # if i==2:
             # column.set_sort_column_id(i)
-            
+
 
         # column.set_alignment(0)
-        
+
         self.filter_tree_view.append_column(column)
-    
+
     filter_selected_row=self.filter_tree_view.get_selection()
     filter_selected_row.connect("changed",filter_row_selected,self)
     # filter_matching_func(self,2)

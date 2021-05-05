@@ -3,13 +3,12 @@
 # gi.require_version("Gtk", "3.24")
 
 from gi.repository import Gtk as g
-import psutil as ps,cairo
 from os import popen
 from xml.etree.ElementTree import fromstring
 
 try:
     from gi_composites import GtkTemplate
-except:
+except ImportError:
     from sysmontask.gi_composites import GtkTemplate
 
 if __name__=='sysmontask.gpu':
@@ -23,7 +22,7 @@ class gpuTabWidget(g.ScrolledWindow):
     # Required else you would need to specify the full module
     # name in mywidget.ui (__main__+MyWidget)
     __gtype_name__ = 'gpuTabWidget'
-    
+
     gpuinfolabel = GtkTemplate.Child()
     gpuutildrawarea=GtkTemplate.Child()
     gpuvramdrawarea=GtkTemplate.Child()
@@ -47,8 +46,9 @@ class gpuTabWidget(g.ScrolledWindow):
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
+        """Construct the GPU widget"""
         super(g.ScrolledWindow, self).__init__()
-        
+
         # This must occur *after* you initialize your base
         self.init_template()
         # self.gpumxfactor=1             #for the scaling of maximum value on the graph
@@ -86,7 +86,7 @@ class gpuTabWidget(g.ScrolledWindow):
             cr.line_to(i*horzontalGap,h)
             cr.stroke()
         cr.stroke()
-        
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -122,8 +122,8 @@ class gpuTabWidget(g.ScrolledWindow):
         cr.stroke()
 
 
-        return False        
-    
+        return False
+
     @GtkTemplate.Callback
     def gpuencodingdrawarea_draw(self,dr,cr):
         #print("idsaf")
@@ -150,7 +150,7 @@ class gpuTabWidget(g.ScrolledWindow):
             cr.line_to(i*horzontalGap,h)
             cr.stroke()
         cr.stroke()
-        
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -215,7 +215,7 @@ class gpuTabWidget(g.ScrolledWindow):
             cr.line_to(i*horzontalGap,h)
             cr.stroke()
         cr.stroke()
-        
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -278,7 +278,7 @@ class gpuTabWidget(g.ScrolledWindow):
             cr.move_to(i*horzontalGap,0)
             cr.line_to(i*horzontalGap,h)
         cr.stroke()
-        
+
         stepsize=w/99.0
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
@@ -348,7 +348,7 @@ def gpuinit(self):
         print('no nvidia gpu found')
         self.isNvidiagpu=0
 
-    
+
 def gpuUpdate(self):
     try:
         p=popen('nvidia-smi -q -x')
@@ -366,7 +366,7 @@ def gpuUpdate(self):
         self.gpuWidget.gpushaderspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('graphics_clock').text)
         self.gpuWidget.gpuvramspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('mem_clock').text)
 
-        ############ int conv bug solve ###################### 
+        ############ int conv bug solve ######################
         gpu_enc=gpuinfoRoot.find('gpu').find('utilization').find('encoder_util').text
         if gpu_enc[-1]=='%':
             gpu_enc=int(gpu_enc[:-1])
@@ -385,10 +385,10 @@ def gpuUpdate(self):
             self.gpuVramArray.pop(0)
             self.gpuVramArray.append(int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
             self.gpuEncodingArray.pop(0)
-            
+
             self.gpuEncodingArray.append(gpu_enc)
             self.gpuDecodingArray.pop(0)
-            
+
             self.gpuDecodingArray.append(gpu_dec)
         else:
             self.gpuUtilArray.pop()

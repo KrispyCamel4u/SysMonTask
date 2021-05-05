@@ -1,4 +1,4 @@
- 
+
 from gi import  require_version
 require_version("Gtk","3.0")
 from gi.repository import Gtk as g
@@ -13,14 +13,14 @@ def fun(filename):
         label=g.Label()
         label.set_markup(
             """
-         <b><big>matplotlib(python3-matplotlib) not found </big></b>. 
+         <b><big>matplotlib(python3-matplotlib) not found </big></b>.
          Please install using pip or package manager.
             """
         )
         content.add(label)
         label.show()
         not_found.show_all()
-        r=not_found.run()
+        not_found.run()
         not_found.destroy()
         return
 
@@ -43,12 +43,12 @@ def fun(filename):
                         data[i].append(float(k[0])/1024)
                     elif "G" in k[1]:
                         data[i].append(float(k[0])*1024)
-        
+
         step=5
         navg=range(2,len(data[0])-2)
         n=range(1,len(data[0])+1)
-        avg=[[],[]] 
-        
+        avg=[[],[]]
+
         avg[0]=[sum(data[0][i-2:i+3])/step for i in range(2,len(data[0])-2) ]
         avg[1]=[sum(data[1][i-2:i+3])/step for i in range(2,len(data[1])-2) ]
 
@@ -70,7 +70,7 @@ def fun(filename):
         axs[0][1].plot(n, data[1])
         axs[0][1].plot(navg, avg[1])
         axs[0][1].legend(['Normal',"Average"])
-        
+
         plt.sca(axs[1][0])
         plt.ylabel('rMemory [MiB]')
         plt.xlabel('Sample Number')
@@ -97,14 +97,14 @@ def fun(filename):
         label.set_markup(
             """
          <b><big>Error Encountered While Plotting.</big></b>
-          "<b>.csv</b>" type files required, check if the selected file      
+          "<b>.csv</b>" type files required, check if the selected file
           is of correct type and not currupted.
             """
         )
         content.add(label)
         label.show()
         can_not_plot.show_all()
-        r=can_not_plot.run()
+        can_not_plot.run()
         can_not_plot.destroy()
 
 # def on_plot_dialog_quit(widget,FigureCanvas,plt,NavigationToolbar):
@@ -120,7 +120,7 @@ def fun(filename):
 #             NavigationToolbar2GTK3 as NavigationToolbar)
 #         # from matplotlib.figure import Figure
 #         # raise ImportError
-        
+
 #     except ImportError:
 #         print("matplotlib not found")
 #         not_found=g.Dialog(title="Can't Plot",parent=None,flags=g.DialogFlags.MODAL)
@@ -128,7 +128,7 @@ def fun(filename):
 #         label=g.Label()
 #         label.set_markup(
 #             """
-#          <b><big>matplotlib(python3-matplotlib) not found </big></b>. 
+#          <b><big>matplotlib(python3-matplotlib) not found </big></b>.
 #          Please install using pip or package manager.
 #             """
 #         )
@@ -155,12 +155,12 @@ def fun(filename):
 #                         data[i].append(float(k[0])/1024)
 #                     elif "G" in k[1]:
 #                         data[i].append(float(k[0])*1024)
-        
+
 #         step=5
 #         navg=range(2,len(data[0])-2)
 #         n=range(1,len(data[0])+1)
-#         avg=[[],[]] 
-        
+#         avg=[[],[]]
+
 #         avg[0]=[sum(data[0][i-2:i+3])/step for i in range(2,len(data[0])-2) ]
 #         avg[1]=[sum(data[1][i-2:i+3])/step for i in range(2,len(data[1])-2) ]
 
@@ -180,7 +180,7 @@ def fun(filename):
 #         axs[0][1].plot(n, data[1])
 #         axs[0][1].plot(navg, avg[1])
 #         axs[0][1].legend(['Normal',"Average"])
-        
+
 #         plt.sca(axs[1][0])
 #         plt.ylabel('rMemory [MiB]')
 #         plt.xlabel('Sample Number')
@@ -214,12 +214,12 @@ def fun(filename):
 #         plot_box.pack_start(toolbar, False, False, 0)
 
 #         plot_dialog.connect("destroy",on_plot_dialog_quit,FigureCanvas,plt,NavigationToolbar)
-        
+
 #         swxx.show_all()
 #         plot_dialog.show_all()
 #         # fig.clf()
 #         # gc.collect()
-        
+
 #     except Exception as e:
 #         print(f"error can't plot: {e}")
 #         can_not_plot=g.Dialog(title="Can't Plot",parent=None,flags=g.DialogFlags.MODAL)
@@ -228,7 +228,7 @@ def fun(filename):
 #         label.set_markup(
 #             """
 #          <b><big>Error Encountered While Plotting.</big></b>
-#           "<b>.csv</b>" type files required, check if the selected file      
+#           "<b>.csv</b>" type files required, check if the selected file
 #           is correct and not currupted.
 #             """
 #         )
@@ -238,7 +238,7 @@ def fun(filename):
 #         r=can_not_plot.run()
 #         can_not_plot.destroy()
 
-    
+
 # plot_log("/home/neeraj/sysmontask_log/code.csv")
 import sys
 fun(sys.argv[1])

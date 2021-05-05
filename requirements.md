@@ -1,5 +1,5 @@
-### Dependencies 
-**If want to use APT then:**
+### Dependencies
+#### If want to use APT then:
 
 python3-gi-cairo
 
@@ -11,7 +11,7 @@ gir1.2-wnck-3.0
 
 python3-psutil>=5.7.2    // alternative to psutil
 
-**If want to use pip**
+#### If want to use pip
 
 gir1.2-gtk3.0 // (needed to for PyGOject) Install with APT
 
