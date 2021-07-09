@@ -15,13 +15,14 @@ import os
 with open("{}/.sysmontask".format(os.environ.get("HOME")),'w+') as ofile:
     ofile.write('0')
 
-from gi.repository import Gtk as g , GLib as go,Gio
-import psutil as ps
+from gi.repository import Gtk as g , GLib as go,Gio,Gdk
+import psutil as ps, colorsys as cs
 
 print(ps.__version__)
 if( not ps.__version__>='5.7.2'):
     print('warning[critical]: psutil>=5.7.2 needed(system-wide)')
 
+""" Importing neccessary Files """
 try:
     # for running as main file
     files_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../glade_files")
@@ -51,8 +52,8 @@ except ImportError:
     # from sysmontask.log_plotter import *
 
 class whatsnew_notice_dialog(g.Dialog):
+    """ Class for What's New Dialog, inheriting the GtkDialog class."""
 
-    """ Class for What's New Dialog."""
     def __init__(self,parentWindow,parent):
         """Initialize the Dialog."""
         g.Dialog.__init__(self,"What's New",parentWindow,g.DialogFlags.MODAL)
@@ -77,14 +78,32 @@ class whatsnew_notice_dialog(g.Dialog):
         self.show_all()
 
 class myclass:
+    """ The main Class which manages everything"""
+
     flag=0      #flag for the updator
     resizerflag=0
     def __init__(self):
-        """Main Initialization of everything."""
+        """All components will be initialized here."""
         import time
         stt=time.time()
+
+        # Object for fetcting the global setting saved by GLIB schema.
         self.settings=Gio.Settings.new('com.github.camelneeraj.sysmontask')
 
+        # Load and Embed the CSS stylesheet
+        style_provider = g.CssProvider()
+        css = open(f'{os.path.dirname(os.path.abspath(__file__))}/style.css','rb') # rb needed for python 3 support
+        css_data = css.read()
+        css.close()
+
+        style_provider.load_from_data(css_data)
+
+        g.StyleContext.add_provider_for_screen(
+            Gdk.Screen.get_default(), style_provider,
+            g.STYLE_PROVIDER_PRIORITY_APPLICATION
+        )
+
+        #Methods and variables defined in other files, making them into the class methods and variables.
         myclass.cpuInit=cpuInit
         myclass.cpuUpdate=cpuUpdate
 
@@ -112,22 +131,43 @@ class myclass:
 
         myclass.filter_init=filter_init
 
+        #Creating the builder object and loading the glade(layout) file and connecting the signals.
         self.builder=g.Builder()
         self.builder.add_from_file(files_dir+"/sysmontask.glade")
         self.builder.connect_signals(self)
+
+        #Creating Main Window object from the glade(layout) file
         self.Window=self.builder.get_object("main_window")
+
+        #Quit button defined in glade(layout) file
         self.quit=self.builder.get_object("quit")
         self.quit.connect('activate',self.on_quit_activate)
 
+        #Setting the icon for the window from the png image
         self.Window.set_icon_from_file(icon_file+'/SysMonTask.png')
 
+        #The performance tab(only the right side the sidepane in not included) defined in glade(layout) file, which has the CPU, Memory etc. details.
         self.performanceStack=self.builder.get_object('performancestack')
+
+        #Box which contains the process tree
         self.process_tab_box=self.builder.get_object('process_tab_box')
 
+        #Sidepane box which will contain the side graphs and switches for stack
         self.sidepaneBox=self.builder.get_object('sidepanebox')
 
-        self.stack_counter=2  # for sidepane clicking and naming of stack pages
+        #Number of stack pages(initialized to 2 for cpu and memory),for names of the button(which acts as the stack switcher) in the sidepane
+        self.stack_counter=2
+        # Variable which gives the name of the current stack page
+        self.current_stack=0
+        # global acessible variable which holds the hold the stack switcher button on which right click is done
+        # self.right_clicked_stack_switcher_button='NA'
+        # stack pages(devices) which are hidden
+        self.device_stack_page_lookup={
+            'cpu':0,
+            'memory':1
+        }
 
+        #Initializing each component
         self.cpuInit()
         self.memoryinitalisation()
         self.diskinitialisation()
@@ -136,88 +176,151 @@ class myclass:
         self.filter_init()
         self.procinitialisation()
 
-        # for about dialog
+        # Getting about dialog from the file
         self.aboutdialog=self.builder.get_object("aboutdialog")
-        # for notebook
+
+        # Notebook (top tabs for processes and performances)
         self.notebook=self.builder.get_object('notebook')
+        # Fetching the active page number in the last session and setting current page to that
         self.notebook.set_current_page(self.settings.get_int('current-tab'))
-        #self.on_notebook_switch_page(self.notebook,'',0)
 
-        #drawing area for cpu
-        self.cpuDrawArea=self.builder.get_object('cpudrawarea')
-        self.cpuUtilArray=[0]*100   #cpu util array
-        self.cpu_logical_cores=ps.cpu_count()
-        self.cpu_logical_cores_util_arrays=[]
+        # If the current page is not processes tab than hide the search entry
+        if self.notebook.get_current_page!=0:
+            self.process_tree_search_entry.hide()
 
-        temp=ps.cpu_percent(percpu=True)
-        for i in range(self.cpu_logical_cores):
-            self.cpu_logical_cores_util_arrays.append([0]*99)
-            self.cpu_logical_cores_util_arrays[i].append(temp[i])
+        # Update time interval in miliseconds for performance tab
+        default_time_interval=850
 
-        self.logical_cpu_grid=self.builder.get_object('logical_grid_area')
+        # Timer binding
+        self.timehandler=go.timeout_add(default_time_interval,self.updater)
+        self.Processtimehandler=go.timeout_add(2000,self.procUpdate)    #for processes tab it is 2000 ms
 
-        self.timeinterval=850     #time interval in mili
-
-        # timer binding
-        self.timehandler=go.timeout_add(self.timeinterval,self.updater)
-        self.Processtimehandler=go.timeout_add(2000,self.procUpdate)
-
-        # update direction
+        # Update-Direction initializing
         self.update_dir_right=self.builder.get_object('update_right')
         self.update_dir_left=self.builder.get_object('update_left')
         self.update_dir_left.connect('toggled',self.on_set_left_update)
         self.update_dir_right.connect('toggled',self.on_set_right_update)
-        self.update_graph_direction=1  #newer on right by default
+
+        # Newer on right by default
+        self.update_graph_direction=1
         self.update_dir_right.set_active(True)
 
-        # update speed
+        # Update-Speed object creation
         self.update_speed_low=self.builder.get_object('low')
         self.update_speed_normal=self.builder.get_object('normal')
         self.update_speed_high=self.builder.get_object('high')
         self.update_speed_paused=self.builder.get_object('paused')
 
+        # Update-Speed signal connection
         self.update_speed_low.connect('toggled',self.on_update_speed_change)
         self.update_speed_normal.connect('toggled',self.on_update_speed_change)
         self.update_speed_high.connect('toggled',self.on_update_speed_change)
         self.update_speed_paused.connect('toggled',self.on_update_speed_change)
 
+        # Update-Speed default to normal
         self.update_speed_normal.set_active(True)
-        self.one_time=0
 
-        ## filter dialog
+        # self.one_time=0 #need to remove it
+
+        # Associating the Filter Button(Filter in menu->View) with Filter dialog
         self.filter_button=self.builder.get_object("filter_button")
         self.filter_button.connect("activate",self.on_filter_dialog_activate)
+        print("device",self.device_stack_page_lookup)
 
-        self.current_stack='page0'
+        # One time feature set/ right click popup menu initialization
+        feature_setup(self)
+        # Post setup/initialisation of things which needs to execute upon refresh
+        self.post_init()
+        # Initializing the sidepane at the last because it need every other module to get Initialized
         self.sidepaneinitialisation()
 
-        #time.sleep(2)p
+        # Show the Window
         self.Window.show()
+        # Time taken to show the window
         print("total window",time.time()-stt)
+
+        # Fetching the coordinate of the window when last time it was closed.
         position=self.settings.get_value('window-position')
+
+        # Moving the Window to those coordinates
         self.Window.move(position[0],position[1])
+
+        # Fetching and setting the window size used during the last time before window closing.
         size=self.settings.get_value('window-size')
         self.Window.resize(size[0],size[1])
 
-        self.log_plot=self.builder.get_object("log_plot")  # connect through glade on_log_plot_activate
+        # Button for log_plot in menu->Tools
+        self.log_plot=self.builder.get_object("log_plot")
 
-        ## whatsnew dialog
+        # On page change on notebook signal binding
+        self.notebook.connect("switch-page",self.on_notebook_page_change)
+
+        ## What's New dialog show only for the first time
         if self.settings.get_int("one-time-whatsnew"):
             dialog=whatsnew_notice_dialog(self.Window,self)
             dialog.run()
             dialog.destroy()
             self.settings.set_int("one-time-whatsnew",0)
 
+    def post_init(self):
+        # Reversing the lookup so to access via page numbers
+        self.reverse_device_stack_page_lookup={}
+        for key in self.device_stack_page_lookup:
+            self.reverse_device_stack_page_lookup[self.device_stack_page_lookup[key]]=key
+
+        # hidden page numbers
+        self.hidden_stack_page_numbers=[]
+        device_list=self.settings.get_value('hidden-device-list')
+        for i in device_list:
+            self.hidden_stack_page_numbers.append(self.device_stack_page_lookup[i])
+
+        # Check Box Menu for hide/show devices
+        # contains the menu items
+        self.device_menu_items={}
+        # show hide menu in view
+        self.show_hide_menu=self.builder.get_object("devices_menu")
+        sub_menu=g.Menu()
+        self.show_hide_menu.set_submenu(sub_menu)
+
+        for key in self.device_stack_page_lookup:
+            value=self.device_stack_page_lookup[key]
+            item=g.CheckMenuItem(label=key)
+            item.set_name(key)
+            if value not in self.hidden_stack_page_numbers: item.set_active(True)
+            else: item.set_active(False)
+            item.connect('toggled',device_show_hide_menu_callback,self)
+            self.device_menu_items[value]=item
+            sub_menu.append(item)
+        sub_menu.show_all()
+
+
     def on_log_plot_activate(self,widget):
+        """
+        Function binding for menu->Tools->Log_Plot button.
+
+        It executes the script to plot the data stored for a process in .CSV file
+        at ~/sysmontask_log directory.
+
+        Parameters
+        ----------
+        widget : the clicked button(menu log_plot button)
+        """
+        # Creating the file chooser dialog
         file_dialog=g.FileChooserDialog(title="Select Log File",parent=self.Window,action=g.FileChooserAction.OPEN,\
             buttons=("Cancel", g.ResponseType.CANCEL,"Open", g.ResponseType.OK))
+        # Setting the current folder in file chooser dialog to ~/sysmontask_log
         file_dialog.set_current_folder(os.path.join(os.environ.get("HOME"),"sysmontask_log"))
 
+        # Running the dialog
         response=file_dialog.run()
+
+        # Conditional response behaviours
         if response==g.ResponseType.OK:
             filename=file_dialog.get_filename()
             print("file choosen",filename)
             file_dialog.destroy()
+
+            # Executing the log_plotter.py script in backgound
             os.system(f"python3 {os.path.join(os.path.abspath(os.path.dirname(__file__)),'log_plotter.py')} {filename} &")
             # plot_log(filename)
 
@@ -226,13 +329,47 @@ class myclass:
             print("didnt choose")
             file_dialog.destroy()
 
+    def on_notebook_page_change(self,object,page,page_num):
+        """
+        To detect a Page Change in GtkNotebook.
+        The search entry in processes tab will be hidden if the page is not processes and unhidden when page corresponds to processes tab.
+
+        Parameters
+        ----------
+        object : GtkNotebook widget
+        page : new page object
+        page_num : index corresponding to the new page
+        """
+        if page_num!=0:
+            self.process_tree_search_entry.hide()
+        else:
+            self.process_tree_search_entry.show()
 
     def on_menu_whatsnew(self,widget):
+        """
+        Signal handler(on active)(binded in glade) for the What's New button in menu->Help
+
+        Parameters
+        ----------
+        Widget : clicked button(What's New button)
+
+        """
         dialog=whatsnew_notice_dialog(self.Window,self)
         dialog.run()
         dialog.destroy()
 
     def on_set_left_update(self,widget):
+        """
+        Function Binding (activate signal) of 'menu->Graph Direction->Newer on Left' button.
+        Change the Update direction of the graphs to Left.
+
+        Parameters
+        ----------
+        widget : Clicked button(newer on left)
+
+        """
+
+        # Reversing the corresponding arrays and setting the direction var
         if widget.get_active():
             self.update_dir_right.set_active(False)
             self.update_graph_direction=0  #0 means newer on left 1 means newer on right
@@ -260,6 +397,16 @@ class myclass:
         print('update Dir left',widget.get_active())
 
     def on_set_right_update(self,widget):
+        """
+        Function Binding (activate signal) of 'menu->Graph Direction->Newer on Right' button.
+        Change the Update direction of the graphs to Right.
+
+        Parameters
+        ----------
+        widget : Clicked button(newer on right)
+
+        """
+        # Reversing the corresponding arrays and setting the direction var
         if widget.get_active():
             self.update_dir_left.set_active(False)
             self.update_graph_direction=1  #0 means newer on left 1 means newer on right
@@ -287,7 +434,18 @@ class myclass:
         print('update Dir right',widget.get_active())
 
     def on_main_window_destroy(self,widget,data=None):
+        """
+        Function Binding(delete-event) (binded in glade) for the window close button.
+        Settings are saved back to glib-schemas.
+        Parameters
+        ----------
+        widget : main window
+        data : optional data passed to the window
+
+        """
         print("print with cancel")
+
+        # Storing the the window size, coordinates and current page of the notebook
         # print(self.Window.get_position())
         self.settings.set_value('window-position',go.Variant("(ii)",self.Window.get_position()))
         self.settings.set_value('window-size',go.Variant("(ii)",self.Window.get_size()))
@@ -295,25 +453,59 @@ class myclass:
         self.settings.set_int('current-tab',self.notebook.get_current_page())
         # print(self.settings.get_value('process-filter'))
 
+        # Storing the filter entries
         l=[]
         for i,row in enumerate(self.filter_list_store):
             l.append([])
             l[i]+=[str(row[0]),row[1],str(row[2]),str(row[3])]
         self.settings.set_value('process-filter',go.Variant('aas',l))
 
+        # Storing the device names that user wants to be hidden
+        l.clear()
+        for i in self.hidden_stack_page_numbers:
+            l.append(self.reverse_device_stack_page_lookup[i])
+        self.settings.set_value('hidden-device-list',go.Variant('as',l))
+
+        # Closing the log file if any opened.
         if self.log_file:
             self.log_file.close()
 
+        # Gtk Quit
         g.main_quit()
 
     def on_quit_activate(self,menuitem,data=None):
+        """
+        Function Binding(activate) (binded in glade) for the 'menu->File->quit' button.
+
+        Parameters
+        ----------
+        menuitem : Clicked button(item in the menu)
+        """
         print("quit from menu",g.Buildable.get_name(menuitem))
         self.on_main_window_destroy(menuitem)
 
     def on_refresh_activate(self,menuitem,data=None):
+        """
+        Function Binding for the 'menu->View->Refresh'.
+        It force refreshes the app to accomodate any hardware change such as network change, USB drive plugged in/out etc.
+
+        Parameters
+        ----------
+        menuitem : the refresh menu button
+        data : optional user data
+        """
+
         print("refreshing")
-        print(self.current_stack)
+
+        permanent_hidden_devices=[]
+        for i in self.hidden_stack_page_numbers:
+            permanent_hidden_devices.append(self.reverse_device_stack_page_lookup[i])
+        self.settings.set_value("hidden-device-list",go.Variant('as',permanent_hidden_devices))
+
+        # print(self.current_stack)
         self.stack_counter=2
+
+        # Destroying the all the except CPU and Memory
         if(self.isNvidiagpu==1):
             g.Widget.destroy(self.gpuWidget)
             g.Widget.destroy(self.gpuSidePaneWidget)
@@ -323,49 +515,95 @@ class myclass:
         for i in range(self.numOfNets):
             g.Widget.destroy(self.netWidgetList[i])
             g.Widget.destroy(self.netSidepaneWidgetList[i])
-        g.Widget.destroy(self.processTree)
-        self.processTreeStore.clear()
+        # g.Widget.destroy(self.processTree)
 
-        # g.main_quit()
-        self.procinitialisation()
+        # Clearing the process tree store
+        # self.processTreeStore.clear()
+
+        # Since after refresh some new device are added and removed
+        self.device_stack_page_lookup={
+            'cpu':0,
+            'memory':1
+        }
+
+        # Reinitializing all destroyed components
+        # self.procinitialisation()
         self.diskinitialisation()
         self.netinitialisation()
         self.gpuinitialisation()
+
+        self.post_init()
         self.sidepaneinitialisation()
-        print(self.current_stack)
-        self.performanceStack.set_visible_child_name(self.current_stack)
+        # print(self.current_stack)
+
+        # Again back to the stack which was before refreshing(can be wrong since it uses the index)
+        self.performanceStack.set_visible_child_name(f'page{self.current_stack}')
 
     # method to show the about dialog
     def on_about_activate(self,menuitem,data=None):
+        """
+        Function Binding for menu->Help->About button.
+
+        This function shows the about dialog.
+
+        Parameters
+        ----------
+        menuitem : the clicked button(about button)
+        data : optional user data
+        """
         print("aboutdialog opening")
         # self.aboutdialog.set_icon_from_file('/usr/share/sysmontask/icons/SysMonTask.png')
         self.response=self.aboutdialog.run()
         self.aboutdialog.hide()
         print("aboutdialog closed")
 
-    def on_filter_dialog_activate(self,dialog,data=None):
+    def on_filter_dialog_activate(self,widget,data=None):
+        """
+        Function Binding for menu->View->Filter.
+
+        Activates the filter dialog and show it.
+
+        Parameters
+        ----------
+        widget : the clicked buttonargs_desc
+        data : optional user data
+        """
         self.filter_dialog.run()
-        # self.filter_dialog.show()
-        self.filter_entry.delete_text(0,-1)
-        print("hiding")
+        # Delete the initial Text
+        self.filter_entry.delete_text(0,-1) # (st,end)
+        print(f"Hiding Filter Dialog")
         self.filter_dialog.hide()
 
-    def resizer(self,item,data=None):
-        if(myclass.resizerflag==0):
-            print('hello')
-            self.Window.set_size_request(-1,-1)
-            myclass.resizerflag+=1
-
+    """..removed::v1.x.x """
+    # def resizer(self,item,data=None):
+    #     if(myclass.resizerflag==0):
+    #         print('hello')
+    #         self.Window.set_size_request(-1,-1)
+    #         myclass.resizerflag+=1
 
     def on_update_speed_change(self,widget):
+        """
+        Function Binding for menu->View->Update Speed->{speed}.
+
+        Changes the updating-speed at which the values are updated/fetched.
+
+        Parameters
+        ----------
+        widget : the clicked check button
+        """
         if widget.get_active():
             update_speed=g.Buildable.get_name(widget)
             if(update_speed=='low'):
                 print("update speed to low")
+                # Removing the time handler
                 go.source_remove(self.timehandler)
-                self.timehandler=go.timeout_add(1400,self.updater)
                 go.source_remove(self.Processtimehandler)
+
+                # Assigning new time handler for updater methods
+                self.timehandler=go.timeout_add(1400,self.updater)
                 self.Processtimehandler=go.timeout_add(2000,self.procUpdate)
+
+                # Setting the other button to false
                 self.update_speed_normal.set_active(False)
                 self.update_speed_high.set_active(False)
                 self.update_speed_paused.set_active(False)
@@ -400,17 +638,15 @@ class myclass:
                 self.update_speed_high.set_active(False)
                 self.update_speed_low.set_active(False)
 
-    # method for notebook switcher
-    #def on_notebook_switch_page(self,notebook,page,page_num,data=None):
-
-    # button click method
-    # def on_button_clicked(self,widget):
-    #     print(widget.get_property('label'),"clicked")
 
     ## repeatedily called out fucntion
     def updater(self):
+        """
+        Main Driver function to update all modules and components for performance tab.
 
-        ## updating
+        It gets executed periodically via timer associated(time handler).
+        """
+        # Calling update method for each component
         self.cpuUpdate()
         self.memoryTab()
         self.disktabUpdate()
@@ -420,7 +656,7 @@ class myclass:
             self.gpuTabUpdate()
         self.sidepaneUpdate()
 
-        ## drawing queue
+        # Calling drawing methods putting them into the queue to draw for each component.
         g.Widget.queue_draw(self.cpuDrawArea)
 
         for i in range(self.cpu_logical_cores):
@@ -452,22 +688,38 @@ class myclass:
         if(self.isNvidiagpu==1):
             g.Widget.queue_draw(self.gpuSidePaneWidget.gpusidepanedrawarea)
 
-
+        # Returning True to run periodically
         return True
 
     def on_cpu_logical_drawing(self,draw_area_widget,cr):
+        """
+        Function Binding for draw signal by logical cpu drawing areas.
+        This function draws the graphs for the logical cpu views.
+
+        Parameters
+        ----------
+        draw_area_widget : the widget on which to draw the graph
+        cr : the cairo surface object
+        """
+        # Setting line width
         cr.set_line_width(2)
+        # getting name and from it getting the id
         logical_cpu_id=int(draw_area_widget.get_name())
         cpu_logical_util_array=self.cpu_logical_cores_util_arrays[logical_cpu_id]
+
+        # Get the allocated width and height
         w=draw_area_widget.get_allocated_width()
         h=draw_area_widget.get_allocated_height()
 
+        # Scalling factor for the graphs
         scalingfactor=h/100.0
+
         #creating outer rectangle
         cr.set_source_rgba(0,.454,.878,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
+
         # creating grid lines
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
@@ -483,58 +735,61 @@ class myclass:
         cr.stroke()
 
         stepsize=w/99.0
-
-        # for i in range(0,99):
-        #     # not effcient way to fill the bars (drawing)
-        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-        #     cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
-        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-cpu_logical_util_array[i+1]))
-        #     cr.line_to((i+1)*stepsize,h)
-        #     cr.line_to(i*stepsize,h)
-        #     cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
-
-        #     cr.fill()
-        #     cr.stroke()
-        #     # for outer line
-        #     cr.set_line_width(1.5)
-        #     cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
-        #     cr.move_to(i*stepsize,scalingfactor*(100-cpu_logical_util_array[i]))
-        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-cpu_logical_util_array[i+1]))
-        #     cr.stroke()
-
-        # cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-        cr.set_source_rgba(.384,.749,1.0,1)
+        # Drawing the outer line
+        cr.set_source_rgba(.384,.749,1.0,1) # Line Color
         cr.move_to(0,scalingfactor*(100-cpu_logical_util_array[0]))
         for i in range(0,99):
             cr.set_line_width(1.5)
             cr.line_to((i+1)*stepsize,scalingfactor*(100-cpu_logical_util_array[i+1]))
         cr.stroke_preserve()
-        cr.set_source_rgba(.588,.823,.98,0.25)
+
+        # Filling the Color inside the graph
+        cr.set_source_rgba(.588,.823,.98,0.25)  #Fill Color
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(100-cpu_logical_util_array[0]))
         cr.fill()
         cr.stroke()
 
+        # Return false to execute only once per request
         return False
 
     def on_memDrawArea1_draw(self,dr,cr):
-        #print("memdraw1")
+        """
+        Function Binding(for draw signal) for Memory Utilisation draw area.
+
+        This function draw the Memory Utilisation graph.
+
+        Parameters
+        ----------
+        dr : the widget on which to draw the graph
+        cr : the cairo surface object
+        """
+        # Setting the line width
         cr.set_line_width(2)
 
+        # Get the allocated width and height
         w=self.memDrawArea1.get_allocated_width()
         h=self.memDrawArea1.get_allocated_height()
+
+        # Scalling factor for the graphs
         scalingfactor=h/self.memTotal
+
         #creating outer rectangle
-        cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
+        cr.set_source_rgba(.380,.102,.509,1)  # Color for the Outer Rectangle
+        # t=cs.rgb_to_hls(.627,.196,.788)
+        # t=cs.hls_to_rgb(t[0],t[1]-0.25,t[2])
+        # cr.set_source_rgba(t[0],t[1],t[2],1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
+
         # creating grid lines
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.815,.419,1.0,1) #for changing the outer line color
+            # cr.set_source_rgba(.815,.419,1.0,1) #for changing the outer line color
+            cr.set_source_rgba(.627,.196,.788,1)
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -544,26 +799,9 @@ class myclass:
         cr.stroke()
 
         stepsize=w/99.0
-        #print("in draw stepsize",stepsize)
-        # for i in range(0,99):
-        #     # not effcient way to fill the bars (drawing)
-        #     cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
-        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
-        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-        #     cr.line_to((i+1)*stepsize,h)
-        #     cr.line_to(i*stepsize,h)
-        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
 
-        #     cr.fill()
-        #     cr.stroke()
-        #     # for outer line
-        #     cr.set_line_width(1.5)
-        #     cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
-        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
-        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-        #     cr.stroke()
-
-        # efficient way to fill
+        # efficient way to Fill
+        # Drawing the outer lines for the curve
         cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))
@@ -571,6 +809,7 @@ class myclass:
             cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
         cr.stroke_preserve()
 
+        # Filling the curve
         cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
         cr.line_to(w,h)
         cr.line_to(0,h)
@@ -578,18 +817,30 @@ class myclass:
         cr.fill()
         cr.stroke()
 
-
         return False
 
     def on_memDrawArea2_draw(self,dr,cr):
-        #print("memdraw2")
+        """
+        Function Binding(for draw signal) for Memory Composition draw area.
+
+        This function draw the Memory Composition graph.
+
+        Parameters
+        ----------
+        dr : the widget on which to draw the graph
+        cr : the cairo surface object
+        """
+
+        # Setting the line width
         cr.set_line_width(2)
 
+        # Get the allocated width and height to the drawing area widget
         w=self.memDrawArea2.get_allocated_width()
         h=self.memDrawArea2.get_allocated_height()
+
         scalingfactor=int(w/self.memTotal)
 
-        #print("in draw stepsize",stepsize)
+        # Drawing the used area rectangle
         cr.set_source_rgba(.815,.419,1.0,0.25)   #for changing the fill color
         cr.set_line_width(2)
         cr.rectangle(0,0,scalingfactor*self.usedd,h)
@@ -601,6 +852,7 @@ class myclass:
         cr.line_to(scalingfactor*self.usedd,h)
         cr.stroke()
 
+        # Buffered and Cached Memory composition
         cr.set_source_rgba(.815,.419,1.0,0.1)   #for changing the fill color
         cr.set_line_width(2)
         cr.rectangle(scalingfactor*(self.usedd),0,scalingfactor*(self.memAvailable-self.memFree),h)
@@ -612,34 +864,48 @@ class myclass:
         cr.line_to(scalingfactor*(self.usedd+self.memAvailable-self.memFree),h)
         cr.stroke()
 
+        # Free Memory
         cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
         cr.set_line_width(2)
         cr.rectangle(scalingfactor*(self.usedd+self.memAvailable-self.memFree),0,scalingfactor*self.memFree,h)
         cr.stroke()
 
-        #creating outer rectangle
+        # # Creating outer rectangle
         cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
 
-
         return False
 
     ## method for drawing
     def on_cpuDrawArea_draw(self,dr,cr):
-        #print("idsaf")
+        """
+        Function Binding(for draw signal) for CPU Utilisation draw area.
+
+        This function draw the CPU Utilisation graph.
+
+        Parameters
+        ----------
+        dr : the widget on which to draw the graph
+        cr : the cairo surface object
+        """
         cr.set_line_width(2)
 
+        # Get the allocated widht and height to the drawing area
         w=self.cpuDrawArea.get_allocated_width()
         h=self.cpuDrawArea.get_allocated_height()
+
         scalingfactor=h/100.0
-        #creating outer rectangle
+
+        # Creating outer rectangle
         cr.set_source_rgba(0,.454,.878,1)
+
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
-        # creating grid lines
+
+        # Creating grid lines
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
@@ -654,6 +920,7 @@ class myclass:
 
         stepsize=w/99.0
 
+        # Not efficient
         # for i in range(0,99):
         #     # not effcient way to fill the bars (drawing)
         #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
@@ -672,6 +939,8 @@ class myclass:
         #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
         #     cr.stroke()
 
+        # Efficient one
+        # Outer lines for the curve
         cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
@@ -679,7 +948,9 @@ class myclass:
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
         cr.stroke_preserve()
 
-        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        # Filling the curve
+        # cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.set_source_rgba(.384,.749,1.0,0.2) #for changing the outer line color
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
@@ -688,43 +959,38 @@ class myclass:
 
         return False
 
-        #side pane cpu draw
+    #side pane cpu draw
 
     def on_cpuSidePaneDrawArea_draw(self,dr,cr):
+        """
+        Function Binding(for draw signal) for CPU Sidepane Utilisation draw area.
+
+        This function draw the CPU Sidepane Utilisation graph.
+
+        Parameters
+        ----------
+        dr : the widget on which to draw the graph
+        cr : the cairo surface object
+        """
+
         #print("cpu sidepane draw")
         cr.set_line_width(2)
 
+        # Get the allocated widht and height of the draw area widget.
         w=self.cpuSidePaneDrawArea.get_allocated_width()
         h=self.cpuSidePaneDrawArea.get_allocated_height()
+
         scalingfactor=h/100.0
-        #creating outer rectangle
+
+        # Creating outer rectangle
         cr.set_source_rgba(0,.454,.878,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
 
-
         stepsize=w/99.0
-        #print("in draw stepsize",stepsize)
-        # for i in range(0,99):
-        #     # not effcient way to fill the bars (drawing)
-        #     cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-        #     cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
-        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
-        #     cr.line_to((i+1)*stepsize,h)
-        #     cr.line_to(i*stepsize,h)
-        #     cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
 
-        #     cr.fill()
-        #     cr.stroke()
-        #     # for outer line
-        #     cr.set_line_width(1.5)
-        #     cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
-        #     cr.move_to(i*stepsize,scalingfactor*(100-self.cpuUtilArray[i]))
-        #     cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
-        #     cr.stroke()
-
-        # efficient way to fill
+        # Drawing the outer lines for the curve
         cr.set_line_width(1.5)
         cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
         cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
@@ -732,6 +998,7 @@ class myclass:
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
         cr.stroke_preserve()
 
+        # Filling the curve
         cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
         cr.line_to(w,h)
         cr.line_to(0,h)
@@ -742,12 +1009,24 @@ class myclass:
         return False
 
     def on_memSidePaneDrawArea_draw(self,dr,cr):
-        #print("tyoe",g.Buildable.get_name(dr))
+        """
+        Function Binding(for draw signal) for Memory Sidepane Utilisation draw area.
+
+        This function draw the Memory Sidepane Utilisation graph.
+
+        Parameters
+        ----------
+        dr : the widget on which to draw the graph
+        cr : the cairo surface object
+        """
         cr.set_line_width(2)
 
+        # Get the allocated widht and height of the drawing widget
         w=self.memSidePaneDrawArea.get_allocated_width()
         h=self.memSidePaneDrawArea.get_allocated_height()
+
         scalingfactor=h/self.memTotal
+
         #creating outer rectangle
         cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
         cr.set_line_width(3)
@@ -755,26 +1034,8 @@ class myclass:
         cr.stroke()
 
         stepsize=w/99.0
-        #print("in draw stepsize",stepsize)
-        # for i in range(0,99):
-        #     # not effcient way to fill the bars (drawing)
-        #     cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
-        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
-        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-        #     cr.line_to((i+1)*stepsize,h)
-        #     cr.line_to(i*stepsize,h)
-        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
 
-        #     cr.fill()
-        #     cr.stroke()
-        #     # for outer line
-        #     cr.set_line_width(1.5)
-        #     cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
-        #     cr.move_to(i*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i]))
-        #     cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
-        #     cr.stroke()
-
-        # efficient way to fill
+        # Drawing the outer lines for the curve
         cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))
@@ -782,6 +1043,7 @@ class myclass:
             cr.line_to((i+1)*stepsize,scalingfactor*(self.memTotal-self.memUsedArray1[i+1]))
         cr.stroke_preserve()
 
+        # Filling the curve
         cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
         cr.line_to(w,h)
         cr.line_to(0,h)
@@ -792,8 +1054,10 @@ class myclass:
         return False
 
 
-
 def start():
+    """
+    Function to start the application.
+    """
     main=myclass()
     g.main()
 

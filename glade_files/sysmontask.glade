@@ -46,7 +46,7 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
     <property name="authors">Neeraj Kumar(camel.neeraj)</property>
     <property name="artists">Neeraj Kumar(camel.neeraj)</property>
-    <property name="logo">/usr/share/sysmontask/icons/SysMonTask.png</property>
+    <property name="logo">usr/share/sysmontask/icons/SysMonTask.png</property>
     <property name="wrap-license">True</property>
     <property name="license-type">custom</property>
     <child internal-child="vbox">
@@ -112,10 +112,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
     <property name="can-focus">False</property>
     <property name="stock">gtk-print-preview</property>
   </object>
+  <object class="GtkImage" id="image8">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="pixbuf">../icons/show.png</property>
+    <property name="use-fallback">True</property>
+    <property name="icon_size">1</property>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
-    <signal name="check-resize" handler="resizer" swapped="no"/>
     <signal name="delete-event" handler="on_main_window_destroy" swapped="no"/>
     <child>
       <object class="GtkBox" id="main_box">
@@ -268,6 +274,16 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                         <property name="always-show-image">True</property>
                       </object>
                     </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="devices_menu">
+                        <property name="label" translatable="yes">Show/Hide Devices</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="image">image8</property>
+                        <property name="use-stock">False</property>
+                        <property name="always-show-image">True</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
@@ -345,71 +361,13 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
           <object class="GtkNotebook" id="notebook">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="scrollable">True</property>
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="vexpand">True</property>
                 <property name="orientation">vertical</property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="halign">start</property>
-                        <property name="margin-left">8</property>
-                        <property name="margin-start">8</property>
-                        <property name="label" translatable="yes">Processes</property>
-                        <attributes>
-                          <attribute name="weight" value="medium"/>
-                          <attribute name="scale" value="1.1000000000000001"/>
-                        </attributes>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="hexpand">True</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkSearchEntry" id="process_search_entry">
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="margin-end">7</property>
-                        <property name="margin-top">5</property>
-                        <property name="margin-bottom">5</property>
-                        <property name="primary-icon-name">edit-find-symbolic</property>
-                        <property name="primary-icon-activatable">False</property>
-                        <property name="primary-icon-sensitive">False</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">2</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
@@ -482,6 +440,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                     <child>
                       <object class="GtkButton" id="processKillButton">
                         <property name="label" translatable="yes">Killer</property>
+                        <property name="name">kill_button</property>
                         <property name="width-request">80</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
@@ -491,13 +450,15 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                         <property name="margin-end">5</property>
                         <property name="margin-top">5</property>
                         <property name="margin-bottom">5</property>
-                        <property name="always-show-image">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">0</property>
                       </packing>
+                    </child>
+                    <child>
+                      <placeholder/>
                     </child>
                     <child>
                       <object class="GtkLabel">
@@ -508,7 +469,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                     <child>
@@ -574,7 +535,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">2</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                   </object>
@@ -602,21 +563,22 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                 <property name="can-focus">True</property>
                 <child>
                   <object class="GtkScrolledWindow">
-                    <property name="width-request">263</property>
+                    <property name="width-request">265</property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="hexpand">True</property>
+                    <property name="hscrollbar-policy">never</property>
                     <property name="shadow-type">in</property>
                     <child>
                       <object class="GtkViewport">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
+                        <property name="hexpand">True</property>
                         <child>
                           <object class="GtkBox" id="sidepanebox">
-                            <property name="width-request">270</property>
+                            <property name="width-request">265</property>
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="halign">start</property>
                             <property name="valign">start</property>
                             <property name="hexpand">True</property>
                             <property name="orientation">vertical</property>
@@ -625,23 +587,23 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
+                                <property name="events">GDK_BUTTON2_MOTION_MASK | GDK_STRUCTURE_MASK</property>
                                 <property name="tooltip-markup" translatable="yes">Click To View Detailed CPU Tab</property>
                                 <property name="margin-start">5</property>
                                 <property name="margin-end">4</property>
                                 <property name="margin-top">1</property>
                                 <property name="margin-bottom">1</property>
-                                <property name="hexpand">False</property>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
+                                    <property name="hexpand">True</property>
                                     <child>
                                       <object class="GtkDrawingArea" id="cpusidepanedrawarea">
                                         <property name="width-request">110</property>
                                         <property name="height-request">64</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="halign">start</property>
                                         <property name="valign">start</property>
                                         <property name="margin-left">8</property>
                                         <property name="margin-start">8</property>
@@ -718,7 +680,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                                 <property name="margin-end">4</property>
                                 <property name="margin-top">1</property>
                                 <property name="margin-bottom">1</property>
-                                <property name="hexpand">False</property>
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -730,7 +691,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                                         <property name="height-request">64</property>
                                         <property name="visible">True</property>
                                         <property name="can-focus">False</property>
-                                        <property name="halign">start</property>
                                         <property name="valign">start</property>
                                         <property name="margin-start">8</property>
                                         <property name="margin-top">8</property>
@@ -2192,6 +2152,20 @@ NA</property>
               </object>
               <packing>
                 <property name="position">1</property>
+                <property name="tab-fill">False</property>
+              </packing>
+            </child>
+            <child type="action-end">
+              <object class="GtkSearchEntry" id="process_search_entry">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="margin-start">10</property>
+                <property name="margin-end">5</property>
+                <property name="primary-icon-name">edit-find-symbolic</property>
+                <property name="primary-icon-activatable">False</property>
+                <property name="primary-icon-sensitive">False</property>
+              </object>
+              <packing>
                 <property name="tab-fill">False</property>
               </packing>
             </child>

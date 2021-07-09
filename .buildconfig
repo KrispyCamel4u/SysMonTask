@@ -1,0 +1,11 @@
+[default]
+name=Default
+runtime=host
+toolchain=default
+config-opts=
+run-opts=
+prefix=/home/neeraj/.cache/gnome-builder/install/sysmontask/host
+app-id=
+postbuild=
+prebuild=
+default=true

@@ -346,7 +346,7 @@ NA</property>
                         <property name="margin-start">10</property>
                         <property name="margin-top">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">IPv4 Address:</property>
+                        <property name="label" translatable="yes">IPv4 Address</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -375,7 +375,7 @@ NA</property>
                         <property name="halign">start</property>
                         <property name="margin-start">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">IPv6 Address:</property>
+                        <property name="label" translatable="yes">IPv6 Address</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -403,6 +403,7 @@ NA</property>
                         <property name="halign">start</property>
                         <property name="margin-start">10</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">Vendor</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -410,12 +411,13 @@ NA</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="cpuvirtualisationlabelvalue">
+                      <object class="GtkLabel" id="netVendorLabelValue">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">start</property>
                         <property name="margin-start">25</property>
                         <property name="hexpand">True</property>
+                        <property name="label" translatable="yes">NA</property>
                       </object>
                       <packing>
                         <property name="left-attach">1</property>
@@ -456,7 +458,7 @@ NA</property>
                         <property name="halign">start</property>
                         <property name="margin-start">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Mac Address:</property>
+                        <property name="label" translatable="yes">Mac Address</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>

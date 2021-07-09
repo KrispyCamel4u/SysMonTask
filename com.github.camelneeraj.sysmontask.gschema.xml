@@ -32,5 +32,11 @@
       <description>for showing whats new one time</description>
     </key>
 
+    <key name="hidden-device-list" type='as'>
+      <default>[]</default>
+      <summary> Store the permanent device list which need to hidden </summary>
+      <description> same as summary</description>
+    </key>
+
   </schema>
 </schemalist>

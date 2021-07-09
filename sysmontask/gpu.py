@@ -332,6 +332,8 @@ def gpuinit(self):
         print('okk')
         self.gpuWidget=gpuTabWidget()
         self.performanceStack.add_titled(self.gpuWidget,f'page{self.stack_counter}','GPU')
+        # For lookup of devices and its assigned stack page numbers
+        self.device_stack_page_lookup[self.gpuName]=self.stack_counter
         self.stack_counter+=1
         self.gpuName=gpuinfoRoot.find('gpu').find('product_name').text
         self.gpuWidget.gpuinfolabel.set_text(self.gpuName)
@@ -359,42 +361,60 @@ def gpuUpdate(self):
         self.gpuutil=gpuinfoRoot.find('gpu').find('utilization').find('gpu_util').text
         self.gpuWidget.gpuutilisationlabelvalue.set_text(self.gpuutil)
         self.gpuWidget.gpuvramusagelabelvalue.set_text(f'{self.vramused[:-3]}/{self.totalvram}')
+
         gpu_temp=gpuinfoRoot.find('gpu').find('temperature').find('gpu_temp').text
         if gpu_temp[-1]=='C':
             gpu_temp =f'{gpu_temp[:-1]}°C'
+
         self.gpuWidget.gputemplabelvalue.set_text(gpu_temp)
         self.gpuWidget.gpushaderspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('graphics_clock').text)
         self.gpuWidget.gpuvramspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('clocks').find('mem_clock').text)
 
         ############ int conv bug solve ######################
         gpu_enc=gpuinfoRoot.find('gpu').find('utilization').find('encoder_util').text
-        if gpu_enc[-1]=='%':
+        try:
             gpu_enc=int(gpu_enc[:-1])
-        else:
+        except Exception:
             gpu_enc=0
 
         gpu_dec=gpuinfoRoot.find('gpu').find('utilization').find('decoder_util').text
-        if gpu_dec[-1]=='%':
+
+        try:
             gpu_dec=int(gpu_dec[:-1])
-        else:
+        except Exception:
             gpu_dec=0
 
         if self.update_graph_direction:
             self.gpuUtilArray.pop(0)
-            self.gpuUtilArray.append(int(self.gpuutil[:-1]))
+            try:
+                self.gpuUtilArray.append(int(self.gpuutil[:-1]))
+            except Exception:
+                self.gpuUtilArray.append(0)
+
             self.gpuVramArray.pop(0)
-            self.gpuVramArray.append(int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
+            try:
+                self.gpuVramArray.append(int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
+            except Exception:
+                self.gpuVramArray.append(0)
+
             self.gpuEncodingArray.pop(0)
-
             self.gpuEncodingArray.append(gpu_enc)
-            self.gpuDecodingArray.pop(0)
 
+            self.gpuDecodingArray.pop(0)
             self.gpuDecodingArray.append(gpu_dec)
         else:
             self.gpuUtilArray.pop()
-            self.gpuUtilArray.insert(0,int(self.gpuutil[:-1]))
+            try:
+                self.gpuUtilArray.insert(0,int(self.gpuutil[:-1]))
+            except Exception:
+                self.gpuUtilArray.insert(0,0)
+
             self.gpuVramArray.pop()
-            self.gpuVramArray.insert(0,int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
+            try:
+                self.gpuVramArray.insert(0,int(gpuinfoRoot.find('gpu').find('fb_memory_usage').find('used').text[:-3]))
+            except Exception:
+                self.gpuVramArray.insert(0,0)
+
             self.gpuEncodingArray.pop()
             self.gpuEncodingArray.insert(0,gpu_enc)
             self.gpuDecodingArray.pop()

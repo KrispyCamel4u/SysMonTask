@@ -1,6 +1,8 @@
 from gi.repository import Gtk as g
 import psutil as ps
 from time import time
+from os import popen
+import json
 
 try:
     from gi_composites import GtkTemplate
@@ -17,11 +19,14 @@ else:
 
 @GtkTemplate(ui=files_dir+'/net.glade')
 class networkWidget(g.ScrolledWindow):
-
+    """
+    A net tab widget(top level box with all childs fields) which is made by the gtk template.
+    """
     # Required else you would need to specify the full module
     # name in mywidget.ui (__main__+MyWidget)
     __gtype_name__ = 'networkWidget'
 
+    # Declaring/Fetching/Assigning the required childs(name in the template should be the same as used here)
     nettextlabel= GtkTemplate.Child()
     netinfolabel= GtkTemplate.Child()
     netdrawarea=GtkTemplate.Child()
@@ -33,34 +38,62 @@ class networkWidget(g.ScrolledWindow):
     net4addrlablevalue= GtkTemplate.Child()
     net6addrlabelvalue= GtkTemplate.Child()
     net_mac_addr_label_value= GtkTemplate.Child()
-
+    netVendorLabelValue=GtkTemplate.Child()
 
     # Alternative way to specify multiple widgets
     #label1, entry = GtkTemplate.Child.widgets(2)
 
     def __init__(self):
-        """Initilising the Net widget."""
+        """Constructing the Net Widget."""
         super(g.ScrolledWindow, self).__init__()
 
         # This must occur *after* you initialize your base
         self.init_template()
-        self.netmxScalingFactor=1   #for the scaling of maximum value on the graph
+        # For the scaling of maximum value on the graph
+        self.netmxScalingFactor=1
 
     def givedata(self,secondself,index):
+        """
+        Method to pass the data to the class(local) object from outside class. And assign them to the local class variables.
+
+        Parameters
+        ----------
+        secondself : the main class reference(the main global self) which will be calling this function.
+        index : index of the net adaptors from the list
+        """
+        # Receive(Donwload) and Send(Upload) speeds passing to the this class variables
         self.netRecSpeedArray=secondself.netReceiveArray[index]
         self.netSendSpeedArray=secondself.netSendArray[index]
 
     @GtkTemplate.Callback
     def on_netDrawArea_draw(self,dr,cr):
+        """
+        Function Binding(for draw signal) for network speeds drawing area.
 
+        This function draw the Network's Receive and Send speed curves upon called by the queue of request generated in
+        the main *updator* function.
+
+        Parameters
+        ----------
+        dr : the widget on which to draw the graph
+        cr : the cairo surface object
+        """
+        # Default line width
         cr.set_line_width(2)
 
+        # Get the allocated widht and height
         w=self.netdrawarea.get_allocated_width()
         h=self.netdrawarea.get_allocated_height()
 
+        # Speed step in KB/s is the step in which the maximum speed(vertical scale) will adjust for dynamic speeds, i.e, in multiples
+        # of this step.
         speedstep=250*1024          #250KB/s
+        # The maximum read or write speeds in the buffer
         maximumcurrentspeed=max(max(self.netRecSpeedArray),max(self.netSendSpeedArray))
+        # The current maximum scale speed
         currentscalespeed=self.netmxScalingFactor*speedstep
+
+        # vertical scale adjustment calculation, i.e, new maximum scale speed
         while(currentscalespeed<maximumcurrentspeed):
             self.netmxScalingFactor+=1
             currentscalespeed=self.netmxScalingFactor*speedstep
@@ -68,19 +101,23 @@ class networkWidget(g.ScrolledWindow):
             self.netmxScalingFactor-=1
             currentscalespeed=self.netmxScalingFactor*speedstep
 
+        # Setting new maximum scale label
         self.netspeedscalelabelvalue.set_text(byte_to_human(currentscalespeed))
 
+        # vertical scaling factor(step)
         scalingfactor=h/currentscalespeed
-        #creating outer rectangle
-        cr.set_source_rgba(.458,.141,.141,1)
+
+        # creating outer rectangle
+        cr.set_source_rgba(.458,.141,.141,1)    # Color of thr rectanlge
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
+
         # creating grid lines
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.58,.196,.196,1)  #for changing the outer line color
+            cr.set_source_rgba(.58,.196,.196,1)  #for changing the glid line color
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -90,7 +127,9 @@ class networkWidget(g.ScrolledWindow):
             cr.stroke()
         cr.stroke()
 
+        # Horzontal step size
         stepsize=w/99.0
+
         #print("in draw stepsize",stepsize)
         # for i in range(0,99):
         #     # not effcient way to fill the bars (drawing)
@@ -126,7 +165,8 @@ class networkWidget(g.ScrolledWindow):
         #     cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i+1])+2)
         #     cr.stroke()
 
-        #efficient receive speed drawing
+        ## Receive ##
+        # Drawing the curve
         cr.set_source_rgba(.709,.164,.164,1) #for changing the outer line color
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.netRecSpeedArray[0])+2)
@@ -134,6 +174,7 @@ class networkWidget(g.ScrolledWindow):
             cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netRecSpeedArray[i+1])+2)
         cr.stroke_preserve()
 
+        # Filling the curve from inside with solid color, the curve(shape) should be a closed then only it can be filled
         cr.set_source_rgba(.709,.164,.164,.2)  #for changing the fill color
         cr.line_to(w,h)
         cr.line_to(0,h)
@@ -141,7 +182,8 @@ class networkWidget(g.ScrolledWindow):
         cr.fill()
         cr.stroke()
 
-        #efficient drawing for write
+        ## Send ##
+        # Drawing the curve's outer line
         cr.set_source_rgba(1,.313,.313,1) #for changing the outer line color
         cr.move_to(0,scalingfactor*(currentscalespeed-self.netSendSpeedArray[0])+2)
         cr.set_line_width(1.5)
@@ -149,6 +191,7 @@ class networkWidget(g.ScrolledWindow):
             cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i+1])+2)
         cr.stroke_preserve()
 
+        # Filling the curve from inside with solid color, the curve(shape) should be a closed then only it can be filled
         cr.set_source_rgba(1,.313,.313,.2)  #for changing the fill color
         cr.line_to(w,h)
         cr.line_to(0,h)
@@ -160,15 +203,19 @@ class networkWidget(g.ScrolledWindow):
 
 
 def netinit(self):
+    """
+    Function for initilization of the Network Components.
+    """
+    # Declaring list for holding the names of net adaptors
+    self.netNameList :list =[]
 
-    self.netNameList=[]
-    temp=ps.net_if_stats()
+    # Getting the adaptor status and find and store ones which are active
+    temp :dict(network_name,tuple(isup,duplex,speed,mtu))=ps.net_if_stats()
     for name in temp:
         if name !='lo' and temp[name][0]==True:
             self.netNameList.append(name)
-            # print('working ')
-    # print("net name list",self.netNameList)
 
+    # If NIC list is not empty
     if len(self.netNameList)!=0:
         self.netWidgetList={}
         self.netstate1=[]
@@ -177,12 +224,29 @@ def netinit(self):
         self.numOfNets=len(self.netNameList)   #number of internet adapters
         # print(self.numOfNets)
 
+        # For finding the product name and vendor
+        p=popen("lshw -c network -json")
+        netinfo=json.loads(p.read())    # netinfo is a List of dictionary
+        p.close()
+
         for i in range(0,self.numOfNets):
             self.netWidgetList[i]=networkWidget()
             self.performanceStack.add_titled(self.netWidgetList[i],f'page{self.stack_counter}','Network'+str(i))
+            # For lookup devices and its assigned stack page numbers
+            self.device_stack_page_lookup[self.netNameList[i]]=self.stack_counter
             self.stack_counter+=1
             self.netWidgetList[i].nettextlabel.set_text(self.netNameList[i])
-            ##self.netWidgetList[i].netinfolabel.set_text(self.netsize[i])                       ###change for the name
+            try:
+                for item in netinfo:
+                    if item["logicalname"]==self.netNameList[i]:
+                        if "product" in item:
+                            self.netWidgetList[i].netinfolabel.set_text(item["product"])    ###change for the name
+                        if "vendor" in item:
+                            self.netWidgetList[i].netVendorLabelValue.set_text(item["vendor"])
+                        break
+            except Exception as e:
+                print(f"Error in getting Product/Vendor {e}")
+
             nettemp=ps.net_io_counters(pernic=True)
             self.nett1=time()
             for adpts in nettemp:
@@ -206,6 +270,9 @@ def netinit(self):
 
 
 def netUpdate(self):
+    """
+    Function to periodically update Network's statistics.
+    """
     nettemp=ps.net_io_counters(pernic=True)
     nettempaddr=ps.net_if_addrs()
     self.nett2=time()##

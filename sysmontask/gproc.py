@@ -534,10 +534,10 @@ def procInit(self):
 
     # self.processTree.connect("start-interactive-search",on_start_interactive_search)
     # self.processTree.set_search_equal_func(interactive_search,self.processTree)
-    search_entry=self.builder.get_object("process_search_entry")
-    search_entry.connect("changed",refresh_tree_filter,self)
+    self.process_tree_search_entry=self.builder.get_object("process_search_entry")
+    self.process_tree_search_entry.connect("changed",refresh_tree_filter,self)
 
-    self.processTree.set_search_entry(search_entry)
+    self.processTree.set_search_entry(self.process_tree_search_entry)
     self.processTree.set_enable_tree_lines(True)
 
     ## process record

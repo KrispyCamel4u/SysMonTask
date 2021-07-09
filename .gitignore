@@ -1,0 +1,44 @@
+exp.py
+exp.glade
+exp.glade~
+netSidepane.glade~ 
+disk.glade~
+taskManager.glade~
+taskManger.py
+taskmanager.spec
+netSidepane.glade~
+sysmontask/__pycache__/disk.cpython-38.pyc
+sysmontask/__pycache__/gi_composites.cpython-38.pyc
+sysmontask/__pycache__/gpu.cpython-38.pyc
+sysmontask/__pycache__/mem.cpython-38.pyc
+sysmontask/__pycache__/net.cpython-38.pyc
+sysmontask/__pycache__/proc.cpython-38.pyc
+sysmontask/__pycache__/rooter.cpython-38.pyc
+sysmontask/__pycache__/sidepane.cpython-38.pyc
+sysmontask/__pycache__/sysmontask.cpython-38.pyc
+
+# Byte-compiled / optimized / DLL files
+sysmontask/__pycache__/
+*.py[cod]
+*$py.class
+
+#glade autosaved
+glade_files/*.glade\~
+
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg

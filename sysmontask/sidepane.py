@@ -1,7 +1,7 @@
 # import gi
 # gi.require_version("Gtk", "3.24")
 
-from gi.repository import Gtk as g
+from gi.repository import Gtk as g,Gdk
 try:
     from gi_composites import GtkTemplate
 except ImportError:
@@ -9,9 +9,9 @@ except ImportError:
 
 
 if __name__=='sysmontask.sidepane':
-    from sysmontask.sysmontask import files_dir
+    from sysmontask.sysmontask import files_dir, icon_file
 else:
-    from sysmontask import files_dir
+    from sysmontask import files_dir,icon_file
 
 @GtkTemplate(ui=files_dir+'/diskSidepane.glade')
 class diskSidepaneWidget(g.Box):
@@ -291,27 +291,130 @@ class gpuSidepaneWidget(g.Box):
 
         return False
 
-def on_switcher_clicked(button,stack,curr_stack):
-    if not button.get_name()==stack.get_visible_child_name():
-        stack.set_visible_child_name(button.get_name())
-        curr_stack=button.get_name()
+# def on_switcher_clicked(button,stack,curr_stack):
+#     if not button.get_name()==stack.get_visible_child_name():
+#         stack.set_visible_child_name(button.get_name())
+#         curr_stack=button.get_name()
+
+def on_switcher_clicked(button,event,stack,self):
+    if event.type==Gdk.EventType.BUTTON_PRESS:
+        if event.button==1:
+            if not button.get_name()==stack.get_visible_child_name():
+                stack.set_visible_child_name(button.get_name())
+                self.current_stack=int(button.get_name()[4:])
+        elif event.button==3:
+            self.right_clicked_stack_switcher_button_num=int(button.get_name()[4:])
+            show_popover(self)
+            # print("right click")
+
+def show_popover(self):
+    self.stack_popover_menu.popup(None, None, None, None, 0, g.get_current_event_time())
+
+def color_chooser(widget,self):
+    c_dialog=g.ColorChooserDialog(title="Choose Color",parent=self.Window)
+    response=c_dialog.run()
+    print(response)
+    if response==g.ResponseType.OK:
+        color=c_dialog.get_rgba()
+        c_dialog.destroy()
+    else: c_dialog.destroy();return
+
+def hide_devices_callback(widget,self):
+    self.device_menu_items[self.right_clicked_stack_switcher_button_num].set_active(False)
+
+def hide_devices(button_num,self):
+    if len(self.hidden_stack_page_numbers)>=self.stack_counter-1 and button_num not in self.hidden_stack_page_numbers:
+        self.device_menu_items[button_num].set_active(True);return
+    self.stack_switcher_buttons[button_num].hide()
+
+    if button_num not in self.hidden_stack_page_numbers:self.hidden_stack_page_numbers.append(button_num)
+
+    if self.current_stack== button_num:
+        i=button_num+1
+        print(i,self.stack_counter,self.current_stack)
+        while(i!=button_num):
+            print(i)
+            if i==self.stack_counter:i=0
+            if i not in self.hidden_stack_page_numbers:
+                self.performanceStack.set_visible_child_name(f'page{i}'); self.current_stack=i; break
+            i+=1
+
+
+def show_devices(button_num,self):
+    if button_num in self.hidden_stack_page_numbers:
+        self.stack_switcher_buttons[button_num].show()
+        self.hidden_stack_page_numbers.remove(button_num)
+
+def device_show_hide_menu_callback(widget,self):
+    if widget.get_active():
+        show_devices(self.device_stack_page_lookup[widget.get_name()],self)
+    else:
+        hide_devices(self.device_stack_page_lookup[widget.get_name()],self)
+    print(self.hidden_stack_page_numbers)
+
+def feature_setup(self):
+
+    self.default_colors :dict(device,rgb)={
+        'cpu':(.384,.749,1.0),
+        'memory':(.627,.196,.788,1),
+        'disk':(),
+        'network':(),
+        'gpu':()
+    }
+
+    # popup menu for right click
+    self.stack_popover_menu=g.Menu()
+    popover_item=g.ImageMenuItem("Change color")
+    img=g.Image()
+    img.set_from_file(f"{icon_file}/choose_color.png")
+    popover_item.set_image(img)
+    popover_item.set_always_show_image(True)
+    popover_item.connect('activate',color_chooser,self)
+    self.stack_popover_menu.append(popover_item)
+
+    img=g.Image()
+    popover_item=g.ImageMenuItem("Hide")
+    img.set_from_file(f"{icon_file}/hide.png")
+    popover_item.set_image(img)
+    popover_item.set_always_show_image(True)
+    popover_item.connect('activate',hide_devices_callback,self)
+    self.stack_popover_menu.append(popover_item)
+
+    self.stack_popover_menu.show_all()
+
 
 def sidepaneinit(self):
     print("initialisating sidepane")
+
+    self.default_colors :dict(device,rgb)={
+        'cpu':(.384,.749,1.0),
+        'memory':(.627,.196,.788,1),
+        'disk':(),
+        'network':(),
+        'gpu':()
+    }
+    self.graph_colors={}
+
+
+    # lookup for stack page switcher button
+    self.stack_switcher_buttons={}
+
     button_counter=0 # button name counter
 
     self.cpuSidePaneLabelValue=self.builder.get_object('cpusidepanelabelvalue')
     self.cpuSidePaneDrawArea=self.builder.get_object('cpusidepanedrawarea')
     cpu_switcher_button=self.builder.get_object("cpu_switcher_button")
-    cpu_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
+    cpu_switcher_button.connect('button-press-event',on_switcher_clicked,self.performanceStack,self)
     cpu_switcher_button.set_name(f'page{button_counter}')
+    self.stack_switcher_buttons[button_counter]=cpu_switcher_button
     button_counter+=1
 
     self.memSidePaneLabelValue=self.builder.get_object('memsidepanelabelvalue')
     self.memSidePaneDrawArea=self.builder.get_object('memsidepanedrawarea')
     mem_switcher_button=self.builder.get_object("mem_switcher_button")
-    mem_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
+    mem_switcher_button.connect('button-press-event',on_switcher_clicked,self.performanceStack,self)
     mem_switcher_button.set_name(f'page{button_counter}')
+    self.stack_switcher_buttons[button_counter]=mem_switcher_button
     button_counter+=1
 
     self.diskSidepaneWidgetList={}
@@ -321,8 +424,9 @@ def sidepaneinit(self):
         self.diskSidepaneWidgetList[i].disksidepanetextlabel.set_text(self.disklist[i])
         self.diskSidepaneWidgetList[i].givedata(self,i)
 
-        self.diskSidepaneWidgetList[i].disk_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
+        self.diskSidepaneWidgetList[i].disk_switcher_button.connect('button-press-event',on_switcher_clicked,self.performanceStack,self)
         self.diskSidepaneWidgetList[i].disk_switcher_button.set_name(f'page{button_counter}')
+        self.stack_switcher_buttons[button_counter]=self.diskSidepaneWidgetList[i].disk_switcher_button
         button_counter+=1
 
     if len(self.netNameList)!=0:
@@ -333,8 +437,9 @@ def sidepaneinit(self):
             self.netSidepaneWidgetList[i].netsidepanetextlabel.set_text(self.netNameList[i])
             self.netSidepaneWidgetList[i].givedata(self,i)
 
-            self.netSidepaneWidgetList[i].net_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
+            self.netSidepaneWidgetList[i].net_switcher_button.connect('button-press-event',on_switcher_clicked,self.performanceStack,self)
             self.netSidepaneWidgetList[i].net_switcher_button.set_name(f'page{button_counter}')
+            self.stack_switcher_buttons[button_counter]=self.netSidepaneWidgetList[i].net_switcher_button
             button_counter+=1
 
     if(self.isNvidiagpu==1):
@@ -344,10 +449,13 @@ def sidepaneinit(self):
         self.gpuSidePaneWidget.givedata(self)
 
         ## unknown signal bug fixed
-        self.gpuSidePaneWidget.gpu_switcher_button.connect('clicked',on_switcher_clicked,self.performanceStack,self.current_stack)
+        self.gpuSidePaneWidget.gpu_switcher_button.connect('button-press-event',on_switcher_clicked,self.performanceStack,self)
         self.gpuSidePaneWidget.gpu_switcher_button.set_name(f'page{button_counter}')
+        self.stack_switcher_buttons[button_counter]=self.gpuSidePaneWidget.gpu_switcher_button
         button_counter+=1
 
+    for i in self.hidden_stack_page_numbers:
+        hide_devices(i, self)
 
 
 def sidePaneUpdate(self):

@@ -1,0 +1,28 @@
+/* button {
+    background-color: lightblue;
+} */
+/* button:active {
+    background-color: #1bd902;
+  }
+  button:hover {
+    background-color: #9130a9;
+  } */
+
+
+/* #kill_button:hover {
+    color: #d32d2d;
+    background-color: #cc00ff;
+} */
+
+
+button {
+	background-image: image(rgba(246,246,246,0.1));
+}
+button:hover {
+	background-color: rgba(153, 204, 255,0.2);
+	border: 1px rgba(100, 210, 255,1) solid;
+}
+button:active {
+	background-color: rgba(153, 204, 255,1);
+	border: 1px rgba(100, 210, 255,1) solid;
+}
