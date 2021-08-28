@@ -2,7 +2,7 @@
 # import gi
 # gi.require_version("Gtk", "3.24")
 
-from gi.repository import Gtk as g
+from gi.repository import Gtk as g,Gdk
 import psutil as ps
 from time import time
 from os import popen
@@ -42,6 +42,9 @@ class diskTabWidget(g.ScrolledWindow):
     diskcurrenspeedlabelvalue=GtkTemplate.Child()
     diskUsagesTreeView=GtkTemplate.Child()
 
+    disk_read_color_descriptor= GtkTemplate.Child()
+    disk_write_color_descriptor= GtkTemplate.Child()
+
     # Alternative way to specify multiple widgets
     #label1, entry = GtkTemplate.Child.widgets(2)
 
@@ -53,6 +56,7 @@ class diskTabWidget(g.ScrolledWindow):
         self.init_template()
         # For the scaling of maximum value on the graph
         self.diskmxfactor=1
+        self.secondself=None # main class
 
     def givedata(self,secondself,index):
         """
@@ -66,7 +70,78 @@ class diskTabWidget(g.ScrolledWindow):
         self.diskactiveArray=secondself.diskActiveArray[index]
         self.diskreadArray=secondself.diskReadArray[index]
         self.diskwriteArray=secondself.diskWriteArray[index]
+        self.secondself=secondself
 
+    @GtkTemplate.Callback
+    def on_diskDrawArea1_draw(self,dr,cr):
+        """
+        Function Binding(for draw signal) for Disk Utilisation draw area.
+
+        This function draw the Disk's Utilisation curves upons called by the queue of request in the updator
+        function.
+
+        Parameters
+        ----------
+        dr : the widget on which to draw the graph
+        cr : the cairo surface object
+        """
+        cr.set_line_width(2)
+
+        # Color Pofile setup
+        color=self.secondself.color_profile['disk'][0]
+        rectangle_color=self.secondself.color_profile['disk'][1]
+
+        # Get the allocated width and height
+        w=self.diskdrawarea1.get_allocated_width()
+        h=self.diskdrawarea1.get_allocated_height()
+
+        # Vertical step size
+        scalingfactor=h/100.0
+
+        #creating outer rectangle
+        # cr.set_source_rgba(.109,.670,.0588,1)
+        cr.set_source_rgba(*rectangle_color,1)
+        cr.set_line_width(3)
+        cr.rectangle(0,0,w,h)
+        cr.stroke()
+
+        # creating grid lines
+        verticalGap=int(h/10)
+        horzontalGap=int(w/10)
+        for i in range(1,10):
+            # cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+            cr.set_source_rgba(*color,1)
+            cr.set_line_width(0.5)
+            cr.move_to(0,i*verticalGap)
+            cr.line_to(w,i*verticalGap)
+
+            cr.move_to(i*horzontalGap,0)
+            cr.line_to(i*horzontalGap,h)
+            cr.stroke()
+        cr.stroke()
+
+        # Horizontal step size
+        stepsize=w/99.0
+
+        # Drawing the outer lines for the curve
+        # cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
+        cr.set_line_width(1.5)
+        cr.move_to(0,scalingfactor*(100-self.diskactiveArray[0])+2)
+        for i in range(0,99):
+            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
+        cr.stroke_preserve()
+
+        # Filling the curve
+        # cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+        cr.set_source_rgba(*color,0.25)
+        cr.line_to(w,h)
+        cr.line_to(0,h)
+        cr.move_to(0,scalingfactor*(100-self.diskactiveArray[0])+2)
+        cr.fill()
+        cr.stroke()
+
+        return False
 
     @GtkTemplate.Callback
     def on_diskDrawArea2_draw(self,dr,cr):
@@ -82,6 +157,13 @@ class diskTabWidget(g.ScrolledWindow):
         cr : the cairo surface object
         """
         cr.set_line_width(2)
+
+        # Color Pofile setup
+        color=self.secondself.color_profile['disk'][0]
+        rectangle_color=self.secondself.color_profile['disk'][1]
+
+        self.disk_read_color_descriptor.set_markup(f'<span size="20000" foreground="{"#%02x%02x%02x" % (int(color[0]*255), int(color[1]*255), int(color[2]*255))}">|</span>')
+        self.disk_write_color_descriptor.set_markup(f'<span size="20000" foreground="{"#%02x%02x%02x" % (int(color[0]*255), int(color[1]*255), int(color[2]*255))}">¦</span>')
 
         # Get the allocated widht and height
         w=self.diskdrawarea2.get_allocated_width()
@@ -112,7 +194,8 @@ class diskTabWidget(g.ScrolledWindow):
         scalingfactor=h/currentscalespeed
 
         #creating outer rectangle
-        cr.set_source_rgba(.109,.670,.0588,1)
+        # cr.set_source_rgba(.109,.670,.0588,1)
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -121,7 +204,8 @@ class diskTabWidget(g.ScrolledWindow):
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.109,.670,.0588,1) #for changing the grid line color
+            # cr.set_source_rgba(.109,.670,.0588,1) #for changing the grid line color
+            cr.set_source_rgba(*color,1)
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -136,7 +220,8 @@ class diskTabWidget(g.ScrolledWindow):
 
         ## Read Speed ##
         # Drawing the curve line
-        cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+        # cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.diskreadArray[0])+2)
         for i in range(0,99):
@@ -144,7 +229,8 @@ class diskTabWidget(g.ScrolledWindow):
         cr.stroke_preserve()
 
         # Filling the curve with solid color, the curve(shape) should be a closed then only it can be filled
-        cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+        # cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.diskreadArray[i])+2)
@@ -153,15 +239,19 @@ class diskTabWidget(g.ScrolledWindow):
 
         ## Write Speed ##
         # Drawing the outer lines for the curve
-        cr.set_source_rgba(.207,.941,.682,1) #for changing the outer line color
+        # cr.set_source_rgba(.207,.941,.682,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.diskwriteArray[0])+2)
+        # Dash line configuration
+        cr.set_dash([3.0,3.0])
         for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.diskwriteArray[i+1])+2)
         cr.stroke_preserve()
 
         # Filling the curve
-        cr.set_source_rgba(.207,.941,.682,0.3)  #for changing the fill color
+        # cr.set_source_rgba(.207,.941,.682,0.3)  #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.diskwriteArray[0])+2)
@@ -170,68 +260,6 @@ class diskTabWidget(g.ScrolledWindow):
 
         return False
 
-    @GtkTemplate.Callback
-    def on_diskDrawArea1_draw(self,dr,cr):
-        """
-        Function Binding(for draw signal) for Disk Utilisation draw area.
-
-        This function draw the Disk's Utilisation curves upons called by the queue of request in the updator
-        function.
-
-        Parameters
-        ----------
-        dr : the widget on which to draw the graph
-        cr : the cairo surface object
-        """
-        cr.set_line_width(2)
-
-        # Get the allocated width and height
-        w=self.diskdrawarea1.get_allocated_width()
-        h=self.diskdrawarea1.get_allocated_height()
-
-        # Vertical step size
-        scalingfactor=h/100.0
-
-        #creating outer rectangle
-        cr.set_source_rgba(.109,.670,.0588,1)
-        cr.set_line_width(3)
-        cr.rectangle(0,0,w,h)
-        cr.stroke()
-
-        # creating grid lines
-        verticalGap=int(h/10)
-        horzontalGap=int(w/10)
-        for i in range(1,10):
-            cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
-            cr.set_line_width(0.5)
-            cr.move_to(0,i*verticalGap)
-            cr.line_to(w,i*verticalGap)
-
-            cr.move_to(i*horzontalGap,0)
-            cr.line_to(i*horzontalGap,h)
-            cr.stroke()
-        cr.stroke()
-
-        # Horizontal step size
-        stepsize=w/99.0
-
-        # Drawing the outer lines for the curve
-        cr.set_source_rgba(.109,.670,.0588,1) #for changing the outer line color
-        cr.set_line_width(1.5)
-        cr.move_to(0,scalingfactor*(100-self.diskactiveArray[0])+2)
-        for i in range(0,99):
-            cr.line_to((i+1)*stepsize,scalingfactor*(100-self.diskactiveArray[i+1])+2)
-        cr.stroke_preserve()
-
-        # Filling the curve
-        cr.set_source_rgba(.431,1,.04,0.25)  #for changing the fill color
-        cr.line_to(w,h)
-        cr.line_to(0,h)
-        cr.move_to(0,scalingfactor*(100-self.diskactiveArray[0])+2)
-        cr.fill()
-        cr.stroke()
-
-        return False
 
 
 def diskinit(self):

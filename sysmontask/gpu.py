@@ -53,23 +53,53 @@ class gpuTabWidget(g.ScrolledWindow):
         self.init_template()
         # self.gpumxfactor=1             #for the scaling of maximum value on the graph
 
+        #The main class self
+        self.secondself=None
+
     def givedata(self,secondself):
+        """
+        Method to pass the data to the class(local) object from outside class. And assign them to the local class variables.
+
+        Parameters
+        ----------
+        secondself : the main class reference(the main global self) which will be calling this function.
+        index : index of the net adaptors from the list
+        """
         self.gpuutilArray=secondself.gpuUtilArray
         self.gpuvramArray=secondself.gpuVramArray
         self.gpuencodingArray=secondself.gpuEncodingArray
         self.gpudecodingArray=secondself.gpuDecodingArray
         self.gputotalvram=int(secondself.totalvram[:-3])
+        self.secondself=secondself
 
     @GtkTemplate.Callback
     def gpuutildrawarea_draw(self,dr,cr):
-        #print("idsaf")
+        """
+        Function Binding(for draw signal) for gpu utilization drawing area.
+
+        This function draw the GPU Utilisation curves upon called by the queue of request generated in
+        the main *updator* function.
+
+        Parameters
+        ----------
+        dr : the widget on which to draw the graph
+        cr : the cairo surface object
+        """
+        # Default line width
         cr.set_line_width(2)
 
+        # Color Pofile setup
+        color=self.secondself.color_profile['gpu'][0]
+        rectangle_color=self.secondself.color_profile['gpu'][1]
+
+        # Get the allocated widht and height
         w=self.gpuutildrawarea.get_allocated_width()
         h=self.gpuutildrawarea.get_allocated_height()
         scalingfactor=h/100.0
+
         #creating outer rectangle
-        cr.set_source_rgba(0,.454,.878,1)
+        # cr.set_source_rgba(0,.454,.878,1)
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -77,7 +107,8 @@ class gpuTabWidget(g.ScrolledWindow):
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            # cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.set_source_rgba(*color,1)
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -108,13 +139,15 @@ class gpuTabWidget(g.ScrolledWindow):
         #     cr.stroke()
 
         cr.set_line_width(1.5)
-        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        # cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.move_to(0,scalingfactor*(100-self.gpuutilArray[0]))
         for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuutilArray[i+1]))
         cr.stroke_preserve()
 
-        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        # cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(100-self.gpuutilArray[0]))
@@ -129,11 +162,15 @@ class gpuTabWidget(g.ScrolledWindow):
         #print("idsaf")
         cr.set_line_width(2)
 
+        # Color Pofile setup
+        color=self.secondself.color_profile['gpu'][0]
+        rectangle_color=self.secondself.color_profile['gpu'][1]
+
         w=self.gpuencodingdrawarea.get_allocated_width()
         h=self.gpuencodingdrawarea.get_allocated_height()
         scalingfactor=h/100.0
         #creating outer rectangle
-        cr.set_source_rgba(0,.454,.878,1)
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -141,7 +178,7 @@ class gpuTabWidget(g.ScrolledWindow):
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.set_source_rgba(*color,1)
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -173,13 +210,13 @@ class gpuTabWidget(g.ScrolledWindow):
 
         #efficient encoding drawing
         cr.set_line_width(1.5)
-        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.move_to(0,scalingfactor*(100-self.gpuencodingArray[0]))
         for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpuencodingArray[i+1]))
         cr.stroke_preserve()
 
-        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(100-self.gpuencodingArray[0]))
@@ -194,11 +231,15 @@ class gpuTabWidget(g.ScrolledWindow):
         #print("idsaf")
         cr.set_line_width(2)
 
+        # Color Pofile setup
+        color=self.secondself.color_profile['gpu'][0]
+        rectangle_color=self.secondself.color_profile['gpu'][1]
+
         w=self.gpudecodingdrawarea.get_allocated_width()
         h=self.gpudecodingdrawarea.get_allocated_height()
         scalingfactor=h/100.0
         #creating outer rectangle
-        cr.set_source_rgba(0,.454,.878,1)
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -206,7 +247,7 @@ class gpuTabWidget(g.ScrolledWindow):
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.set_source_rgba(*color,1)
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -237,13 +278,13 @@ class gpuTabWidget(g.ScrolledWindow):
         #     cr.stroke()
 
         cr.set_line_width(1.5)
-        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.move_to(0,scalingfactor*(100-self.gpudecodingArray[0]))
         for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.gpudecodingArray[i+1]))
         cr.stroke_preserve()
 
-        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(100-self.gpudecodingArray[0]))
@@ -257,12 +298,16 @@ class gpuTabWidget(g.ScrolledWindow):
         # print('heloow  gpu')
         cr.set_line_width(2)
 
+        # Color Pofile setup
+        color=self.secondself.color_profile['gpu'][0]
+        rectangle_color=self.secondself.color_profile['gpu'][1]
+
         w=self.gpuvramdrawarea.get_allocated_width()
         h=self.gpuvramdrawarea.get_allocated_height()
         scalingfactor=h/self.gputotalvram
         # print(self.gputotalvram)
         #creating outer rectangle
-        cr.set_source_rgba(0,.454,.878,1)  ##need tochange the color
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -270,7 +315,7 @@ class gpuTabWidget(g.ScrolledWindow):
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.set_source_rgba(*color,1)
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -300,13 +345,13 @@ class gpuTabWidget(g.ScrolledWindow):
         #     cr.stroke()
 
         cr.set_line_width(1.5)
-        cr.set_source_rgba(.384,.749,1.0,1)   #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.move_to(0,scalingfactor*(self.gputotalvram-self.gpuvramArray[0]))
         for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(self.gputotalvram-self.gpuvramArray[i+1]))
         cr.stroke_preserve()
 
-        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(self.gputotalvram-self.gpuvramArray[0]))
@@ -332,9 +377,7 @@ def gpuinit(self):
         print('okk')
         self.gpuWidget=gpuTabWidget()
         self.performanceStack.add_titled(self.gpuWidget,f'page{self.stack_counter}','GPU')
-        # For lookup of devices and its assigned stack page numbers
-        self.device_stack_page_lookup[self.gpuName]=self.stack_counter
-        self.stack_counter+=1
+
         self.gpuName=gpuinfoRoot.find('gpu').find('product_name').text
         self.gpuWidget.gpuinfolabel.set_text(self.gpuName)
         self.totalvram=gpuinfoRoot.find('gpu').find('fb_memory_usage').find('total').text
@@ -344,10 +387,13 @@ def gpuinit(self):
         self.gpuWidget.gpumaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('graphics_clock').text)
         self.gpuWidget.gpuvrammaxspeedlabelvalue.set_text(gpuinfoRoot.find('gpu').find('max_clocks').find('mem_clock').text)
 
+        # For lookup of devices and its assigned stack page numbers
+        self.device_stack_page_lookup[self.gpuName]=self.stack_counter
+        self.stack_counter+=1
 
         self.gpuWidget.givedata(self)
-    except:
-        print('no nvidia gpu found')
+    except Exception as e:
+        print('no nvidia gpu found',e)
         self.isNvidiagpu=0
 
 

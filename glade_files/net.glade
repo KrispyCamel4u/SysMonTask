@@ -267,17 +267,13 @@ NA</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="00">
+                      <object class="GtkLabel" id="net_send_color_descriptor">
                         <property name="width-request">0</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">end</property>
-                        <property name="label" translatable="yes">|</property>
-                        <attributes>
-                          <attribute name="weight" value="normal"/>
-                          <attribute name="scale" value="1.8"/>
-                          <attribute name="foreground" value="#ffff72587258"/>
-                        </attributes>
+                        <property name="label" translatable="yes">¦</property>
+                        <property name="use-markup">True</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -285,17 +281,13 @@ NA</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="0">
+                      <object class="GtkLabel" id="net_recv_color_descriptor">
                         <property name="width-request">0</property>
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="halign">end</property>
                         <property name="label" translatable="yes">|</property>
-                        <attributes>
-                          <attribute name="weight" value="normal"/>
-                          <attribute name="scale" value="1.8"/>
-                          <attribute name="foreground" value="#b6b62a292a29"/>
-                        </attributes>
+                        <property name="use-markup">True</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>

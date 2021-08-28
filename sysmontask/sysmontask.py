@@ -16,7 +16,7 @@ with open("{}/.sysmontask".format(os.environ.get("HOME")),'w+') as ofile:
     ofile.write('0')
 
 from gi.repository import Gtk as g , GLib as go,Gio,Gdk
-import psutil as ps, colorsys as cs
+import psutil as ps
 
 print(ps.__version__)
 if( not ps.__version__>='5.7.2'):
@@ -167,6 +167,9 @@ class myclass:
             'memory':1
         }
 
+        #Initializing color profiles
+        color_profile_initializer(self)
+
         #Initializing each component
         self.cpuInit()
         self.memoryinitalisation()
@@ -263,6 +266,17 @@ class myclass:
             self.settings.set_int("one-time-whatsnew",0)
 
     def post_init(self):
+        # group lookup by device
+        self.grouping_for_color_profile={
+            'cpu':'cpu',
+            'memory':'memory',
+            self.gpuName:'gpu'
+            }
+        for i in self.disklist:
+            self.grouping_for_color_profile[i]='disk'
+        for i in self.netNameList:
+            self.grouping_for_color_profile[i]='network'
+
         # Reversing the lookup so to access via page numbers
         self.reverse_device_stack_page_lookup={}
         for key in self.device_stack_page_lookup:
@@ -465,6 +479,13 @@ class myclass:
         for i in self.hidden_stack_page_numbers:
             l.append(self.reverse_device_stack_page_lookup[i])
         self.settings.set_value('hidden-device-list',go.Variant('as',l))
+
+        # Storing the color profile
+        l.clear()
+        for i in self.color_profile:
+            l.append(self.color_profile[i][0])
+        self.settings.set_value('color-profile',go.Variant('a(ddd)',l))
+        # print("l during exit",l)
 
         # Closing the log file if any opened.
         if self.log_file:
@@ -768,6 +789,10 @@ class myclass:
         # Setting the line width
         cr.set_line_width(2)
 
+        # Color Pofile setup
+        color=self.color_profile['memory'][0]
+        rectangle_color=self.color_profile['memory'][1]
+
         # Get the allocated width and height
         w=self.memDrawArea1.get_allocated_width()
         h=self.memDrawArea1.get_allocated_height()
@@ -776,10 +801,8 @@ class myclass:
         scalingfactor=h/self.memTotal
 
         #creating outer rectangle
-        cr.set_source_rgba(.380,.102,.509,1)  # Color for the Outer Rectangle
-        # t=cs.rgb_to_hls(.627,.196,.788)
-        # t=cs.hls_to_rgb(t[0],t[1]-0.25,t[2])
-        # cr.set_source_rgba(t[0],t[1],t[2],1)
+        # cr.set_source_rgba(.380,.102,.509,1)  # Color for the Outer Rectangle
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -789,7 +812,7 @@ class myclass:
         horzontalGap=int(w/10)
         for i in range(1,10):
             # cr.set_source_rgba(.815,.419,1.0,1) #for changing the outer line color
-            cr.set_source_rgba(.627,.196,.788,1)
+            cr.set_source_rgba(*color,1)
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -802,7 +825,8 @@ class myclass:
 
         # efficient way to Fill
         # Drawing the outer lines for the curve
-        cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
+        # cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))
         for i in range(0,99):
@@ -810,7 +834,8 @@ class myclass:
         cr.stroke_preserve()
 
         # Filling the curve
-        cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+        # cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))
@@ -834,6 +859,10 @@ class myclass:
         # Setting the line width
         cr.set_line_width(2)
 
+        # Color Pofile setup
+        color=self.color_profile['memory'][0]
+        rectangle_color=self.color_profile['memory'][1]
+
         # Get the allocated width and height to the drawing area widget
         w=self.memDrawArea2.get_allocated_width()
         h=self.memDrawArea2.get_allocated_height()
@@ -841,37 +870,44 @@ class myclass:
         scalingfactor=int(w/self.memTotal)
 
         # Drawing the used area rectangle
-        cr.set_source_rgba(.815,.419,1.0,0.25)   #for changing the fill color
+        # cr.set_source_rgba(.815,.419,1.0,0.25)   #for changing the fill color
+        cr.set_source_rgba(*color,0.25)
         cr.set_line_width(2)
         cr.rectangle(0,0,scalingfactor*self.usedd,h)
         cr.fill()
         cr.stroke()
-        cr.set_source_rgba(.815,.419,1.0,1)
+
+        # cr.set_source_rgba(.815,.419,1.0,1)
+        cr.set_source_rgba(*color,1)
         cr.set_line_width(2)
         cr.move_to(scalingfactor*self.usedd,0)
         cr.line_to(scalingfactor*self.usedd,h)
         cr.stroke()
 
         # Buffered and Cached Memory composition
-        cr.set_source_rgba(.815,.419,1.0,0.1)   #for changing the fill color
+        # cr.set_source_rgba(.815,.419,1.0,0.1)   #for changing the fill color
+        cr.set_source_rgba(*color,0.1)
         cr.set_line_width(2)
         cr.rectangle(scalingfactor*(self.usedd),0,scalingfactor*(self.memAvailable-self.memFree),h)
         cr.fill()
         cr.stroke()
-        cr.set_source_rgba(.815,.419,1.0,.7)   #for changing the fill color
+        # cr.set_source_rgba(.815,.419,1.0,.7)   #for changing the fill color
+        cr.set_source_rgba(*color,0.7)
         cr.set_line_width(2)
         cr.move_to(scalingfactor*(self.usedd+self.memAvailable-self.memFree),0)
         cr.line_to(scalingfactor*(self.usedd+self.memAvailable-self.memFree),h)
         cr.stroke()
 
         # Free Memory
-        cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+        # cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.set_line_width(2)
         cr.rectangle(scalingfactor*(self.usedd+self.memAvailable-self.memFree),0,scalingfactor*self.memFree,h)
         cr.stroke()
 
         # # Creating outer rectangle
-        cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
+        # cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -892,6 +928,10 @@ class myclass:
         """
         cr.set_line_width(2)
 
+        color=self.color_profile['cpu'][0]
+        rectangle_color=self.color_profile['cpu'][1]
+        # print("rectangle",rectangle_color)
+
         # Get the allocated widht and height to the drawing area
         w=self.cpuDrawArea.get_allocated_width()
         h=self.cpuDrawArea.get_allocated_height()
@@ -899,8 +939,8 @@ class myclass:
         scalingfactor=h/100.0
 
         # Creating outer rectangle
-        cr.set_source_rgba(0,.454,.878,1)
-
+        # cr.set_source_rgba(0,.454,.878,1)
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -909,7 +949,8 @@ class myclass:
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            # cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.set_source_rgba(*color,1)
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -941,7 +982,8 @@ class myclass:
 
         # Efficient one
         # Outer lines for the curve
-        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        # cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
         for i in range(0,99):
@@ -950,7 +992,8 @@ class myclass:
 
         # Filling the curve
         # cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
-        cr.set_source_rgba(.384,.749,1.0,0.2) #for changing the outer line color
+        # cr.set_source_rgba(.384,.749,1.0,0.2) #for changing the outer line color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
@@ -976,6 +1019,9 @@ class myclass:
         #print("cpu sidepane draw")
         cr.set_line_width(2)
 
+        # Color Pofile setup
+        color=self.color_profile['cpu'][0]
+        rectangle_color=self.color_profile['cpu'][1]
         # Get the allocated widht and height of the draw area widget.
         w=self.cpuSidePaneDrawArea.get_allocated_width()
         h=self.cpuSidePaneDrawArea.get_allocated_height()
@@ -983,7 +1029,7 @@ class myclass:
         scalingfactor=h/100.0
 
         # Creating outer rectangle
-        cr.set_source_rgba(0,.454,.878,1)
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -992,14 +1038,14 @@ class myclass:
 
         # Drawing the outer lines for the curve
         cr.set_line_width(1.5)
-        cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1) #for changing the outer line color
         cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
         for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(100-self.cpuUtilArray[i+1]))
         cr.stroke_preserve()
 
         # Filling the curve
-        cr.set_source_rgba(.588,.823,.98,0.25)   #for changing the fill color
+        cr.set_source_rgba(*color,0.25)   #for changing the fill color
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(100-self.cpuUtilArray[0]))
@@ -1021,6 +1067,10 @@ class myclass:
         """
         cr.set_line_width(2)
 
+        # Color Pofile setup
+        color=self.color_profile['memory'][0]
+        rectangle_color=self.color_profile['memory'][1]
+
         # Get the allocated widht and height of the drawing widget
         w=self.memSidePaneDrawArea.get_allocated_width()
         h=self.memSidePaneDrawArea.get_allocated_height()
@@ -1028,7 +1078,7 @@ class myclass:
         scalingfactor=h/self.memTotal
 
         #creating outer rectangle
-        cr.set_source_rgba(.380,.102,.509,1)  ##need tochange the color
+        cr.set_source_rgba(*rectangle_color,1)  ##need tochange the color
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -1036,7 +1086,7 @@ class myclass:
         stepsize=w/99.0
 
         # Drawing the outer lines for the curve
-        cr.set_source_rgba(.627,.196,.788,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1) #for changing the outer line color
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))
         for i in range(0,99):
@@ -1044,7 +1094,7 @@ class myclass:
         cr.stroke_preserve()
 
         # Filling the curve
-        cr.set_source_rgba(.815,.419,1.0,0.2)   #for changing the fill color
+        cr.set_source_rgba(*color,0.2)   #for changing the fill color
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(self.memTotal-self.memUsedArray1[0]))

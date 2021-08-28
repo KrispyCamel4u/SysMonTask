@@ -40,6 +40,9 @@ class networkWidget(g.ScrolledWindow):
     net_mac_addr_label_value= GtkTemplate.Child()
     netVendorLabelValue=GtkTemplate.Child()
 
+    net_recv_color_descriptor= GtkTemplate.Child()
+    net_send_color_descriptor= GtkTemplate.Child()
+
     # Alternative way to specify multiple widgets
     #label1, entry = GtkTemplate.Child.widgets(2)
 
@@ -51,6 +54,8 @@ class networkWidget(g.ScrolledWindow):
         self.init_template()
         # For the scaling of maximum value on the graph
         self.netmxScalingFactor=1
+        # The main class self
+        self.secondself=None
 
     def givedata(self,secondself,index):
         """
@@ -64,6 +69,7 @@ class networkWidget(g.ScrolledWindow):
         # Receive(Donwload) and Send(Upload) speeds passing to the this class variables
         self.netRecSpeedArray=secondself.netReceiveArray[index]
         self.netSendSpeedArray=secondself.netSendArray[index]
+        self.secondself=secondself
 
     @GtkTemplate.Callback
     def on_netDrawArea_draw(self,dr,cr):
@@ -80,6 +86,13 @@ class networkWidget(g.ScrolledWindow):
         """
         # Default line width
         cr.set_line_width(2)
+
+        # Color Pofile setup
+        color=self.secondself.color_profile['network'][0]
+        rectangle_color=self.secondself.color_profile['network'][1]
+
+        self.net_recv_color_descriptor.set_markup(f'<span size="20000" foreground="{"#%02x%02x%02x" % (int(color[0]*255), int(color[1]*255), int(color[2]*255))}">|</span>')
+        self.net_send_color_descriptor.set_markup(f'<span size="20000" foreground="{"#%02x%02x%02x" % (int(color[0]*255), int(color[1]*255), int(color[2]*255))}">¦</span>')
 
         # Get the allocated widht and height
         w=self.netdrawarea.get_allocated_width()
@@ -108,7 +121,8 @@ class networkWidget(g.ScrolledWindow):
         scalingfactor=h/currentscalespeed
 
         # creating outer rectangle
-        cr.set_source_rgba(.458,.141,.141,1)    # Color of thr rectanlge
+        # cr.set_source_rgba(.458,.141,.141,1)    # Color of thr rectanlge
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -117,7 +131,8 @@ class networkWidget(g.ScrolledWindow):
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.58,.196,.196,1)  #for changing the glid line color
+            # cr.set_source_rgba(.58,.196,.196,1)  #for changing the glid line color
+            cr.set_source_rgba(*color,1)
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -167,7 +182,8 @@ class networkWidget(g.ScrolledWindow):
 
         ## Receive ##
         # Drawing the curve
-        cr.set_source_rgba(.709,.164,.164,1) #for changing the outer line color
+        # cr.set_source_rgba(.709,.164,.164,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.set_line_width(1.5)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.netRecSpeedArray[0])+2)
         for i in range(0,99):
@@ -175,7 +191,8 @@ class networkWidget(g.ScrolledWindow):
         cr.stroke_preserve()
 
         # Filling the curve from inside with solid color, the curve(shape) should be a closed then only it can be filled
-        cr.set_source_rgba(.709,.164,.164,.2)  #for changing the fill color
+        # cr.set_source_rgba(.709,.164,.164,.2)  #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.netRecSpeedArray[0])+2)
@@ -184,15 +201,18 @@ class networkWidget(g.ScrolledWindow):
 
         ## Send ##
         # Drawing the curve's outer line
-        cr.set_source_rgba(1,.313,.313,1) #for changing the outer line color
+        # cr.set_source_rgba(1,.313,.313,1) #for changing the outer line color
+        cr.set_source_rgba(*color,1)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.netSendSpeedArray[0])+2)
         cr.set_line_width(1.5)
+        cr.set_dash([3.0 ,3.0])
         for i in range(0,99):
             cr.line_to((i+1)*stepsize,scalingfactor*(currentscalespeed-self.netSendSpeedArray[i+1])+2)
         cr.stroke_preserve()
 
         # Filling the curve from inside with solid color, the curve(shape) should be a closed then only it can be filled
-        cr.set_source_rgba(1,.313,.313,.2)  #for changing the fill color
+        # cr.set_source_rgba(1,.313,.313,.2)  #for changing the fill color
+        cr.set_source_rgba(*color,0.2)
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.netSendSpeedArray[0])+2)

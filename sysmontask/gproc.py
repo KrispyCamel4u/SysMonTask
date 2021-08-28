@@ -25,7 +25,7 @@ gio_apps=Gio.AppInfo.get_all()
 
 ####### added for python<=3.7
 def reversed_process(procdi):
-    if sys.version_info > (3, 7):
+    if sys.version_info >= (3, 8):
         return reversed(procdi)
     else:
         return reversed(list(procdi.keys()))

@@ -38,5 +38,12 @@
       <description> same as summary</description>
     </key>
 
+    <key name="color-profile" type='a(ddd)'>
+      <default>[(.384,.749,1.0),(.627,.196,.788),(.109,.670,.0588),(.709,.164,.164),(.384,.749,1.0)]</default>
+      <summary> Store the color profile for the devices</summary>
+      <description> same as summary</description>
+    </key>
+
+
   </schema>
 </schemalist>
