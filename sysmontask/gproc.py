@@ -550,6 +550,11 @@ def procInit(self):
     self.process_record_start.connect("toggled",on_record_button_toggle,self)
     self.process_record_pause.connect("toggled",on_record_button_toggle,self)
 
+    # Diabling them until a process is selected
+    self.process_record_start.set_sensitive(False)
+    self.process_record_pause.set_sensitive(False)
+    self.process_kill_button.set_sensitive(False)
+
     #                                 0   1   2   3   4   5   6   7   8   9   10   11  12  13       14
     self.processTreeStore=g.TreeStore(int,str,str,str,str,str,str,str,str,str,str,str,str,str,GdkPixbuf.Pixbuf,bool)
     self.filter_model=self.processTreeStore.filter_new()
@@ -622,6 +627,8 @@ def procInit(self):
         column.set_expand(True)
         # column.set_alignment(0)
         column.set_sort_indicator(True)
+        # Setting the minimum width so that the column wont move with each update of values
+        column.set_min_width(90)
 
         self.processTree.append_column(column)
         self.columnList[i]=column
@@ -676,6 +683,16 @@ def process_pop(self,pidds,itr):
             # self.processTreeIterList.pop(pidds)
 
 def procUpdate(self,header=True):
+
+    if self.selected_process_pid==0:
+        self.process_record_start.set_sensitive(False)
+        self.process_record_pause.set_sensitive(False)
+        self.process_kill_button.set_sensitive(False)
+    else:
+        self.process_record_start.set_sensitive(True)
+        self.process_record_pause.set_sensitive(True)
+        self.process_kill_button.set_sensitive(True)
+
     # stt=time()
     cpu_count=ps.cpu_count()
 

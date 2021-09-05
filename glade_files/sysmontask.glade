@@ -592,6 +592,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                         <property name="hexpand">True</property>
                         <child>
                           <object class="GtkBox" id="sidepanebox">
+                            <property name="name">sidepane_box</property>
                             <property name="width-request">265</property>
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>

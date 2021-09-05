@@ -188,7 +188,7 @@ class myclass:
         self.notebook.set_current_page(self.settings.get_int('current-tab'))
 
         # If the current page is not processes tab than hide the search entry
-        if self.notebook.get_current_page!=0:
+        if self.notebook.get_current_page()!=0:
             self.process_tree_search_entry.hide()
 
         # Update time interval in miliseconds for performance tab

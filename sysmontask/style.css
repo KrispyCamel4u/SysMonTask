@@ -8,21 +8,28 @@
     background-color: #9130a9;
   } */
 
-
-/* #kill_button:hover {
-    color: #d32d2d;
-    background-color: #cc00ff;
+/* button {
+  background-image: image(rgba(246,246,246,0.1));
 } */
 
-
-button {
-	background-image: image(rgba(246,246,246,0.1));
+button#kill_button:hover {
+  /* background-color: rgba(153, 204, 255,0.2); */
+	border: 1px rgb(255, 0, 0) solid;
 }
-button:hover {
+
+button#record_start:hover , button#record_pause:hover {
+  /* background-color: rgba(153, 204, 255,0.2); */
+	border: 1px rgb(241, 163, 37) solid;
+}
+
+
+#sidepane_box button:hover {
+  background-image: image(rgba(246,246,246,0.1));
 	background-color: rgba(153, 204, 255,0.2);
 	border: 1px rgba(100, 210, 255,1) solid;
 }
-button:active {
+/* #sidepane_box button:active {
+  background-image: image(rgba(246,246,246,0.1));
 	background-color: rgba(153, 204, 255,1);
 	border: 1px rgba(100, 210, 255,1) solid;
-}
+} */
