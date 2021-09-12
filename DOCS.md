@@ -1,10 +1,13 @@
 ## Menu
-- File : Nothing much, reserved for future use
-- View : Refresh, Update Speed, Graph Direction
+- File : Reset Colors, Quit
+  * Reset Colors: Reset the color of the device's Graphs to the default.
+  * quit: Quit the application.
+- View : Refresh, Update Speed, Graph Direction, Show/Hide Devices
   * Refresh : For accomodating a new hardware related change such as network change.
   * Update Speed : Speed control for performance tab.
   * Graph Direction : Newer on Right(default) / Newer on Left
   * **Filter**: To Filter out the unwanted processes.
+  * Show/Hide Devices: Can be used to hide or show the device of intereset.
 - **Tools: Log Plot**(To visualise the data collected using Record)
 - Help : About, What's New
 

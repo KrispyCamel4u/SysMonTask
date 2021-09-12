@@ -51,6 +51,8 @@ except ImportError:
     from sysmontask.gproc import *
     # from sysmontask.log_plotter import *
 
+VERSION_INT =2
+
 class whatsnew_notice_dialog(g.Dialog):
     """ Class for What's New Dialog, inheriting the GtkDialog class."""
 
@@ -62,13 +64,22 @@ class whatsnew_notice_dialog(g.Dialog):
         label=g.Label()
         label.set_markup(
         """
-        <b><span size='20000'>New Feature #v1.3.9 </span></b>
+        <b><span size='20000'>New Feature #v1.x.x </span></b>
+          * <b><big>Color Customizations</big></b>
+              Color for each devices can be changed.
+          * <b><big>Hide/Show Devices</big></b>
+              Now each device can be hide permanantly.
+          * <b><big>Bug fixes and Small Visual Improvements</big></b>
+              For details visit:<a href='https://github.com/KrispyCamel4u/SysMonTask'>https://github.com/KrispyCamel4u/SysMonTask/</a>
+            -------------------------------------------------------------------------------------------------
+            <b>Previous highlights</b>
+            -------------------------------------------------------------------------------------------------
           * <b><big>Filter Dialog</big></b>
               Can be accessed through : view->filter
               User can define his/her own filtering words to exclude the unwanted processes.
               Filter Dialog follow <b><big>strict semantic and formating rules</big></b> for adding a new entry.
               For more information of rules and filter dialog, visit:
-              <big><a href='https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#filter-dialog-view-filter'>https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md</a></big>
+              <a href='https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md#filter-dialog-view-filter'>https://github.com/KrispyCamel4u/SysMonTask/blob/master/DOCS.md</a>
           * <b><big>Process Log Record</big></b>(at lower right corner in process tab)
           * <b><big>Log plotter</big></b>(Tools->Log_plot)
           * Bug fixes, optimisation and support for all desktop enviornments.
@@ -259,19 +270,20 @@ class myclass:
         self.notebook.connect("switch-page",self.on_notebook_page_change)
 
         ## What's New dialog show only for the first time
-        if self.settings.get_int("one-time-whatsnew"):
+        if (self.settings.get_int("version-int")!=VERSION_INT):
             dialog=whatsnew_notice_dialog(self.Window,self)
             dialog.run()
             dialog.destroy()
-            self.settings.set_int("one-time-whatsnew",0)
+            self.settings.set_int("version-int",VERSION_INT)
 
     def post_init(self):
         # group lookup by device
         self.grouping_for_color_profile={
             'cpu':'cpu',
             'memory':'memory',
-            self.gpuName:'gpu'
             }
+        if self.isNvidiagpu:
+            self.grouping_for_color_profile[self.gpuName]='gpu'
         for i in self.disklist:
             self.grouping_for_color_profile[i]='disk'
         for i in self.netNameList:
@@ -722,6 +734,10 @@ class myclass:
         draw_area_widget : the widget on which to draw the graph
         cr : the cairo surface object
         """
+
+        color=self.color_profile['cpu'][0]
+        rectangle_color=self.color_profile['cpu'][1]
+
         # Setting line width
         cr.set_line_width(2)
         # getting name and from it getting the id
@@ -736,7 +752,7 @@ class myclass:
         scalingfactor=h/100.0
 
         #creating outer rectangle
-        cr.set_source_rgba(0,.454,.878,1)
+        cr.set_source_rgba(*rectangle_color,1)
         cr.set_line_width(3)
         cr.rectangle(0,0,w,h)
         cr.stroke()
@@ -745,7 +761,7 @@ class myclass:
         verticalGap=int(h/10)
         horzontalGap=int(w/10)
         for i in range(1,10):
-            cr.set_source_rgba(.384,.749,1.0,1) #for changing the outer line color
+            cr.set_source_rgba(*color,1) #for changing the outer line color
             cr.set_line_width(0.5)
             cr.move_to(0,i*verticalGap)
             cr.line_to(w,i*verticalGap)
@@ -757,7 +773,7 @@ class myclass:
 
         stepsize=w/99.0
         # Drawing the outer line
-        cr.set_source_rgba(.384,.749,1.0,1) # Line Color
+        cr.set_source_rgba(*color,1) # Line Color
         cr.move_to(0,scalingfactor*(100-cpu_logical_util_array[0]))
         for i in range(0,99):
             cr.set_line_width(1.5)
@@ -765,7 +781,7 @@ class myclass:
         cr.stroke_preserve()
 
         # Filling the Color inside the graph
-        cr.set_source_rgba(.588,.823,.98,0.25)  #Fill Color
+        cr.set_source_rgba(*color,0.25)  #Fill Color
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(100-cpu_logical_util_array[0]))

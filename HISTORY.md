@@ -1,3 +1,18 @@
+### v1.x.x
+#### [Enhancements]
+- [[#50](https://github.com/KrispyCamel4u/SysMonTask/issues/50)] Color Customizations: Color of each devices can be changed now.
+- [[#61](https://github.com/KrispyCamel4u/SysMonTask/issues/50)]Show/Hide Devices: Uninterested devices can be made hidden.
+
+#### [Bug Fix]
+- [[#56](https://github.com/KrispyCamel4u/SysMonTask/issues/56),[#57](https://github.com/KrispyCamel4u/SysMonTask/issues/57)] Unneeded Column name, Better space management.
+- [[#58](https://github.com/KrispyCamel4u/SysMonTask/issues/58)] Running it with superuser permission doesn't use the right theme, theme API bug.
+- [[#60](https://github.com/KrispyCamel4u/SysMonTask/issues/60)] For some people Nvidia GPU usage is not showing and GPU graphs don't work.
+- [[#62](https://github.com/KrispyCamel4u/SysMonTask/issues/62)] CPU cache NA value and Wifi adapter NA.
+- [[#63](https://github.com/KrispyCamel4u/SysMonTask/issues/63)] Error trying to open sysmontask: Handling of large number of cores.
+- [[#64](https://github.com/KrispyCamel4u/SysMonTask/issues/64)] SSD usage sometimes goes to 103%
+- [[#65](https://github.com/KrispyCamel4u/SysMonTask/issues/65),[#76](https://github.com/KrispyCamel4u/SysMonTask/issues/76)] Ubuntu hirsute release does not have a release file, Support 21.04.2
+- [[#72](https://github.com/KrispyCamel4u/SysMonTask/issues/72)] Process Menu Need to Refresh Manually and Not Working: Python dictionary reverse error.
+
 ### v1.3.9
 #### [Bug Fix]
 - [[#22](https://github.com/KrispyCamel4u/SysMonTask/issues/22)] Temperature of AMD CPU displays as NA ["zenpower" name added]

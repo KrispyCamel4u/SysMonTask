@@ -264,7 +264,7 @@ class netSidepaneWidget(g.Box):
 
         # Filling the curve from inside with solid color, the curve(shape) should be a closed then only it can be filled
         # cr.set_source_rgba(.709,.164,.164,.2)  #for changing the fill color
-        cr.set_source_rgba(.709,.164,.164,.2)  #for changing the fill color
+        cr.set_source_rgba(*color,.2)  #for changing the fill color
         cr.line_to(w,h)
         cr.line_to(0,h)
         cr.move_to(0,scalingfactor*(currentscalespeed-self.netRecSpeedArray[0])+2)
