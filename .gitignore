@@ -43,4 +43,5 @@ var/
 .installed.cfg
 *.egg
 
-*.vscode/
+.vscode/
+.buildconfig
