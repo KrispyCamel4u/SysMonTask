@@ -1,8 +1,0 @@
-{
-    "python.pythonPath": "/bin/python3",
-    "python.jediEnabled": false,
-    "python.autoComplete.extraPaths": [
-        "/usr/lib/python3/dist-packages",
-    ],
-    "python.languageServer": "Microsoft"
-}
