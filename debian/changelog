@@ -1,5 +1,5 @@
-sysmontask (1.x.x-ubuntu20.10-cc) groovy; urgency=high
+sysmontask (<ver_name>) <code_name>; urgency=high
 
   * Additional release.
 
- -- Neeraj Kumar <neerajjangra4u@gmail.com>  Fri, 14 May 2021 11:57:22 +0530
+ -- Neeraj Kumar <neerajjangra4u@gmail.com>  <date_string>

@@ -244,10 +244,13 @@ def netinit(self):
         self.numOfNets=len(self.netNameList)   #number of internet adapters
         # print(self.numOfNets)
 
-        # For finding the product name and vendor
-        p=popen("lshw -c network -json")
-        netinfo=json.loads(p.read())    # netinfo is a List of dictionary
-        p.close()
+        try:
+            # For finding the product name and vendor
+            p=popen("lshw -c network -json")
+            netinfo=json.loads(p.read())    # netinfo is a List of dictionary
+            p.close()
+        except:
+            print("lshw not found")
 
         for i in range(0,self.numOfNets):
             self.netWidgetList[i]=networkWidget()
