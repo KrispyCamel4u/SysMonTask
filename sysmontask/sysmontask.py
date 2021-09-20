@@ -4,16 +4,8 @@ from gi import require_version
 require_version("Gtk", "3.0")
 require_version("Wnck", "3.0")
 ###############################################################
-try:
-    from rooter import theme_agent
-except ImportError:
-    from sysmontask.rooter import theme_agent
 
-theme_agent()
 import os
-
-with open("{}/.sysmontask".format(os.environ.get("HOME")),'w+') as ofile:
-    ofile.write('0')
 
 from gi.repository import Gtk as g , GLib as go,Gio,Gdk
 import psutil as ps
