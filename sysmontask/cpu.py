@@ -181,13 +181,17 @@ def cpuUpdate(self):
     self.cpuUtilLabelValue.set_text(cpuUtilString)
 
     # Setting number of processes and threads")
-    self.cpuProcessesLabelValue.set_text(str(len(ps.pids())))
-    try:
-        p=popen("ps axms|wc -l")
-        self.cpuThreadsLabelValue.set_text(sub('[\s]','',p.read()))
-        p.close()
-    except:
-        print("Failed to get Threads")
+    # 5 less than the original way of calculating the number of threads, because `ps` creates 2 lines in its output, `wc` creates 2 lines, and the header is one line
+    pid_iter = ps.process_iter()
+    pids, threads = (0, 0)
+    # I'm not good at python, there might be a smarter way to get the number of pids than incrementing in the while loop
+    for proc in pid_iter:
+        threads += proc.num_threads()
+        pids += 1
+        print("pid: %d threads: %d" % (pids, threads))
+    self.cpuProcessesLabelValue.set_text(str(pids))
+    # Shouldn't this be just 'threads' not 'threads + pids'? I think the program has had a bug. TODO before this gets merged
+    self.cpuThreadsLabelValue.set_text(str(threads + pids))
 
     try:
         #cpu package temp
