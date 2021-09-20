@@ -189,7 +189,6 @@ def cpuUpdate(self):
     for proc in pid_iter:
         threads += proc.num_threads()
         pids += 1
-        print("pid: %d threads: %d" % (pids, threads))
     self.cpuProcessesLabelValue.set_text(str(pids))
     self.cpuThreadsLabelValue.set_text(str(threads))
 
