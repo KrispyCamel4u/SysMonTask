@@ -69,10 +69,11 @@ def memorytabinit(self):
 
     # Getting the Corrupted memory info
     try:
-        p=popen('cat /proc/meminfo | grep -E -i "corrupted"')
-        tempcourrupted=p.read().split(':')[1]
-        p.close()
-        self.memCourruptedLabelValue.set_text(re.sub('\s','',tempcourrupted))
+        with open("/proc/meminfo") as meminfo:
+            for line in meminfo:
+                if line.startswith('HardwareCorrupted'):
+                    self.memCourruptedLabelValue.set_text(line.split(':')[1].strip())
+                    break
     except:
         print("Failed to get Corrupted Memory")
 
