@@ -181,13 +181,16 @@ def cpuUpdate(self):
     self.cpuUtilLabelValue.set_text(cpuUtilString)
 
     # Setting number of processes and threads")
-    self.cpuProcessesLabelValue.set_text(str(len(ps.pids())))
-    try:
-        p=popen("ps axms|wc -l")
-        self.cpuThreadsLabelValue.set_text(sub('[\s]','',p.read()))
-        p.close()
-    except:
-        print("Failed to get Threads")
+    # pids + 3 less than the original way of calculating the number of threads, because we no longer fork to create a `ps` and a `wc` process and `ps axms` has a header line
+    # Additionally, `ps axms` shows a single-threaded process on one line and its thread on another line. You should have been using `ps axH`
+    pid_iter = ps.process_iter()
+    pids, threads = (0, 0)
+    # I'm not good at python, there might be a smarter way to get the number of pids than incrementing in the while loop. This is probably good enough though
+    for proc in pid_iter:
+        threads += proc.num_threads()
+        pids += 1
+    self.cpuProcessesLabelValue.set_text(str(pids))
+    self.cpuThreadsLabelValue.set_text(str(threads))
 
     try:
         #cpu package temp
