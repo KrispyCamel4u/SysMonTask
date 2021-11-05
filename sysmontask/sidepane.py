@@ -580,7 +580,7 @@ def sidepaneinit(self):
             self.stack_switcher_buttons[button_counter]=self.netSidepaneWidgetList[i].net_switcher_button
             button_counter+=1
 
-    if(self.isNvidiagpu==1):
+    if(self.isNvidiagpu==1 or self.isAMDgpu==1):
         self.gpuSidePaneWidget=gpuSidepaneWidget()
         self.sidepaneBox.pack_start(self.gpuSidePaneWidget,True,True,0)
         self.gpuSidePaneWidget.gpusidepanetextlabel.set_text(f'{self.gpuName.split()[-2]}{self.gpuName.split()[-1]}')
@@ -618,9 +618,9 @@ def sidePaneUpdate(self):
             except Exception as e:
                 print(f"some error in netsidepane update {e}")
 
-    if(self.isNvidiagpu==1):
+    if(self.isNvidiagpu==1 or self.isAMDgpu==1):
         try:
-            self.gpuSidePaneWidget.gpusidepanelabelvalue.set_text(self.gpuutil)
+            self.gpuSidePaneWidget.gpusidepanelabelvalue.set_text(str(self.gpuutil))
             self.gpuSidePaneWidget.givedata(self)
         except Exception as e:
             print(f"some error in gpusidepane update {e}")

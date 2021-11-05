@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import threading
+
 ############ container missing error in some distro #############
 from gi import require_version
 require_version("Gtk", "3.0")
@@ -282,7 +284,7 @@ class myclass:
             'cpu':'cpu',
             'memory':'memory',
             }
-        if self.isNvidiagpu:
+        if self.isNvidiagpu or self.isAMDgpu:
             self.grouping_for_color_profile[self.gpuName]='gpu'
         for i in self.disklist:
             self.grouping_for_color_profile[i]='disk'
@@ -539,7 +541,7 @@ class myclass:
         self.stack_counter=2
 
         # Destroying the all the except CPU and Memory
-        if(self.isNvidiagpu==1):
+        if(self.isNvidiagpu==1 or self.isAMDgpu==1):
             g.Widget.destroy(self.gpuWidget)
             g.Widget.destroy(self.gpuSidePaneWidget)
         for i in range(0,self.numOfDisks):
@@ -685,8 +687,10 @@ class myclass:
         self.disktabUpdate()
         if len(self.netNameList)!=0:
             self.netTabUpdate()
-        if(self.isNvidiagpu==1):
-            self.gpuTabUpdate()
+
+        if(self.isNvidiagpu==1 or self.isAMDgpu==1):
+            threading.Thread(target=lambda: self.gpuTabUpdate()).start()
+            
         self.sidepaneUpdate()
 
         # Calling drawing methods putting them into the queue to draw for each component.
@@ -704,7 +708,7 @@ class myclass:
         for i in range(0,self.numOfNets):
             g.Widget.queue_draw(self.netWidgetList[i].netdrawarea)
 
-        if(self.isNvidiagpu==1):
+        if(self.isNvidiagpu==1 or self.isAMDgpu==1):
             g.Widget.queue_draw(self.gpuWidget.gpuutildrawarea)
             g.Widget.queue_draw(self.gpuWidget.gpuvramdrawarea)
             g.Widget.queue_draw(self.gpuWidget.gpuencodingdrawarea)
@@ -718,7 +722,7 @@ class myclass:
             g.Widget.queue_draw(self.diskSidepaneWidgetList[i].disksidepanedrawarea)
         for i in range(self.numOfNets):
             g.Widget.queue_draw(self.netSidepaneWidgetList[i].netsidepanedrawarea)
-        if(self.isNvidiagpu==1):
+        if(self.isNvidiagpu==1 or self.isAMDgpu==1):
             g.Widget.queue_draw(self.gpuSidePaneWidget.gpusidepanedrawarea)
 
         # Returning True to run periodically
