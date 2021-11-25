@@ -81,11 +81,11 @@ def cpuInit(self):
         self.cpuL1LabelValue.set_text(sub("[\s]","",p.read().split(':')[1]))
         p.close()
 
-        p=popen('lscpu|grep -i -m1 "L2 cache:"')
+        p=popen('lscpu|grep -m1 "L2 cache:"')
         self.cpuL2LabelValue.set_text(sub('[\s]','',p.read().split(':')[1]))
         p.close()
 
-        p=popen('lscpu|grep -i "L2 cache:"')
+        p=popen('lscpu|grep -m1 "L2 cache:"')
         self.cpuL3LabelValue.set_text(sub('[\s]','',p.read().split(':')[1]))
         p.close()
     except:
