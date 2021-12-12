@@ -48,13 +48,15 @@ def cpuInit(self):
     self.cpuFanSpeedLabelValue=self.builder.get_object('cpufanspeedlabelvalue')
     self.cpuMxSpeedLabelValue=self.builder.get_object('cpumxspeedlabelvalue')
 
+    # Get the name of the CPU
     try:
-        ## for the first time only to get the name of the cpu
-        p=popen('cat /proc/cpuinfo |grep -m1 "model name"')
-        self.cpuname=p.read().split(':')[1].split('\n')[0]
+        with open("/proc/cpuinfo") as cpuinfo:
+            for line in cpuinfo:
+                if line.startswith('model name'):
+                    self.cpuname = line.split(':')[1].strip()
+                    break
         self.cpuInfoLabel.set_text(self.cpuname)
         self.cpuInfoLabel.set_valign(g.Align.CENTER)
-        p.close()
     except:
         print("Failed to get model information")
 
