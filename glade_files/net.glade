@@ -450,7 +450,7 @@ NA</property>
                         <property name="halign">start</property>
                         <property name="margin-start">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Mac Address</property>
+                        <property name="label" translatable="yes">MAC Address</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>

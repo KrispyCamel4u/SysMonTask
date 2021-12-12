@@ -622,7 +622,7 @@
                         <property name="margin-left">10</property>
                         <property name="margin-start">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Gpu Max speed:</property>
+                        <property name="label" translatable="yes">GPU Max speed:</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -653,7 +653,7 @@
                         <property name="margin-left">10</property>
                         <property name="margin-start">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Vram spead:</property>
+                        <property name="label" translatable="yes">VRAM speed:</property>
                         <property name="justify">center</property>
                       </object>
                       <packing>
@@ -685,7 +685,7 @@
                         <property name="margin-left">10</property>
                         <property name="margin-start">10</property>
                         <property name="hexpand">True</property>
-                        <property name="label" translatable="yes">Vram Max spead:</property>
+                        <property name="label" translatable="yes">VRAM Max speed:</property>
                         <property name="justify">center</property>
                       </object>
                       <packing>
