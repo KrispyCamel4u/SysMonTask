@@ -20,7 +20,9 @@ Depends: ${python3:Depends},
          python3-gi-cairo,
          python3-gi,
          gir1.2-gtk-3.0,
-         gir1.2-wnck-3.0
+         gir1.2-wnck-3.0,
+         python3-psutil (>= 5.7.2)
+Recommends: nvidia-smi
 Description: System Monitor With UI Like Windows
  SysMonTask is a Linux system monitor with the compactness and usefulness of 
  Windows Task Manager to allow higher control and monitoring.
