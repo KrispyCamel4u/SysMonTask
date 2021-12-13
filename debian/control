@@ -1,12 +1,26 @@
 Source: sysmontask
-Maintainer: Neeraj Kumar <neerajjangra4u@gmail.com>
-Build-Depends: debhelper,dh-python,python3-all,python3-setuptools,lshw
-Section: devel
+Section: utils
 Priority: optional
+Maintainer: Neeraj Kumar <neerajjangra4u@gmail.com>
+Build-Depends: debhelper,
+               dh-python,
+               python3-all,
+               python3-setuptools,
+               lshw
 Standards-Version: 3.8.6
 X-Python3-Version: >= 3.6
+Homepage: https://github.com/KrispyCamel4u/SysMonTask
+Vcs-Browser: https://github.com/KrispyCamel4u/SysMonTask
+Vcs-Git: https://github.com/KrispyCamel4u/SysMonTask.git
+Rules-Requires-Root: no
 
 Package: sysmontask
 Architecture: all
+Depends: ${python3:Depends},
+         python3-gi-cairo,
+         python3-gi,
+         gir1.2-gtk-3.0,
+         gir1.2-wnck-3.0
 Description: System Monitor With UI Like Windows
-Depends: ${python3:Depends},python3-gi-cairo,python3-gi,gir1.2-gtk-3.0,gir1.2-wnck-3.0
+ SysMonTask is a Linux system monitor with the compactness and usefulness of 
+ Windows Task Manager to allow higher control and monitoring.
