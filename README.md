@@ -33,7 +33,7 @@ Linux system monitor with the compactness and usefulness of Windows Task Manager
 ## Installation
 ***[need help in making a package for Suse, Redhat]***
 
-### #Ubuntu and Its Family**(only for: 18.04, 20.04, 20.10, 21.04 and equivalent)**, run:
+### #Ubuntu and Its Family**(only for: 18.04, 20.04, 21.04, 21.10 and equivalent)**, run:
 ```
 $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
 $ sudo apt install sysmontask
