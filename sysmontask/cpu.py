@@ -62,34 +62,31 @@ def cpuInit(self):
     self.cpuCoreLabelValue.set_text(str(ps.cpu_count(logical=False)))
     self.cpuLogicalLabelValue.set_text(str(self.cpu_logical_cores))
 
-    # Virtualisation Info
+    # Get the cache sizes and virtualisation information from `lscpu`
     try:
-        p=popen('lscpu|grep -i -E "(vt-x)|(amd-v)"')
-        temp=p.read()
-        if temp:
-            temptext="Enabled"
-        else:
-            temptext="Disabled"
-        self.cpuVirtualisationLabelValue.set_text(temptext)
-        p.close()
+        virtualisation = "N/A"
+        cache_l1 = "N/A"
+        cache_l2 = "N/A"
+        cache_l3 = "N/A"
+
+        lscpu = popen('lscpu').readlines()
+        for line in lscpu:
+            line = line.strip()
+            if line.startswith('L1d cache:'):
+                cache_l1 = line.split(':')[1].strip()
+            elif line.startswith('L2 cache:'):
+                cache_l2 = line.split(':')[1].strip()
+            elif line.startswith('L3 cache:'):
+                cache_l3 = line.split(':')[1].strip()
+            elif line.startswith('Virtualization:'):
+                virtualisation = line.split(':')[1].strip()
+
+        self.cpuVirtualisationLabelValue.set_text(virtualisation)
+        self.cpuL1LabelValue.set_text(cache_l1)
+        self.cpuL2LabelValue.set_text(cache_l2)
+        self.cpuL3LabelValue.set_text(cache_l3)
     except:
-        print("Failed to get Virtualisation information")
-
-    # CPU Caches
-    try:
-        p=popen('lscpu|grep -i -m1 "L1d"')
-        self.cpuL1LabelValue.set_text(sub("[\s]","",p.read().split(':')[1]))
-        p.close()
-
-        p=popen('lscpu|grep -i -m1 "L2"')
-        self.cpuL2LabelValue.set_text(sub('[\s]','',p.read().split(':')[1]))
-        p.close()
-
-        p=popen('lscpu|grep -i "L3"')
-        self.cpuL3LabelValue.set_text(sub('[\s]','',p.read().split(':')[1]))
-        p.close()
-    except:
-        print("Failed to get Cache information")
+        print("Failed to get Virtualisation and CPU cache information from `lscpu` shell command")
 
     # CPU Frequency
     self.speed=ps.cpu_freq()
