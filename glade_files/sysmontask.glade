@@ -862,7 +862,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE</property>
                                             <property name="halign">start</property>
                                             <property name="margin-start">15</property>
                                             <property name="hexpand">True</property>
-                                            <property name="label" translatable="yes">% Utilisation</property>
+                                            <property name="label" translatable="yes">% Utilization</property>
                                           </object>
                                           <packing>
                                             <property name="left-attach">0</property>
@@ -1179,7 +1179,7 @@ NA</property>
                                                     <property name="margin-start">13</property>
                                                     <property name="margin-top">10</property>
                                                     <property name="hexpand">True</property>
-                                                    <property name="label" translatable="yes">Utilisation</property>
+                                                    <property name="label" translatable="yes">Utilization</property>
                                                   </object>
                                                   <packing>
                                                     <property name="left-attach">0</property>
@@ -1464,7 +1464,7 @@ NA</property>
                                                 <property name="halign">start</property>
                                                 <property name="margin-start">10</property>
                                                 <property name="hexpand">True</property>
-                                                <property name="label" translatable="yes">Virtualisation:</property>
+                                                <property name="label" translatable="yes">Virtualization:</property>
                                               </object>
                                               <packing>
                                                 <property name="left-attach">0</property>
