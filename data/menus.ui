@@ -1,0 +1,150 @@
+<?xml version="1.0"?>
+<interface>
+  <menu id="menubar">
+  <submenu id="file-menu">
+      <attribute name="label">_File</attribute>
+      <section>
+        <item>
+            <attribute name="label">_Reset</attribute>
+            <attribute name="action">app.Reset</attribute>
+        </item>
+      </section>
+      <section>
+        <item>
+            <attribute name="label">_Quit</attribute>
+            <attribute name="action">app.quit</attribute>
+        </item>
+      </section>
+    </submenu>
+    <submenu id="view-menu">
+      <attribute name="label">_View</attribute>
+      <section>
+      <item>
+        <attribute name="label" translatable="yes">_Refresh</attribute>
+        <attribute name="action">win.refresh</attribute>
+      </item>
+    </section>
+      <section>
+        <item>
+            <attribute name="label">_Show_Hierarchy</attribute>
+            <attribute name="action">win.show-hierarchy</attribute>
+        </item>
+      </section>
+      <section>
+      <item>
+        <attribute name="label">_Active Processes</attribute>
+        <attribute name="action">win.show-whose-processes</attribute>
+        <attribute name="target">active</attribute>
+      </item>
+      <item>
+        <attribute name="label">M_y Processes</attribute>
+        <attribute name="action">win.show-whose-processes</attribute>
+        <attribute name="target">user</attribute>
+      </item>
+      <item>
+        <attribute name="label">A_ll Processes</attribute>
+        <attribute name="action">win.show-whose-processes</attribute>
+        <attribute name="target">all</attribute>
+      </item>
+    </section>
+    </submenu>
+    <submenu>
+      <attribute name="label">_Help</attribute>
+      <section>
+        <item>
+            <attribute name="label">_About</attribute>
+            <attribute name="action">app.about</attribute>
+        </item>
+        <item>
+            <attribute name="label">_Help</attribute>
+            <attribute name="action">app.help</attribute>
+        </item>
+      </section>
+    </submenu>
+  </menu>
+
+  <menu id="process-popup-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Properties</attribute>
+        <attribute name="action">win.process-properties</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Memory Maps</attribute>
+        <attribute name="action">win.memory-maps</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes" comments="Translators: this means 'Files that are open' (open is not a verb here)">Open _Files</attribute>
+        <attribute name="action">win.open-files</attribute>
+      </item>
+    </section>
+    <section>
+      <submenu>
+        <attribute name="label" translatable="yes">_Change Priority</attribute>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Very High</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">-20</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">High</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">-5</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Normal</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">0</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Low</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">5</attribute>
+          </item>
+          <item>
+            <attribute name="label" translatable="yes">Very Low</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">19</attribute>
+          </item>
+        </section>
+        <section>
+          <item>
+            <attribute name="label" translatable="yes">Custom</attribute>
+            <attribute name="action">win.priority</attribute>
+            <attribute name="target" type="i">32</attribute>
+          </item>
+        </section>
+      </submenu>
+      <item>
+        <attribute name="label" translatable="yes">Set _Affinity</attribute>
+        <attribute name="action">win.set-affinity</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_Stop</attribute>
+        <attribute name="action">win.send-signal-stop</attribute>
+        <attribute name="target" type="i">19</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Continue</attribute>
+        <attribute name="action">win.send-signal-cont</attribute>
+        <attribute name="target" type="i">18</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_End</attribute>
+        <attribute name="action">win.send-signal-end</attribute>
+        <attribute name="target" type="i">15</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Kill</attribute>
+        <attribute name="action">win.send-signal-kill</attribute>
+        <attribute name="target" type="i">9</attribute>
+      </item>
+    </section>
+  </menu>
+  
+</interface>
