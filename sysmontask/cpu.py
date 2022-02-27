@@ -77,7 +77,7 @@ def cpuInit(self):
 
     # CPU Caches
     try:
-        p=popen('lscpu|grep -i -m1 "L1d"')
+        p=popen('lscpu|grep -i -m1 "L1d cache"')
         self.cpuL1LabelValue.set_text(sub("[\s]","",p.read().split(':')[1]))
         p.close()
 
@@ -172,7 +172,7 @@ def cpuUpdate(self):
     """
     # CPU frequency
     self.speed=ps.cpu_freq()
-    cpuSpeedstring="{:.2f} Ghz".format(self.speed[0]/1000)
+    cpuSpeedstring="{:.2f} Ghz".format(self.speed[0])
     self.cpuSpeedLabelValue.set_text(cpuSpeedstring)
 
     # CPU Utilisation
