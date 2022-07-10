@@ -45,3 +45,4 @@ var/
 
 .vscode/
 .buildconfig
+.idea/
