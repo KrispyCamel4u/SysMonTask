@@ -33,7 +33,7 @@ Linux system monitor with the compactness and usefulness of Windows Task Manager
 ## Installation
 ***[need help in making a package for Suse, Redhat]***
 
-### #Ubuntu and Its Family**(only for: 18.04, 20.04, 21.04, 21.10 and equivalent)**, run:
+### Ubuntu and Its Family *(only for: 18.04, 20.04, 21.04, 21.10 and equivalent)*, run:
 ```
 $ sudo add-apt-repository ppa:camel-neeraj/sysmontask
 $ sudo apt install sysmontask
@@ -57,7 +57,7 @@ $ sudo pip3 install -U psutil  // needed to run sysmontask with root access, hen
 ```
 ---
 
-### #Arch Based:
+### Arch Based:
 Using any AUR helper tools like Yay:
 ```
 $ yay -S sysmontask
@@ -72,14 +72,14 @@ $ sysmontask
 Or,
 Install using pamac(gui for software add/remove), first enable the AUR(arch user repository) in preferences, then search sysmontask, install and enjoy.
 
-### #Fedora:
+### Fedora:
 
 Available in official [Fedora repos](https://src.fedoraproject.org/rpms/sysmontask).
 ```
 $ sudo dnf install sysmontask
 ```
 ---
-### #Installing From Source
+### Installing From Source
 Install the dependencies required, mentioned in the [requirments.md](https://github.com/KrispyCamel4u/SysMonTask/blob/master/requirements.md). In case of issue related to PyGoject or pycairo OR to get the command for the specific package manager, follow the link given in requirements.md .
 
 While installing from source, pip automatically installs some of the packages(which can be installed using pip) required others need to be installed using package manager.
