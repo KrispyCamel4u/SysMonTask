@@ -13,7 +13,7 @@ python3-psutil>=5.7.2    // alternative to psutil
 
 #### If want to use pip
 
-gir1.2-gtk3.0 // (needed to for PyGOject) Install with APT
+gir1.2-gtk-3.0 // (needed to for PyGOject) Install with APT
 
 gir1.2-wnck-3.0 // Install with APT (not available as pip package)
 
