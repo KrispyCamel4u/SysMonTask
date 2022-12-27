@@ -92,7 +92,7 @@ def cpuInit(self):
         print("Failed to get Cache information")
 
     # CPU Frequency
-    self.speed=ps.cpu_freq()
+    self.speed=max(ps.cpu_freq(1))
     self.cpuMxSpeedLabelValue.set_text('{:.2f} GHz'.format(self.speed[2]/1000))
 
     # Number fo drawing widgets to put in one column for different logical cpu counts
