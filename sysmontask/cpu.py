@@ -206,6 +206,11 @@ def cpuUpdate(self):
                 if lis.label=='Tdie':
                     self.cpuTempLabelValue.set_text('{0} °C'.format(int(lis.current)))
                     break
+        elif 'cpu_thermal' in temperatures_list:
+            for lis in temperatures_list['cpu_thermal']:
+                if lis.label=='':
+                    self.cpuTempLabelValue.set_text('{0} °C'.format(int(lis.current)))
+                    break
 
     except:
         pass
